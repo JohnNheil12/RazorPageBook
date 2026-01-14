@@ -57,12 +57,26 @@ container  {
     color: black;
 }
 .BusinessName {
-    font-family: Times New Roman, Georgia, Garamond
+    font-family: Times New Roman, Georgia, Garamond;
 }
 .row {
     justify-content: center;
     text-autospace: auto;
 }
 .title {
+    justify-content: center;
     text-align: center;
 }
+.create-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+}
+.form-control {
+    border-radius: 8px;
+}
+.card{
+    font-family: Times New Roman, Georgia, Garamond;
+    background-color: grey;
+}
+

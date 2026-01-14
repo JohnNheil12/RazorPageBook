@@ -2,44 +2,57 @@
 @model RazorPageBooks.Pages.Books.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Book";
 }
 
-<h1>Edit</h1>
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4 create-card">
+        <h2 class="text-center mb-1">Edit Book</h2>
 
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <input type="hidden" asp-for="Book.Id" />
-            <div class="form-group">
-                <label asp-for="Book.Title" class="control-label"></label>
+
+            <!-- Title -->
+            <div class="form-group mb-3">
+                <label asp-for="Book.Title" class="form-label"></label>
                 <input asp-for="Book.Title" class="form-control" />
                 <span asp-validation-for="Book.Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Book.Author" class="control-label"></label>
+
+            <!-- Author -->
+            <div class="form-group mb-3">
+                <label asp-for="Book.Author" class="form-label"></label>
                 <input asp-for="Book.Author" class="form-control" />
                 <span asp-validation-for="Book.Author" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Book.YearPublished" class="control-label"></label>
+
+            <!-- Year Published -->
+            <div class="form-group mb-4">
+                <label asp-for="Book.YearPublished" class="form-label"></label>
                 <input asp-for="Book.YearPublished" class="form-control" />
                 <span asp-validation-for="Book.YearPublished" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Save Button -->
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Save
+                </button>
             </div>
         </form>
+
+        <!-- Back to List Link -->
+        <div class="text-center">
+            <a asp-page="./Index" class="text-decoration-none">
+                ← Back to List
+            </a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
