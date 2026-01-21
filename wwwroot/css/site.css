@@ -79,4 +79,28 @@ container  {
     font-family: Times New Roman, Georgia, Garamond;
     background-color: grey;
 }
+.hero-banner {
+    /* 1. The Image Path: make sure your image is in wwwroot/images/ */
+    /* The linear-gradient acts as an overlay so text is readable */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/library-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* 2. Sizing: 400px tall, or use 50vh for half the screen height */
+    height: 400px;
+    width: 100%;
+    /* 3. Centering the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin-top: -24px; /* Adjust this if your layout has default padding */
+    margin-bottom: 30px;
+}
 
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
