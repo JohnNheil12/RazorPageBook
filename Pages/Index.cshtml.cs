@@ -1,21 +1,30 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore; // Add this for .ToListAsync()
+using RazorPageBooks.Data;           // Update this to match your actual Data namespace
+using RazorPageBooks.Models;
 
 namespace RazorPageBooks.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        // 1. Add the Database Context here
+        private readonly RazorPageBooks.Data.RazorPageBooksContext _context;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        // 2. Add context to the constructor
+        public IndexModel(RazorPageBooks.Data.RazorPageBooksContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public void OnGet()
-        {
+        public IList<Book> Book { get; set; } = default!;
 
+        // 3. Change OnGet to async to fetch the data
+        public async Task OnGetAsync()
+        {
+            if (_context.Book != null)
+            {
+                Book = await _context.Book.ToListAsync();
+            }
         }
     }
 }

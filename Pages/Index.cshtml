@@ -1,10 +1,117 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Inventory Management";
 }
 
-<div class="text-center">
-    <h1 class="BusinessName">The Book Cellar.</h1>
-    <a href="https://localhost:7213/Books">Open Store.</a> 
+@{
+    ViewData["Title"] = "The Book Cellar";
+}
+
+<div class="hero-banner mb-5 shadow-sm">
+    <div class="container h-100 d-flex align-items-center">
+        <div class="banner-content text-white">
+            <h1 class="display-3 fw-bold text-serif">The Book Cellar.</h1>
+            <p class="lead opacity-75">Discover, organize, and curate your personal literary sanctuary.</p>
+            <a asp-page="Create" class="btn btn-light btn-lg mt-3 shadow" >
+                <i href="https://localhost:7213/books" class="bi bi-plus-lg"></i> Add New Title
+            </a>
+        </div>
+    </div>
 </div>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Your Collection</h2>
+        <span class="badge bg-dark">@Model.Book.Count Titles Total</span>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
+        @foreach (var item in Model.Book)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm book-card">
+                    <div class="position-relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1543005120-019f2ef5532a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                             class="card-img-top book-cover" alt="@item.Title">
+                        <div class="hover-overlay d-flex align-items-center justify-content-center">
+                             <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-light btn-sm mx-1">Details</a>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title text-serif fw-bold mb-1">@item.Title</h5>
+                        <p class="text-muted small mb-2">By @item.Author | @item.YearPublished</p>
+                        
+                        <p class="card-text text-secondary small">
+                            A compelling journey through the eyes of @item.Author, exploring themes of growth and discovery.
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <div class="btn-group w-100 shadow-sm">
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+
+    body {
+        background-color: #fdfdfd;
+    }
+
+    .text-serif {
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Hero Banner Styling */
+    .hero-banner {
+        height: 400px;
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                    url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');
+        background-size: cover;
+        background-position: center;
+        border-radius: 0 0 20px 20px;
+    }
+
+    /* Book Card Animations */
+    .book-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .book-cover {
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .book-card:hover .book-cover {
+        transform: scale(1.1);
+    }
+
+    .hover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(44, 62, 80, 0.7);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .book-card:hover .hover-overlay {
+        opacity: 1;
+    }
+</style>
