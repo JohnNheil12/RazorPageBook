@@ -18,17 +18,18 @@ public static class SeedData
             {
                 throw new ArgumentNullException("Book DbSet is null in RazorPageBooksContext");
             }
-
             if (context.Book.Any())
             {
                 return;   
             }
+            //context.Book.ExecuteDelete();
+
 
             context.Book.AddRange(
                 new Book
                 {
                     Title = "When Harry Met Sally",
-                    Author = "Nora Ephron",
+                    Author = "Nora Aunor",
                     YearPublished = 2019
                 },
                 new Book
@@ -50,7 +51,6 @@ public static class SeedData
                     YearPublished = 2022
                 }
             );
-
             context.SaveChanges();
         }
     }
