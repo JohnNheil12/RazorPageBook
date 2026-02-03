@@ -49,7 +49,8 @@
                             <th class="ps-4 py-3 text-uppercase small letter-spacing">Title</th>
                             <th class="py-3 text-uppercase small letter-spacing">Author</th>
                             <th class="py-3 text-uppercase small letter-spacing text-center">Year</th>
-                            <th class="pe-4 py-3 text-end text-uppercase small letter-spacing">Actions</th>
+                            <th class="pe-4 py-3 text-end text-uppercase small letter-spacing">Publisher</th>
+                            <th class="pe-4 py-3 text-end text-uppercase small letter-spacing">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,10 +64,11 @@
                                 <td class="text-center">
                                     <span class="badge bg-light text-dark border fw-normal px-3 py-2">@item.YearPublished</span>
                                 </td>
+                                <td class="text-secondary">@item.Publisher</td>
                                 <td class="pe-4 text-end">
                                     <div class="dropdown">
                                         <button class="btn btn-light btn-sm rounded-pill px-3 shadow-sm border" type="button" data-bs-toggle="dropdown">
-                                            Manage <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
+                                            Manage<i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                                             <li><a class="dropdown-item" asp-page="/Books/Edit" asp-route-id="@item.Id"><i class="bi bi-pencil me-2 text-primary"></i>Edit</a></li>

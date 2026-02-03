@@ -30,6 +30,12 @@
                 <span asp-validation-for="Book.YearPublished" class="text-danger"></span>
             </div>
 
+            <div class="form-group mb-3">
+                <label asp-for="Book.Publisher" class="form-label">Publisher</label>
+                <input asp-for="Book.Publisher" class="form-control" />
+                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
+            </div>
+
             <div class="d-grid mb-3">
                 <button type="submit" class="btn btn-primary btn-lg">
                     Create
