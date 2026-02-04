@@ -5,57 +5,133 @@
     ViewData["Title"] = "Edit Book";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
 <div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg p-4 create-card">
-        <h2 class="text-center mb-1">Edit Book</h2>
-
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <input type="hidden" asp-for="Book.Id" />
-
-            <!-- Title -->
-            <div class="form-group mb-3">
-                <label asp-for="Book.Title" class="form-label"></label>
-                <input asp-for="Book.Title" class="form-control" />
-                <span asp-validation-for="Book.Title" class="text-danger"></span>
+    <div class="create-container">
+        <div class="glass-card">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-1">Edit Record</h2>
+                <p class="text-muted-custom small">Modify the details of the book entry</p>
             </div>
 
-            <!-- Author -->
-            <div class="form-group mb-3">
-                <label asp-for="Book.Author" class="form-label"></label>
-                <input asp-for="Book.Author" class="form-control" />
-                <span asp-validation-for="Book.Author" class="text-danger"></span>
-            </div>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-warning mb-3 small"></div>
+                <input type="hidden" asp-for="Book.Id" />
 
-            <!-- Year Published -->
-            <div class="form-group mb-4">
-                <label asp-for="Book.YearPublished" class="form-label"></label>
-                <input asp-for="Book.YearPublished" class="form-control" />
-                <span asp-validation-for="Book.YearPublished" class="text-danger"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="Book.Title" class="form-label">Book Title</label>
+                    <input asp-for="Book.Title" class="form-control" autocomplete="off" placeholder="Book Title" />
+                    <span asp-validation-for="Book.Title" class="text-info small"></span>
+                </div>
 
-            <div class="form-group mb-4">
-                <label asp-for="Book.Publisher" class="form-label"></label>
-                <input asp-for="Book.Publisher" class="form-control" />
-                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="Book.Author" class="form-label">Author Name</label>
+                    <input asp-for="Book.Author" class="form-control" autocomplete="off" placeholder="Author Name" />
+                    <span asp-validation-for="Book.Author" class="text-info small"></span>
+                </div>
 
-            <!-- Save Button -->
-            <div class="d-grid mb-3">
-                <button type="submit" class="btn btn-primary btn-lg">
-                    Save
-                </button>
-            </div>
-        </form>
+                <div class="row">
+                    <div class="col-6 mb-4">
+                        <label asp-for="Book.YearPublished" class="form-label">Year</label>
+                        <input asp-for="Book.YearPublished" class="form-control" autocomplete="off" placeholder="YYYY" />
+                        <span asp-validation-for="Book.YearPublished" class="text-info small"></span>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <label asp-for="Book.Publisher" class="form-label">Publisher</label>
+                        <input asp-for="Book.Publisher" class="form-control" autocomplete="off" placeholder="..." />
+                        <span asp-validation-for="Book.Publisher" class="text-info small"></span>
+                    </div>
+                </div>
 
-        <!-- Back to List Link -->
-        <div class="text-center">
-            <a asp-page="./Index" class="text-decoration-none">
-                ← Back to List
-            </a>
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        Update Changes
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <a asp-page="./Index" class="back-link text-decoration-none small">
+                        ← Discard and Return
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .create-container {
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .form-label {
+        color: #cbd5e0;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 10px;
+        padding: 0.75rem;
+    }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #4cc9f0;
+            color: #fff;
+            box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.25);
+        }
+
+    .btn-submit {
+        background: #4cc9f0;
+        border: none;
+        font-weight: 600;
+        padding: 0.8rem;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+        .btn-submit:hover {
+            background: #43b3d5;
+            transform: translateY(-2px);
+        }
+
+    .text-muted-custom {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .back-link {
+        color: rgba(255, 255, 255, 0.5);
+        transition: 0.3s;
+    }
+
+        .back-link:hover {
+            color: #4cc9f0;
+        }
+</style>
 
 @section Scripts {
     @{

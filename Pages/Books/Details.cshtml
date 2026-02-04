@@ -2,39 +2,124 @@
 @model RazorPageBooks.Pages.Books.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Book Details";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
 <div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg p-4 create-card">
+    <div class="create-container">
+        <div class="glass-card">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-1 text-accent">Book Details</h2>
+                <p class="text-muted-custom small">Full information for the selected record</p>
+            </div>
 
-        <div>
-            <h4 class="text-center">Book Information</h4>
-            <hr />
-            <dl class="row mb-4">
-                <dt class="col-sm-4 fw-bold">Title</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(model => model.Book.Title)</dd>
+            <div class="mb-3">
+                <label class="form-label">Book Title</label>
+                <div class="display-field">@Html.DisplayFor(model => model.Book.Title)</div>
+            </div>
 
-                <dt class="col-sm-4 fw-bold">Author</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(model => model.Book.Author)</dd>
+            <div class="mb-3">
+                <label class="form-label">Author</label>
+                <div class="display-field">@Html.DisplayFor(model => model.Book.Author)</div>
+            </div>
 
-                <dt class="col-sm-4 fw-bold">Year Published</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(model => model.Book.YearPublished)</dd>
+            <div class="row">
+                <div class="col-6 mb-4">
+                    <label class="form-label">Year Published</label>
+                    <div class="display-field">@Html.DisplayFor(model => model.Book.YearPublished)</div>
+                </div>
+                <div class="col-6 mb-4">
+                    <label class="form-label">Publisher</label>
+                    <div class="display-field">@Html.DisplayFor(model => model.Book.Publisher)</div>
+                </div>
+            </div>
 
-                <dt class="col-sm-4 fw-bold">Publisher</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(model => model.Book.Publisher)</dd>
-            </dl>
-        </div>
-
-        <!-- Edit and Back to List buttons -->
-        <div class="text-center">
-            <a asp-page="./Edit" asp-route-id="@Model.Book.Id" class="btn btn-primary btn-lg mb-3">
-                Edit
-            </a>
-            <br />
-            <a asp-page="./Index" class="text-decoration-none">
-                ← Back to List
-            </a>
+            <div class="d-grid gap-2 mb-3">
+                <a asp-page="./Edit" asp-route-id="@Model.Book.Id" class="btn btn-primary btn-submit text-decoration-none text-center">
+                    Edit Details
+                </a>
+                <div class="text-center mt-2">
+                    <a asp-page="./Index" class="back-link text-decoration-none small">
+                        ← Return to Library
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .create-container {
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .text-accent {
+        color: #f39c12; /* Golden Amber accent */
+    }
+
+    .form-label {
+        color: #cbd5e0;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+    }
+
+    .display-field {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .btn-submit {
+        background: #4cc9f0; /* Keeping primary blue for the Edit action */
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.8rem;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+        .btn-submit:hover {
+            background: #43b3d5;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+    .text-muted-custom {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .back-link {
+        color: rgba(255, 255, 255, 0.5);
+        transition: 0.3s;
+    }
+
+        .back-link:hover {
+            color: #4cc9f0;
+        }
+</style>

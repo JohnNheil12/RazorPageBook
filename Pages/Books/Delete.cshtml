@@ -5,41 +5,126 @@
     ViewData["Title"] = "Delete Book";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
 <div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg p-4 create-card">
-        <h2 class="text-center mb-2 text-danger">Delete</h2>
-        <p class="text-center mb-4">
-            Are you sure you want to delete this book?
-        </p>
-
-        <dl class="row mb-4">
-            <dt class="col-sm-4 fw-bold">Title</dt>
-            <dd class="col-sm-8">@Model.Book.Title</dd>
-
-            <dt class="col-sm-4 fw-bold">Author</dt>
-            <dd class="col-sm-8">@Model.Book.Author</dd>
-
-            <dt class="col-sm-4 fw-bold">Year Published</dt>
-            <dd class="col-sm-8">@Model.Book.YearPublished</dd>
-
-            <dt class="col-sm-4 fw-bold">Publisher</dt>
-            <dd class="col-sm-8">@Model.Book.Publisher</dd>
-        </dl>
-
-        <form method="post">
-            <input type="hidden" asp-for="Book.Id" />
-
-            <div class="d-grid mb-3">
-                <button type="submit" class="btn btn-danger btn-lg">
-                    Delete
-                </button>
+    <div class="create-container">
+        <div class="glass-card">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-1 text-danger-accent">Delete Entry</h2>
+                <p class="text-muted-custom small">Are you sure you want to remove this book?</p>
             </div>
 
-            <div class="text-center">
-                <a asp-page="./Index" class="text-decoration-none">
-                    ← Back to List
-                </a>
+            <div class="mb-3">
+                <label class="form-label">Book Title</label>
+                <div class="display-field">@Model.Book.Title</div>
             </div>
-        </form>
+
+            <div class="mb-3">
+                <label class="form-label">Author</label>
+                <div class="display-field">@Model.Book.Author</div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-4">
+                    <label class="form-label">Year</label>
+                    <div class="display-field">@Model.Book.YearPublished</div>
+                </div>
+                <div class="col-6 mb-4">
+                    <label class="form-label">Publisher</label>
+                    <div class="display-field">@Model.Book.Publisher</div>
+                </div>
+            </div>
+
+            <form method="post">
+                <input type="hidden" asp-for="Book.Id" />
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-danger btn-delete">
+                        Confirm Delete
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <a asp-page="./Index" class="back-link text-decoration-none small">
+                        ← Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        font-family: 'Inter', sans-serif;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .create-container {
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .text-danger-accent {
+        color: #ff4d4d;
+    }
+
+    .form-label {
+        color: #cbd5e0;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+    }
+
+    /* Style for read-only data to match input spacing */
+    .display-field {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .btn-delete {
+        background: #ff4d4d;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.8rem;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+    .btn-delete:hover {
+        background: #e63939;
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .text-muted-custom {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .back-link {
+        color: rgba(255, 255, 255, 0.5);
+        transition: 0.3s;
+    }
+
+    .back-link:hover {
+        color: #ff4d4d;
+    }
+</style>
