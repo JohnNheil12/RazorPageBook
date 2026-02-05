@@ -30,25 +30,29 @@ public static class SeedData
                 {
                     Title = "When Harry Met Sally",
                     Author = "Nora Aunor",
-                    YearPublished = 2019
+                    YearPublished = 2019,
+                    Publisher = "Contemporary Books",
                 },
                 new Book
                 {
                     Title = "Harry Potter",
                     Author = "Kirk Villamor",
-                    YearPublished = 2020
+                    YearPublished = 2020,
+                    Publisher = "Scholastic",
                 },
                 new Book
                 {
                     Title = "When Life Gives You Tangerine",
                     Author = "Euro Step",
-                    YearPublished = 2021
+                    YearPublished = 2021,
+                    Publisher = "Penguin Random House",
                 },
                 new Book
                 {
                     Title = "When Time is Ended",
                     Author = "Kian Kram",
-                    YearPublished = 2022
+                    YearPublished = 2022,
+                    Publisher = "HarperCollins",
                 }
             );
             context.SaveChanges();

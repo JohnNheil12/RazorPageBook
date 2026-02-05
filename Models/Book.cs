@@ -20,5 +20,7 @@ namespace RazorPageBooks.Models
 
         [StringLength(50)]
         public string? Publisher { get; set; }
+
+        public string? ImageUrl { get; set; }
     }
 }

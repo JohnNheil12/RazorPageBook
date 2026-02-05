@@ -25,16 +25,20 @@
                 <div class="display-field">@Model.Book.Author</div>
             </div>
 
-            <div class="row">
-                <div class="col-6 mb-4">
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <div class="display-field">@Model.Book.ImageUrl</div>
+            </div>
+
+                <div class="bm-3">
                     <label class="form-label">Year</label>
                     <div class="display-field">@Model.Book.YearPublished</div>
                 </div>
-                <div class="col-6 mb-4">
+                <div class="bm-3">
                     <label class="form-label">Publisher</label>
                     <div class="display-field">@Model.Book.Publisher</div>
                 </div>
-            </div>
+            
 
             <form method="post">
                 <input type="hidden" asp-for="Book.Id" />

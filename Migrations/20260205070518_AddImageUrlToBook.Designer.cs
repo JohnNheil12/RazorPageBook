@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RazorPageBooks.Data;
 
@@ -11,9 +12,11 @@ using RazorPageBooks.Data;
 namespace RazorPageBooks.Migrations
 {
     [DbContext(typeof(RazorPageBooksContext))]
-    partial class RazorPageBooksContextModelSnapshot : ModelSnapshot
+    [Migration("20260205070518_AddImageUrlToBook")]
+    partial class AddImageUrlToBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,8 +41,8 @@ namespace RazorPageBooks.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Publisher")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()

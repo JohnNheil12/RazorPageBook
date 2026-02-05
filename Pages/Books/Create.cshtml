@@ -36,10 +36,16 @@
                     <span asp-validation-for="Book.YearPublished" class="text-info small"></span>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label asp-for="Book.Publisher" class="form-label">Publisher</label>
                     <input asp-for="Book.Publisher" class="form-control" autocomplete="off" placeholder="Publishing House Name" />
                     <span asp-validation-for="Book.Publisher" class="text-info small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Book.ImageUrl" class="form-label">Cover Image URL</label>
+                    <input asp-for="Book.ImageUrl" class="form-control" autocomplete="off" placeholder="https://example.com/image.jpg" />
+                    <span asp-validation-for="Book.ImageUrl" class="text-info small"></span>
                 </div>
 
                 <div class="d-grid mb-3">

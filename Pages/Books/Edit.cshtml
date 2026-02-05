@@ -15,33 +15,39 @@
                 <p class="text-muted-custom small">Modify the details of the book entry</p>
             </div>
 
+
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-warning mb-3 small"></div>
                 <input type="hidden" asp-for="Book.Id" />
 
                 <div class="mb-3">
-                    <label asp-for="Book.Title" class="form-label">Book Title</label>
+                    <label asp-for="Book.Title" class="form-label d-block mb-2">Book Title</label>
                     <input asp-for="Book.Title" class="form-control" autocomplete="off" placeholder="Book Title" />
                     <span asp-validation-for="Book.Title" class="text-info small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Book.Author" class="form-label">Author Name</label>
+                    <label asp-for="Book.Author" class="form-label d-block mb-2">Author Name</label>
                     <input asp-for="Book.Author" class="form-control" autocomplete="off" placeholder="Author Name" />
                     <span asp-validation-for="Book.Author" class="text-info small"></span>
                 </div>
 
-                <div class="row">
-                    <div class="col-6 mb-4">
-                        <label asp-for="Book.YearPublished" class="form-label">Year</label>
-                        <input asp-for="Book.YearPublished" class="form-control" autocomplete="off" placeholder="YYYY" />
-                        <span asp-validation-for="Book.YearPublished" class="text-info small"></span>
-                    </div>
-                    <div class="col-6 mb-4">
-                        <label asp-for="Book.Publisher" class="form-label">Publisher</label>
-                        <input asp-for="Book.Publisher" class="form-control" autocomplete="off" placeholder="..." />
-                        <span asp-validation-for="Book.Publisher" class="text-info small"></span>
-                    </div>
+                <div class="mb-3">
+                    <label asp-for="Book.ImageUrl" class="form-label d-block mb-2">Cover Image URL</label>
+                    <input asp-for="Book.ImageUrl" id="imageUrlInput" class="form-control" autocomplete="off" placeholder="https://..." />
+                    <span asp-validation-for="Book.ImageUrl" class="text-info small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Book.YearPublished" class="form-label d-block mb-2">Year Published</label>
+                    <input asp-for="Book.YearPublished" class="form-control" autocomplete="off" placeholder="YYYY" />
+                    <span asp-validation-for="Book.YearPublished" class="text-info small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Book.Publisher" class="form-label d-block mb-2">Publisher</label>
+                    <input asp-for="Book.Publisher" class="form-control" autocomplete="off" placeholder="Publisher Name" />
+                    <span asp-validation-for="Book.Publisher" class="text-info small"></span>
                 </div>
 
                 <div class="d-grid mb-3">
@@ -71,14 +77,16 @@
     .create-container {
         max-width: 450px;
         width: 100%;
+        padding: 20px;
     }
 
     .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
-        padding: 3rem;
+        padding: 2.5rem;
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
 
@@ -93,30 +101,33 @@
     .form-control {
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
+        color: #fff !important;
         border-radius: 10px;
         padding: 0.75rem;
+        width: 100%;
     }
 
         .form-control:focus {
             background: rgba(255, 255, 255, 0.12);
             border-color: #4cc9f0;
-            color: #fff;
             box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.25);
+            outline: none;
         }
 
     .btn-submit {
         background: #4cc9f0;
         border: none;
+        color: white;
         font-weight: 600;
         padding: 0.8rem;
         border-radius: 10px;
-        transition: transform 0.2s;
+        transition: all 0.2s;
     }
 
         .btn-submit:hover {
             background: #43b3d5;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
         }
 
     .text-muted-custom {
@@ -131,10 +142,28 @@
         .back-link:hover {
             color: #4cc9f0;
         }
+
+    .text-info {
+        color: #4cc9f0 !important;
+    }
+
+    .text-warning {
+        color: #ffcc00 !important;
+    }
 </style>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        // Update image preview in real-time when typing/pasting
+        const input = document.getElementById('imageUrlInput');
+        const preview = document.getElementById('imagePreview');
+
+        input.addEventListener('input', function() {
+            preview.src = this.value || 'https://via.placeholder.com/150x200?text=No+Cover';
+        });
+    </script>
 }
