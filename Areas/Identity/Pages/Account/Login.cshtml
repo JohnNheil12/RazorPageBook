@@ -1,0 +1,194 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="login-wrapper">
+    <div class="modern-card">
+        <form id="account" method="post">
+            <h1 class="card-title">@ViewData["Title"]</h1>
+            <p class="card-subtitle">Use a local account to log in.</p>
+            <hr class="divider" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-group">
+                <label asp-for="Input.Email" class="custom-label">Email</label>
+                <input asp-for="Input.Email" class="custom-input" autocomplete="username" placeholder="name@example.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Password" class="custom-label">Password</label>
+                <input asp-for="Input.Password" class="custom-input" type="password" placeholder="Password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="checkbox-group">
+                <input class="form-check-input" asp-for="Input.RememberMe" />
+                <label asp-for="Input.RememberMe" class="form-check-label">Remember me</label>
+            </div>
+
+            <button id="login-submit" type="submit" class="btn-modern-primary">Log in</button>
+
+            <div class="footer-links">
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                <br />
+                <a id="forgot-password" asp-page="./ForgotPassword" class="small-link">Forgot password?</a>
+            </div>
+        </form>
+
+        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+        {
+            <div class="external-section">
+                <p class="small text-muted">Or log in with</p>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div class="social-grid">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="btn-social" name="provider" value="@provider.Name">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<style>
+    /* Background and Wrapper */
+    .login-wrapper {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    /* The Card */
+    .modern-card {
+        background: #ffffff;
+        border-radius: 28px; /* Very soft rounded corners */
+        padding: 40px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* Soft, natural shadow */
+        border: 1px solid #f0f0f0;
+        text-align: left;
+    }
+
+    .card-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+    }
+
+    .card-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+    }
+
+    .divider {
+        border-top: 1px solid #eee;
+        margin-bottom: 30px;
+    }
+
+    /* Form Styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .custom-label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        color: #444;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        background-color: #fafafa;
+        transition: all 0.2s ease;
+    }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #53c8ed;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(83, 200, 237, 0.1);
+        }
+
+    /* Checkbox */
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    /* Buttons */
+    .btn-modern-primary {
+        width: 100%;
+        background-color: #53c8ed; /* Blue from your reference */
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+        .btn-modern-primary:hover {
+            background-color: #42b6db;
+            transform: translateY(-1px);
+        }
+
+    .footer-links {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .footer-links a {
+            color: #53c8ed;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+            .footer-links a:hover {
+                text-decoration: underline;
+            }
+
+    /* Social Buttons */
+    .social-grid {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    .btn-social {
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid #eee;
+        background: white;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+</style>

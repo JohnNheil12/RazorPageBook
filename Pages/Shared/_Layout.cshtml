@@ -25,6 +25,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark nav-glass-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark nav-glass-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                            </li>
+                        </ul>
                     </ul>
                 </div>
             </div>
@@ -49,3 +57,32 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<style>
+    /* Styling for the header links on the left */
+    .nav-glass-link {
+        color: #333 !important; /* Dark text for readability */
+        font-weight: 500;
+        padding: 8px 16px !important;
+        margin-right: 10px; /* Spacing between items */
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2); /* Subtle glass effect */
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .nav-glass-link:hover {
+            transform: translateY(-3px); /* Lifts up */
+            background: rgba(255, 255, 255, 0.8); /* Brighter white on hover */
+            color: #53c8ed !important; /* Matches your 'Log in' button blue */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-color: rgba(83, 200, 237, 0.5);
+        }
+
+    .navbar {
+        background: rgba(255, 255, 255, 0.6) !important;
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+   
+</style>
