@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore; // Add this for .ToListAsync()
 using RazorPageBooks.Data;           // Update this to match your actual Data namespace
@@ -5,6 +6,7 @@ using RazorPageBooks.Models;
 
 namespace RazorPageBooks.Pages
 {
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
         // 1. Add the Database Context here

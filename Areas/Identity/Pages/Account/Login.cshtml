@@ -1,5 +1,5 @@
 ﻿@page
-@model LoginModel
+@model RazorPageBooks.Areas.Identity.Pages.Account.LoginModel
 
 @{
     ViewData["Title"] = "Log in";
@@ -8,6 +8,8 @@
 <div class="login-wrapper">
     <div class="modern-card">
         <form id="account" method="post">
+            <input type="hidden" asp-for="ReturnUrl" />
+
             <div class="text-center">
                 <h1 class="card-title">@ViewData["Title"]</h1>
                 <p class="card-subtitle">Use your credentials to access your account</p>
@@ -18,8 +20,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
             <div class="form-group">
-                <label class="custom-label">Username</label>
-                <input class="custom-input" placeholder="johndoe123" required />
+                <label asp-for="Input.UsernameOrEmail" class="custom-label">Username or Email</label>
+                <input asp-for="Input.UsernameOrEmail" class="custom-input" placeholder="johndoe123" required />
+                <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -72,20 +75,18 @@
         --text-muted: #636e72;
     }
 
-    /* Full screen centering */
     .login-wrapper {
         min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: var(--bg-color);
         padding: 20px;
         font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
     .modern-card {
         background: #ffffff;
-        border-radius: 32px; /* Extra rounded corners like the image */
+        border-radius: 32px;
         padding: 50px 40px;
         width: 100%;
         max-width: 440px;
@@ -155,7 +156,6 @@
         color: var(--text-muted);
     }
 
-    /* The main action button */
     .btn-modern-primary {
         width: 100%;
         background-color: var(--primary-color);

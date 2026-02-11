@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -27,15 +25,15 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            if (returnUrl != null)
+
+            if (!string.IsNullOrEmpty(returnUrl))
             {
                 return LocalRedirect(returnUrl);
             }
             else
             {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
-                return RedirectToPage();
+                // Correct Razor Pages redirect to Index (no /Pages prefix)
+                return RedirectToPage("/Index");
             }
         }
     }
