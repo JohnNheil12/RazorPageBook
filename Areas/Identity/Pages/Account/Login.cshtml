@@ -8,21 +8,23 @@
 <div class="login-wrapper">
     <div class="modern-card">
         <form id="account" method="post">
-            <h1 class="card-title">@ViewData["Title"]</h1>
-            <p class="card-subtitle">Use a local account to log in.</p>
+            <div class="text-center">
+                <h1 class="card-title">@ViewData["Title"]</h1>
+                <p class="card-subtitle">Use your credentials to access your account</p>
+            </div>
+
             <hr class="divider" />
 
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
             <div class="form-group">
-                <label asp-for="Input.Email" class="custom-label">Email</label>
-                <input asp-for="Input.Email" class="custom-input" autocomplete="username" placeholder="name@example.com" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <label class="custom-label">Username</label>
+                <input class="custom-input" placeholder="johndoe123" required />
             </div>
 
             <div class="form-group">
                 <label asp-for="Input.Password" class="custom-label">Password</label>
-                <input asp-for="Input.Password" class="custom-input" type="password" placeholder="Password" />
+                <input asp-for="Input.Password" class="custom-input" type="password" placeholder="••••••••" required />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
@@ -34,8 +36,7 @@
             <button id="login-submit" type="submit" class="btn-modern-primary">Log in</button>
 
             <div class="footer-links">
-                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                <br />
+                <p class="small-text">Don't have an account? <a asp-page="./Register">Register</a></p>
                 <a id="forgot-password" asp-page="./ForgotPassword" class="small-link">Forgot password?</a>
             </div>
         </form>
@@ -43,7 +44,7 @@
         @if ((Model.ExternalLogins?.Count ?? 0) > 0)
         {
             <div class="external-section">
-                <p class="small text-muted">Or log in with</p>
+                <div class="or-divider"><span>Or log in with</span></div>
                 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div class="social-grid">
                         @foreach (var provider in Model.ExternalLogins!)
@@ -62,133 +63,159 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
 <style>
-    /* Background and Wrapper */
+    :root {
+        --primary-color: #53c8ed;
+        --primary-hover: #42b6db;
+        --text-main: #2d3436;
+        --text-muted: #636e72;
+    }
+
+    /* Full screen centering */
     .login-wrapper {
-        min-height: 80vh;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: var(--bg-color);
         padding: 20px;
+        font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
-    /* The Card */
     .modern-card {
         background: #ffffff;
-        border-radius: 28px; /* Very soft rounded corners */
-        padding: 40px;
+        border-radius: 32px; /* Extra rounded corners like the image */
+        padding: 50px 40px;
         width: 100%;
-        max-width: 420px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* Soft, natural shadow */
-        border: 1px solid #f0f0f0;
+        max-width: 440px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         text-align: left;
     }
 
+    .text-center {
+        text-align: center;
+    }
+
     .card-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 8px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 4px;
     }
 
     .card-subtitle {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 24px;
-    }
-
-    .divider {
-        border-top: 1px solid #eee;
+        color: var(--text-muted);
+        font-size: 1rem;
         margin-bottom: 30px;
     }
 
-    /* Form Styling */
+    .divider {
+        border: 0;
+        border-top: 1px solid #f0f0f0;
+        margin-bottom: 30px;
+    }
+
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 22px;
     }
 
     .custom-label {
         display: block;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.85rem;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         color: #444;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .custom-input {
         width: 100%;
-        padding: 12px 16px;
+        padding: 14px 18px;
         border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        background-color: #fafafa;
-        transition: all 0.2s ease;
+        border: 1px solid #e2e8f0;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        font-size: 1rem;
     }
 
         .custom-input:focus {
             outline: none;
-            border-color: #53c8ed;
-            background-color: #fff;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(83, 200, 237, 0.1);
         }
 
-    /* Checkbox */
     .checkbox-group {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 24px;
+        gap: 10px;
+        margin-bottom: 25px;
         font-size: 0.9rem;
-        color: #666;
+        color: var(--text-muted);
     }
 
-    /* Buttons */
+    /* The main action button */
     .btn-modern-primary {
         width: 100%;
-        background-color: #53c8ed; /* Blue from your reference */
+        background-color: var(--primary-color);
         color: white;
         border: none;
-        padding: 14px;
-        border-radius: 12px;
-        font-weight: 600;
+        padding: 16px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 1.1rem;
         cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
+        transition: all 0.2s ease;
+        margin-bottom: 20px;
     }
 
         .btn-modern-primary:hover {
-            background-color: #42b6db;
+            background-color: var(--primary-hover);
             transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(83, 200, 237, 0.3);
+        }
+
+    .or-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px 0;
+        color: #cbd5e0;
+        font-size: 0.85rem;
+    }
+
+        .or-divider::before, .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .or-divider span {
+            padding: 0 10px;
         }
 
     .footer-links {
-        margin-top: 20px;
         text-align: center;
+        margin-top: 10px;
     }
 
-        .footer-links a {
-            color: #53c8ed;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-            .footer-links a:hover {
-                text-decoration: underline;
-            }
-
-    /* Social Buttons */
-    .social-grid {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 15px;
+    .small-text {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin-bottom: 10px;
     }
 
-    .btn-social {
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: 1px solid #eee;
-        background: white;
-        font-size: 0.8rem;
-        cursor: pointer;
+    .footer-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .small-link {
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-top: 5px;
+        opacity: 0.8;
     }
 </style>
