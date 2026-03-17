@@ -1,5 +1,4 @@
 ﻿#nullable disable
-
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,6 +17,11 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
+        // ✅ Default admin credentials
+        private const string DefaultAdminUsername = "admin";
+        private const string DefaultAdminEmail = "admin@admin.com";
+        private const string DefaultAdminPassword = "Admin@123";
+
         public LoginModel(SignInManager<IdentityUser> signInManager,
                           UserManager<IdentityUser> userManager,
                           ILogger<LoginModel> logger)
@@ -29,10 +33,7 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
 
         [BindProperty]
         public InputModel Input { get; set; }
-
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        // Store ReturnUrl to preserve the redirect URL between requests
         public string ReturnUrl { get; set; }
 
         public class InputModel
@@ -51,30 +52,28 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            // If no returnUrl specified, default to homepage
             ReturnUrl = returnUrl ?? Url.Content("~/Index");
-
-            // Clear any existing external cookie to ensure clean login
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            // Load any external login schemes (e.g., Google, Facebook)
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // ✅ Seed the default admin account if it doesn't exist yet
+            await SeedDefaultAdminAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            // Preserve the returnUrl between requests, default to homepage if missing
             ReturnUrl = returnUrl ?? Url.Content("~/Index");
 
             if (ModelState.IsValid)
             {
-                // Attempt to find user by username or email
+                // ✅ Seed admin in case it was never created
+                await SeedDefaultAdminAsync();
+
                 IdentityUser user = await _userManager.FindByNameAsync(Input.UsernameOrEmail)
                                     ?? await _userManager.FindByEmailAsync(Input.UsernameOrEmail);
 
                 if (user != null)
                 {
-                    // Attempt password sign-in
                     var result = await _signInManager.PasswordSignInAsync(
                         user.UserName,
                         Input.Password,
@@ -88,13 +87,32 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
                     }
                 }
 
-                // If login failed
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 
-            // If we got here, something failed, redisplay form
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             return Page();
+        }
+
+        // ✅ Creates the default admin account if it doesn't exist
+        private async Task SeedDefaultAdminAsync()
+        {
+            var existingUser = await _userManager.FindByNameAsync(DefaultAdminUsername);
+            if (existingUser == null)
+            {
+                var adminUser = new IdentityUser
+                {
+                    UserName = DefaultAdminUsername,
+                    Email = DefaultAdminEmail,
+                    EmailConfirmed = true
+                };
+
+                var result = await _userManager.CreateAsync(adminUser, DefaultAdminPassword);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("Default admin account created.");
+                }
+            }
         }
     }
 }

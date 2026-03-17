@@ -1,0 +1,35 @@
+.create-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+.card {
+    font-family: Times New Roman, Georgia, Garamond;
+    background-color: grey;
+}
+.book-banner {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/library-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin-top: -24px;
+    margin-bottom: 30px;
+}
+
+.books-content h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RazorPageBooks.Data;
+using static System.Net.WebRequestMethods;
 
 namespace RazorPageBooks.Models;
 
@@ -28,10 +29,11 @@ public static class SeedData
             context.Book.AddRange(
                 new Book
                 {
-                    Title = "When Harry Met Sally",
-                    Author = "Nora Aunor",
+                    Title = "Walk into the Shadow",
+                    Author = "Estelle Darcy",
                     YearPublished = 2019,
                     Publisher = "Contemporary Books",
+                    ImageUrl = "https://marketplace.canva.com/EAFfSnGl7II/2/0/1003w/canva-elegant-dark-woods-fantasy-photo-book-cover-vAt8PH1CmqQ.jpg",
                 },
                 new Book
                 {
@@ -39,20 +41,23 @@ public static class SeedData
                     Author = "Kirk Villamor",
                     YearPublished = 2020,
                     Publisher = "Scholastic",
+                    ImageUrl = "https://static1.srcdn.com/wordpress/wp-content/uploads/2025/03/harry-potter-2.png",
                 },
                 new Book
                 {
-                    Title = "When Life Gives You Tangerine",
-                    Author = "Euro Step",
+                    Title = "The Past is Rising",
+                    Author = "Kathryn Bywaters",
                     YearPublished = 2021,
                     Publisher = "Penguin Random House",
+                    ImageUrl = "https://i.pinimg.com/564x/f7/c8/12/f7c812c9b0296cd9f119e33a06d9a256.jpg",
                 },
                 new Book
                 {
-                    Title = "When Time is Ended",
-                    Author = "Kian Kram",
+                    Title = "Beyond the Moon",
+                    Author = "Catherine Taylor",
                     YearPublished = 2022,
                     Publisher = "HarperCollins",
+                    ImageUrl = "https://blog-cdn.reedsy.com/directories/gallery/139/large_6b475cacd2ad05ee513a65b91960173b.jpg",
                 }
             );
             context.SaveChanges();

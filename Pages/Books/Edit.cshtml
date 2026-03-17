@@ -4,166 +4,131 @@
 @{
     ViewData["Title"] = "Edit Book";
 }
+ <link rel="stylesheet" href="~/css/edit.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<div class="page-wrapper">
 
-<div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="create-container">
-        <div class="glass-card">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold mb-1">Edit Record</h2>
-                <p class="text-muted-custom small">Modify the details of the book entry</p>
-            </div>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="text-center">
+            <h1 class="page-title">Edit Entry.</h1>
+            <p class="page-subtitle">Modify the details of the book entry.</p>
+        </div>
+        <a asp-page="Index" class="back-btn">
+            <i class="bi bi-arrow-left"></i> Back to Library
+        </a>
+    </div>
 
+    <!-- Form Card -->
+    <div class="form-card">
+        <div class="card-accent"></div>
 
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-warning mb-3 small"></div>
+        <div class="card-inner">
+            <form method="post" class="book-form">
+                <div asp-validation-summary="ModelOnly" class="validation-alert"></div>
                 <input type="hidden" asp-for="Book.Id" />
 
-                <div class="mb-3">
-                    <label asp-for="Book.Title" class="form-label d-block mb-2">Book Title</label>
-                    <input asp-for="Book.Title" class="form-control" autocomplete="off" placeholder="Book Title" />
-                    <span asp-validation-for="Book.Title" class="text-info small"></span>
+                <div class="form-row two-col">
+                    <div class="field-group">
+                        <label asp-for="Book.Title" class="field-label">
+                            <i class="bi bi-book"></i> Book Title
+                        </label>
+                        <input asp-for="Book.Title" class="field-input"
+                               placeholder="e.g. The Great Gatsby" autocomplete="off" />
+                        <span asp-validation-for="Book.Title" class="field-error"></span>
+                    </div>
+
+                    <div class="field-group">
+                        <label asp-for="Book.Author" class="field-label">
+                            <i class="bi bi-person"></i> Author Name
+                        </label>
+                        <input asp-for="Book.Author" class="field-input"
+                               placeholder="e.g. F. Scott Fitzgerald" autocomplete="off" />
+                        <span asp-validation-for="Book.Author" class="field-error"></span>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Book.Author" class="form-label d-block mb-2">Author Name</label>
-                    <input asp-for="Book.Author" class="form-control" autocomplete="off" placeholder="Author Name" />
-                    <span asp-validation-for="Book.Author" class="text-info small"></span>
+                <div class="form-row two-col">
+                    <div class="field-group">
+                        <label asp-for="Book.YearPublished" class="field-label">
+                            <i class="bi bi-calendar3"></i> Year Published
+                        </label>
+                        <input asp-for="Book.YearPublished" class="field-input"
+                               placeholder="YYYY" autocomplete="off" />
+                        <span asp-validation-for="Book.YearPublished" class="field-error"></span>
+                    </div>
+
+                    <div class="field-group">
+                        <label asp-for="Book.Publisher" class="field-label">
+                            <i class="bi bi-building"></i> Publisher
+                        </label>
+                        <input asp-for="Book.Publisher" class="field-input"
+                               placeholder="Publishing House Name" autocomplete="off" />
+                        <span asp-validation-for="Book.Publisher" class="field-error"></span>
+                    </div>
                 </div>
 
-                @* <div class="mb-3">
-                    <label asp-for="Book.ImageUrl" class="form-label d-block mb-2">Cover Image URL</label>
-                    <input asp-for="Book.ImageUrl" id="imageUrlInput" class="form-control" autocomplete="off" placeholder="https://..." />
-                    <span asp-validation-for="Book.ImageUrl" class="text-info small"></span>
-                </div> *@
-
-                <div class="mb-3">
-                    <label asp-for="Book.YearPublished" class="form-label d-block mb-2">Year Published</label>
-                    <input asp-for="Book.YearPublished" class="form-control" autocomplete="off" placeholder="YYYY" />
-                    <span asp-validation-for="Book.YearPublished" class="text-info small"></span>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label asp-for="Book.ImageUrl" class="field-label">
+                            <i class="bi bi-image"></i> Cover Image URL
+                        </label>
+                        <div class="url-field-wrap">
+                            <input asp-for="Book.ImageUrl" class="field-input"
+                                   placeholder="https://example.com/cover.jpg" autocomplete="off"
+                                   id="imageUrlInput" />
+                            <div class="cover-preview" id="coverPreview">
+                                <img id="previewImg"
+                                     src="@(string.IsNullOrEmpty(Model.Book.ImageUrl) ? "" : Model.Book.ImageUrl)"
+                                     alt=""
+                                     style="@(string.IsNullOrEmpty(Model.Book.ImageUrl) ? "display:none" : "display:block")" />
+                                <span class="preview-placeholder"
+                                      style="@(string.IsNullOrEmpty(Model.Book.ImageUrl) ? "" : "display:none")">
+                                    <i class="bi bi-image"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Book.ImageUrl" class="field-error"></span>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label asp-for="Book.Publisher" class="form-label d-block mb-2">Publisher</label>
-                    <input asp-for="Book.Publisher" class="form-control" autocomplete="off" placeholder="Publisher Name" />
-                    <span asp-validation-for="Book.Publisher" class="text-info small"></span>
-                </div>
-
-                <div class="d-grid mb-3">
-                    <button type="submit" class="btn btn-primary btn-submit">
-                        Update Changes
+                <!-- Centered Buttons -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                        <i class="bi bi-check-lg"></i> Update Changes
                     </button>
+                    <a asp-page="./Index" class="btn-cancel">← Discard and Return</a>
                 </div>
 
-                <div class="text-center">
-                    <a asp-page="./Index" class="back-link text-decoration-none small">
-                        ← Discard and Return
-                    </a>
-                </div>
             </form>
         </div>
     </div>
 </div>
 
-<style>
-    body {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        font-family: 'Inter', sans-serif;
-        color: #ffffff;
-        margin: 0;
-    }
-
-    .create-container {
-        max-width: 450px;
-        width: 100%;
-        padding: 20px;
-    }
-
-    .glass-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-
-    .form-label {
-        color: #cbd5e0;
-        font-weight: 600;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .form-control {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff !important;
-        border-radius: 10px;
-        padding: 0.75rem;
-        width: 100%;
-    }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: #4cc9f0;
-            box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.25);
-            outline: none;
-        }
-
-    .btn-submit {
-        background: #4cc9f0;
-        border: none;
-        color: white;
-        font-weight: 600;
-        padding: 0.8rem;
-        border-radius: 10px;
-        transition: all 0.2s;
-    }
-
-        .btn-submit:hover {
-            background: #43b3d5;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
-        }
-
-    .text-muted-custom {
-        color: rgba(255, 255, 255, 0.6);
-    }
-
-    .back-link {
-        color: rgba(255, 255, 255, 0.5);
-        transition: 0.3s;
-    }
-
-        .back-link:hover {
-            color: #4cc9f0;
-        }
-
-    .text-info {
-        color: #4cc9f0 !important;
-    }
-
-    .text-warning {
-        color: #ffcc00 !important;
-    }
-</style>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
     <script>
-        // Update image preview in real-time when typing/pasting
         const input = document.getElementById('imageUrlInput');
-        const preview = document.getElementById('imagePreview');
+        const img = document.getElementById('previewImg');
+        const placeholder = document.querySelector('.preview-placeholder');
 
-        input.addEventListener('input', function() {
-            preview.src = this.value || 'https://via.placeholder.com/150x200?text=No+Cover';
+        input.addEventListener('input', function () {
+            const url = this.value.trim();
+            if (url) {
+                img.src = url;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                img.onerror = () => {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                };
+            } else {
+                img.style.display = 'none';
+                placeholder.style.display = 'flex';
+            }
         });
     </script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -1,50 +1,47 @@
 ﻿@page
-@model RegisterModel
+@model RazorPageBooks.Areas.Identity.Pages.Account.RegisterModel
 @{
-    ViewData["Title"] = "Create Account";
+    ViewData["Title"] = "Register New User";
 }
 
-<div class="login-wrapper">
-    <div class="modern-card">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div class="text-center">
-                <h1 class="card-title">@ViewData["Title"]</h1>
-            </div>
+<h2>Register New User</h2>
 
-            <hr class="divider" />
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
 
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" style="list-style:none; padding:0; font-size:0.8rem; margin-bottom:15px;"></div>
+<div class="row">
+    <div class="col-md-5">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="form-group">
-                <label asp-for="Input.Username" class="custom-label">USERNAME</label>
-                <input asp-for="Input.Username" class="custom-input" placeholder="johndoe123" />
+            <div class="form-group mb-3">
+                <label asp-for="Input.Username"></label>
+                <input asp-for="Input.Username" class="form-control" />
                 <span asp-validation-for="Input.Username" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Input.Email" class="custom-label">EMAIL</label>
-                <input asp-for="Input.Email" class="custom-input" placeholder="name@example.com" />
+            <div class="form-group mb-3">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Input.Password" class="custom-label">PASSWORD</label>
-                <input asp-for="Input.Password" type="password" class="custom-input" placeholder="••••••••" />
+            <div class="form-group mb-3">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword" class="custom-label">CONFIRM PASSWORD</label>
-                <input asp-for="Input.ConfirmPassword" type="password" class="custom-input" placeholder="••••••••" />
+            <div class="form-group mb-3">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button id="registerSubmit" type="submit" class="btn-modern-primary">Create Account</button>
-
-            <div class="footer-links">
-                <p class="small-text">Already have an account? <a asp-page="./Login">Log in</a></p>
-                <a asp-page="./ForgotPassword" class="small-link">Forgot password?</a>
-            </div>
+            <button type="submit" class="btn btn-primary">Create User</button>
+            <a asp-page="/Index" class="btn btn-secondary ms-2">Cancel</a>
         </form>
     </div>
 </div>
@@ -52,186 +49,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-<style>
-    :root {
-        --primary-color: #53c8ed;
-        --primary-hover: #42b6db;
-        --text-main: #2d3436;
-        --text-muted: #636e72;
-    }
-
-    /* Full screen centering */
-    .login-wrapper {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--bg-gradient);
-        padding: 20px;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    .modern-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 24px;
-        padding: 40px;
-        width: 100%;
-        max-width: 480px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .card-title {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-        margin-bottom: 5px;
-    }
-
-    .card-subtitle {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        margin-bottom: 25px;
-    }
-
-    .divider {
-        border: 0;
-        border-top: 1px solid #eee;
-        margin: 20px 0 25px 0;
-    }
-
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    /* Layout for Password + Confirm */
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .custom-label {
-        display: block;
-        font-weight: 600;
-        font-size: 0.8rem;
-        margin-bottom: 8px;
-        color: var(--text-main);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .custom-input {
-        width: 100%;
-        padding: 12px 16px;
-        border-radius: 12px;
-        border: 2px solid #edf2f7;
-        background-color: #fff;
-        transition: all 0.3s ease;
-        font-size: 0.95rem;
-    }
-
-        .custom-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(83, 200, 237, 0.15);
-        }
-
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 20px 0;
-        font-size: 0.85rem;
-        color: var(--text-muted);
-    }
-
-    .btn-modern-primary {
-        width: 100%;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 15px;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(83, 200, 237, 0.3);
-    }
-
-        .btn-modern-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(83, 200, 237, 0.4);
-        }
-
-    .or-divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 25px 0;
-        color: #a0aec0;
-        font-size: 0.8rem;
-    }
-
-        .or-divider::before, .or-divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .or-divider span {
-            padding: 0 10px;
-        }
-
-    .social-grid {
-        display: flex;
-        gap: 12px;
-    }
-
-    .btn-social {
-        flex: 1;
-        padding: 10px;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        background: white;
-        font-weight: 600;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-        .btn-social:hover {
-            background: #f8fafc;
-        }
-
-    .footer-links {
-        margin-top: 25px;
-        text-align: center;
-    }
-
-    .small-text {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-    }
-
-    .footer-links a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .small-link {
-        font-size: 0.8rem;
-        display: block;
-        margin-top: 10px;
-        opacity: 0.8;
-    }
-</style>
