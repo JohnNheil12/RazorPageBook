@@ -20,7 +20,7 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
         // ✅ Default admin credentials
         private const string DefaultAdminUsername = "admin";
         private const string DefaultAdminEmail = "admin@admin.com";
-        private const string DefaultAdminPassword = "Admin@123";
+        private const string DefaultAdminPassword = "admin123";
 
         public LoginModel(SignInManager<IdentityUser> signInManager,
                           UserManager<IdentityUser> userManager,

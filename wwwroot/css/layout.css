@@ -1,3 +1,12 @@
+
+:root {
+    --brand-accent: #111111; /* Changed to match your main theme */
+    --text-main: #1a1a1a;
+    --text-muted: #718096;
+    --input-bg: #f8fafc;
+}
+
+
 html {
     font-size: 14px;
 }
@@ -21,4 +30,159 @@ body {
     margin-bottom: 60px;
     background-color: darkgray;
     color: white;
+}
+/* ?? Clean & Professional Auth ?? */
+.manage-link {
+    color: #111 !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    transition: opacity 0.2s;
+}
+
+    .manage-link:hover {
+        opacity: 0.7;
+    }
+
+.user-name {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.auth-divider {
+    color: #e0e0e0;
+    font-weight: 300;
+}
+
+/* Professional Login Button */
+.btn-login {
+    border: 1.5px solid #111 !important;
+    color: #111 !important;
+    border-radius: 50px !important;
+    padding: 6px 20px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease !important;
+}
+
+    .btn-login:hover {
+        background: #111 !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+/* Logout Button */
+.btn-logout {
+    color: #888 !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    border: none !important;
+    background: none !important;
+    padding: 0 !important;
+    transition: color 0.2s !important;
+}
+
+    .btn-logout:hover {
+        color: #dc3545 !important; /* Subtle red alert for logout */
+    }
+
+
+/* ?? Layout Structure ?? */
+.split-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #fff;
+}
+
+/* ?? Left Side (Brand/Image) ?? */
+.brand-side {
+    flex: 1.2;
+    /* ? Modification 1: Set Background Image */
+    background-image: url('/images/book-cellar-bg.jpg'); /* Ensure this path is correct */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    overflow: hidden;
+    color: white;
+}
+
+    /* ? Modification 2: Dark Overlay for Text Legibility */
+    .brand-side::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.65); /* Adjust opacity here */
+        z-index: 1;
+    }
+
+.brand-content {
+    position: relative;
+    z-index: 10;
+    max-width: 420px;
+    text-align: left;
+}
+
+/* ? Refined Brand Badge/Logo */
+.brand-badge {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.15); /* Translucent background */
+    backdrop-filter: blur(12px); /* Classy glass blur effect */
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin-bottom: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.brand-title {
+    font-family: 'Playfair Display', serif; /* Classic Bookstore look */
+    font-size: 3.8rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    line-height: 1.1;
+}
+
+.brand-tagline {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+/* ? Modification 3: Clean Responsive Handling */
+@@media (max-width: 992px) {
+    .brand-side {
+        display: none;
+    }
+    /* Hide image side on mobile */
+    .split-container {
+        background: #f8fafc;
+    }
+
+    .form-side {
+        padding: 20px;
+    }
+
+    .modern-card {
+        background: #fff;
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
 }
