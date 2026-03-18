@@ -14,7 +14,7 @@
             <span class="eyebrow-dot"></span>
             Book Management
         </div>
-        <h1 class="page-title">The Book Cellar</h1>
+        <h1 class="page-title">The Book <span class="title-accent">Cellar</span></h1>
         <p class="page-subtitle">Manage and oversee your entire book collection</p>
     </div>
     <div class="header-right">
@@ -154,15 +154,9 @@ else
                             </td>
                             <td class="td-actions">
                                 <div class="action-cluster">
-                                       <a asp-page="/Books/Details" asp-route-id="@item.Id" class="act-btn act-view" title="View details">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a asp-page="/Books/Edit" asp-route-id="@item.Id" class="act-btn act-edit" title="Edit book">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="act-btn act-delete" title="Delete book">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                    <a asp-page="/Books/Details" asp-route-id="@item.Id" class="act-btn act-view" title="View details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
                                     @if (SignInManager.IsSignedIn(User))
                                     {
                                         <a asp-page="/Books/Edit" asp-route-id="@item.Id" class="act-btn act-edit" title="Edit book">
@@ -194,7 +188,9 @@ else
         --txt: #0f172a;
         --txt-muted: #64748b;
         --txt-light: #94a3b8;
-        --accent: #0f172a;
+        --accent: #1d4ed8;
+        --accent-light: #eff6ff;
+        --accent-border: #bfdbfe;
         --indigo: #4f46e5; --indigo-bg: #eef2ff; --indigo-border: #c7d2fe;
         --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
         --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
@@ -204,49 +200,109 @@ else
         --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
     }
 
+    /* ── Header ───────────────────────────────────────── */
     .admin-page-header {
-        display: flex; align-items: flex-start;
+        display: flex; align-items: center;
         justify-content: space-between;
-        margin-bottom: 22px; gap: 16px; flex-wrap: wrap;
+        gap: 24px; flex-wrap: wrap;
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        border-left: 4px solid var(--accent);
+        box-shadow: 0 1px 6px rgba(15,23,42,0.05);
     }
 
     .page-eyebrow {
         display: flex; align-items: center; gap: 7px;
-        font-size: 0.72rem; font-weight: 600;
-        text-transform: uppercase; letter-spacing: 1.1px;
-        color: var(--txt-muted); margin-bottom: 5px;
+        font-size: 0.7rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: var(--accent);
+        margin-bottom: 6px;
+        font-family: 'DM Sans', sans-serif;
     }
 
     .eyebrow-dot {
         width: 6px; height: 6px; border-radius: 50%;
-        background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
-        display: inline-block;
+        background: var(--accent);
+        display: inline-block; flex-shrink: 0;
     }
 
     .page-title {
         font-family: 'Playfair Display', serif;
-        font-size: 1.9rem; font-weight: 700;
+        font-size: 2rem; font-weight: 700;
         color: var(--txt); letter-spacing: -0.5px;
-        margin: 0 0 3px; line-height: 1.15;
+        margin: 0 0 4px; line-height: 1.15;
     }
 
-    .page-subtitle { font-size: 0.875rem; color: var(--txt-muted); margin: 0; }
+    .title-accent {
+        color: var(--accent);
+        font-style: italic;
+    }
 
+    .page-subtitle {
+        font-size: 0.85rem;
+        color: var(--txt-muted);
+        margin: 0;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .header-right {
+        display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+
+    /* Inline stats inside header */
+    .header-stats-inline {
+        display: flex; align-items: center; gap: 0;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 0;
+    }
+
+    .inline-stat {
+        display: flex; flex-direction: column; align-items: center;
+        padding: 10px 20px; gap: 1px;
+    }
+
+    .inline-stat-value {
+        font-size: 1.15rem; font-weight: 700;
+        color: var(--txt); line-height: 1;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .inline-stat-label {
+        font-size: 0.65rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.8px;
+        color: var(--txt-light);
+    }
+
+    .inline-stat-divider {
+        width: 1px; height: 32px;
+        background: var(--border);
+        flex-shrink: 0;
+    }
+
+    /* ── Buttons ──────────────────────────────────────── */
     .btn-admin-primary {
         display: inline-flex; align-items: center; gap: 7px;
-        padding: 10px 18px; background: var(--accent); color: #fff;
+        padding: 10px 18px;
+        background: var(--accent); color: #fff;
         border: none; border-radius: 10px;
         font-size: 0.85rem; font-weight: 600;
         font-family: 'DM Sans', sans-serif;
         text-decoration: none; cursor: pointer;
         transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-        box-shadow: 0 2px 8px rgba(15,23,42,0.18); white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(29,78,216,0.22);
+        white-space: nowrap;
     }
 
     .btn-admin-primary:hover {
-        background: #1e293b; color: #fff;
+        background: #1e40af; color: #fff;
         transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(15,23,42,0.22);
+        box-shadow: 0 4px 14px rgba(29,78,216,0.28);
     }
 
     .btn-admin-ghost {
@@ -261,6 +317,7 @@ else
 
     .btn-admin-ghost:hover { background: #f1f5f9; border-color: #cbd5e1; color: var(--txt); }
 
+    /* ── Stats Grid ───────────────────────────────────── */
     .stats-grid {
         display: grid; grid-template-columns: repeat(4, 1fr);
         gap: 14px; margin-bottom: 20px;
@@ -298,7 +355,6 @@ else
     .stat-icon.rose    { background: var(--rose-bg);    color: var(--rose);    }
 
     .stat-body { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
-
     .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; }
 
     .stat-label {
@@ -316,6 +372,7 @@ else
     .stat-trend.up      { background: var(--emerald-bg); color: var(--emerald); }
     .stat-trend.neutral { background: var(--border-light); color: var(--txt-light); }
 
+    /* ── Toolbar ──────────────────────────────────────── */
     .admin-toolbar {
         display: flex; align-items: center;
         justify-content: space-between;
@@ -333,7 +390,7 @@ else
 
     .search-box:focus-within {
         border-color: var(--accent);
-        box-shadow: 0 0 0 4px rgba(15,23,42,0.06);
+        box-shadow: 0 0 0 4px rgba(29,78,216,0.08);
     }
 
     .search-ico { color: var(--txt-light); font-size: 0.9rem; flex-shrink: 0; }
@@ -354,7 +411,7 @@ else
         cursor: pointer; flex-shrink: 0; transition: background 0.15s;
     }
 
-    .search-btn:hover { background: #1e293b; }
+    .search-btn:hover { background: #1e40af; }
 
     .toolbar-meta { display: flex; align-items: center; gap: 10px; }
 
@@ -376,13 +433,13 @@ else
 
     .clear-search:hover { background: #f1f5f9; color: var(--txt); }
 
+    /* ── Table ────────────────────────────────────────── */
     .admin-table-card {
         background: var(--surface); border: 1px solid var(--border);
         border-radius: 16px; overflow: hidden;
     }
 
     .admin-table { width: 100%; border-collapse: collapse; font-family: 'DM Sans', sans-serif; }
-
     .admin-table thead tr { background: #f8fafc; border-bottom: 1px solid var(--border); }
 
     .admin-table thead th {
@@ -391,9 +448,9 @@ else
         color: var(--txt-light); white-space: nowrap;
     }
 
-    .admin-table thead th.th-cover  { padding-left: 24px; }
+    .admin-table thead th.th-cover   { padding-left: 24px; }
     .admin-table thead th.th-actions { text-align: right; padding-right: 24px; }
-    .admin-table thead th.th-year   { text-align: center; }
+    .admin-table thead th.th-year    { text-align: center; }
 
     .book-row { border-bottom: 1px solid var(--border-light); transition: background 0.12s; }
     .book-row:last-child { border-bottom: none; }
@@ -461,6 +518,7 @@ else
     .footer-count { font-size: 0.8rem; color: var(--txt-light); }
     .footer-count strong { color: var(--txt-muted); }
 
+    /* ── Empty State ──────────────────────────────────── */
     .empty-state {
         background: var(--surface); border: 1px solid var(--border);
         border-radius: 16px; padding: 72px 32px; text-align: center;
@@ -482,11 +540,14 @@ else
 
     .empty-actions { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 
+    /* ── Responsive ───────────────────────────────────── */
     @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
 
     @@media (max-width: 768px) {
         .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        .admin-page-header { flex-direction: column; }
+        .admin-page-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
+        .header-right { width: 100%; justify-content: space-between; }
+        .header-stats-inline { flex: 1; justify-content: space-around; }
         .search-form { max-width: 100%; }
         .admin-toolbar { flex-direction: column; align-items: stretch; }
         .th-pub, .td-pub { display: none; }
@@ -495,5 +556,6 @@ else
     @@media (max-width: 480px) {
         .stats-grid { grid-template-columns: 1fr 1fr; }
         .th-year, .td-year { display: none; }
+        .header-stats-inline { display: none; }
     }
 </style>
