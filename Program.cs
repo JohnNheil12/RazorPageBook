@@ -13,12 +13,12 @@ builder.Services.AddRazorPages()
             System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
-// 2. Database connection - Standardized for SQLite
-// We define the string once here so it is consistent.
-var connectionString = "Data Source=RazorPageBooks.db";
+// 2. Database connection - SQL Server
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "Server=(localdb)\\mssqllocaldb;Database=RazorPageBooks;Trusted_Connection=True;MultipleActiveResultSets=true";
 
 builder.Services.AddDbContext<RazorPageBooksContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(connectionString));
 
 // 3. Identity configuration
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
@@ -51,11 +51,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<RazorPageBooksContext>();
-
-        // This is the "Magic Fix": It applies pending migrations and 
-        // creates the .db file if it doesn't exist yet.
         context.Database.Migrate();
-
         SeedData.Initialize(services);
     }
     catch (Exception ex)

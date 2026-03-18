@@ -13,7 +13,7 @@ namespace RazorPageBooks.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Publisher",
                 table: "Book",
-                type: "nvarchar(max)",
+                type: "nvarchar(50)",
                 nullable: false,
                 defaultValue: "",
                 oldClrType: typeof(string),
@@ -32,7 +32,7 @@ namespace RazorPageBooks.Migrations
                 maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar()");
         }
     }
 }
