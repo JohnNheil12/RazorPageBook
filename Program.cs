@@ -6,12 +6,15 @@ using RazorPageBooks.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Add services to the container.
-builder.Services.AddRazorPages()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy =
-            System.Text.Json.JsonNamingPolicy.CamelCase;
-    });
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Books");
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy =
+        System.Text.Json.JsonNamingPolicy.CamelCase;
+});
 
 // 2. Database connection - SQL Server
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
