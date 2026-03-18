@@ -23,33 +23,10 @@
                 <span class="brand-icon"><i class="bi bi-book-half"></i></span>
                 <span class="brand-text">The Book Cellar</span>
             </a>
-
-            @* @{
-                var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
-            } *@
-            @* @if (currentPage != "/Books/Index")
-            {
-                <form method="get" asp-page="/Books/Index" class="nav-search-form">
-                    <div class="nav-search-box">
-                        <i class="bi bi-search search-icon"></i>
-                        <input type="text"
-                               name="SearchString"
-                               id="navSearchInput"
-                               class="nav-search-input"
-                               placeholder="Search books, authors..."
-                               autocomplete="off" />
-                        <button type="submit" class="nav-search-btn">Search</button>
-                    </div>
-                    <div id="searchDropdown" class="search-dropdown"></div>
-                </form>
-            } *@
-
+                <div class="nav-right">
             <ul class="nav-links">
                 @if (User.Identity.IsAuthenticated && User.Identity.Name == "admin")
                 {
-                <li>
-                    <a class="nav-link-item" asp-area="" asp-page="/Books/Index"> Inventory </a>
-                </li>
                     <li>
                         <a class="nav-link-item nav-link-register" asp-area="Identity" asp-page="/Account/Register">
                             <i class="bi bi-person-plus"></i> Register User
@@ -66,7 +43,7 @@
                 <i class="bi bi-list"></i>
             </button>
         </div>
-
+            </div>
         <div class="collapse mobile-nav" id="mobileNav">
             <div class="mobile-nav-inner">
                 <form method="get" asp-page="/Books/Index" class="mobile-search-form">
@@ -383,9 +360,8 @@
         display: flex;
         align-items: center;
         gap: 2px;
-        flex-shrink: 0;
+        margin-left: auto; /* ✅ THIS pushes it to the right */
     }
-
     .nav-link-item {
         display: inline-flex;
         align-items: center;
@@ -418,13 +394,18 @@
 
     /* ── Auth ── */
     .nav-auth {
-        margin-left: auto;
         display: flex;
         align-items: center;
         gap: 8px;
         flex-shrink: 0;
     }
 
+    .nav-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
     .nav-auth a,
     .nav-auth button {
         font-size: 0.875rem !important;

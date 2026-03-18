@@ -16,7 +16,7 @@
             <h1 class="page-title">Book Details.</h1>
             <p class="page-subtitle">Full information for the selected record.</p>
         </div>
-        <a asp-page="Index" class="back-btn">
+        <a asp-page="/Index" class="back-btn">
             <i class="bi bi-arrow-left"></i> Back to Library
         </a>
     </div>
@@ -68,11 +68,14 @@
             </div>
 
             <!-- Actions -->
-            <div class="form-actions">
-                <a asp-page="./Edit" asp-route-id="@Model.Book.Id" class="btn-edit">
-                    <i class="bi bi-pencil"></i> Edit Details
-                </a>
-            </div>
+            @if (User.Identity.IsAuthenticated && User.Identity.Name == "admin")
+            {
+                <div class="form-actions">
+                    <a asp-page="./Edit" asp-route-id="@Model.Book.Id" class="btn-edit">
+                        <i class="bi bi-pencil"></i> Edit Details
+                    </a>
+                </div>
+            }
 
         </div>
     </div>
