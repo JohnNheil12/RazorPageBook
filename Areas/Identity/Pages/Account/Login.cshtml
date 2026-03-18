@@ -1,239 +1,476 @@
-﻿@page
-@model RazorPageBooks.Areas.Identity.Pages.Account.LoginModel
+﻿    @page
+    @model RazorPageBooks.Areas.Identity.Pages.Account.LoginModel
 
-@{
-    ViewData["Title"] = "Log in";
-}
+    @{
+        ViewData["Title"] = "Log in";
+    }
 
-<div class="split-container">
-    <div class="brand-side">
-        <div class="brand-content">
-            <div class="brand-badge">
-                <i class="bi bi-book-half"></i>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+    <div class="split-container">
+        <!-- ── Left Side (Brand Image) ── -->
+        <div class="brand-side">
+            <div class="brand-content">
+                <div class="brand-badge">
+                    <i class="bi bi-book-half"></i>
+                </div>
+                <h1 class="brand-title">The Book Cellar</h1>
+                <p class="brand-tagline">Where every page turns into a new discovery. Log in to manage your collection.</p>
             </div>
-            <h1 class="brand-title">The Book Cellar</h1>
-            <p class="brand-tagline">Where every page turns into a new discovery. Log in to manage your collection.</p>
+        </div>
+
+        <!-- ── Right Side (Form + Admin Preview) ── -->
+        <div class="form-side">
+            <div class="form-side-inner">
+
+                <!-- Admin Status Banner -->
+                <div class="admin-status-bar">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Admin Portal &nbsp;·&nbsp; Secure Access</span>
+                    <span class="status-badge">v2.4.1</span>
+                </div>
+
+                <!-- Login Card -->
+                <div class="modern-card">
+                    <form id="account" method="post">
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        <div class="form-header">
+                            <h2 class="card-title">Welcome Back</h2>
+                            <p class="card-subtitle">Sign in to your admin dashboard</p>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Input.UsernameOrEmail" class="custom-label">
+                                <i class="bi bi-person label-icon"></i> Username or Email
+                            </label>
+                            <input asp-for="Input.UsernameOrEmail" class="custom-input" placeholder="admin@bookcellar.com" required />
+                            <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Input.Password" class="custom-label">
+                                <i class="bi bi-lock label-icon"></i> Password
+                            </label>
+                            <div class="input-wrapper">
+                                <input asp-for="Input.Password" class="custom-input" id="password-input" type="password" placeholder="••••••••" required />
+                                <button type="button" class="toggle-password" onclick="togglePassword()" tabindex="-1">
+                                    <i class="bi bi-eye" id="eye-icon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-options">
+                            <div class="checkbox-group">
+                                <input class="form-check-input" asp-for="Input.RememberMe" id="remember-me" />
+                                <label asp-for="Input.RememberMe" class="form-check-label" for="remember-me">Remember me</label>
+                            </div>
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="forgot-link">Forgot password?</a>
+                        </div>
+
+                        <button id="login-submit" type="submit" class="btn-modern-primary">
+                            <i class="bi bi-box-arrow-in-right btn-icon"></i>
+                            Sign In to Dashboard
+                        </button>
+                    </form>
+                </div>
+                <!-- Footer -->
+                <p class="form-footer">
+                    &copy; 2025 The Book Cellar &nbsp;·&nbsp;
+                    <a href="#" class="footer-link">Privacy</a> &nbsp;·&nbsp;
+                    <a href="#" class="footer-link">Terms</a>
+                </p>
+
+            </div>
         </div>
     </div>
 
-    <div class="form-side">
-        <div class="modern-card">
-            <form id="account" method="post">
-                <input type="hidden" asp-for="ReturnUrl" />
-
-                <div class="form-header">
-                    <h2 class="card-title">Welcome Back</h2>
-                    <p class="card-subtitle">Please enter your details to continue</p>
-                </div>
-
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
-                <div class="form-group">
-                    <label asp-for="Input.UsernameOrEmail" class="custom-label">Username or Email</label>
-                    <input asp-for="Input.UsernameOrEmail" class="custom-input" placeholder="e.g. username" required />
-                    <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Input.Password" class="custom-label">Password</label>
-                    <input asp-for="Input.Password" class="custom-input" type="password" placeholder="••••••••" required />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-
-                <div class="form-options">
-                    <div class="checkbox-group">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        <label asp-for="Input.RememberMe" class="form-check-label">Remember me</label>
-                    </div>
-                    <a id="forgot-password" asp-page="./ForgotPassword" class="forgot-link">Forgot password?</a>
-                </div>
-
-                <button id="login-submit" type="submit" class="btn-modern-primary">Log In</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
-<style>
-    :root {
-        --brand-dark: #111111;
-        --text-main: #1a1a1a;
-        --text-muted: #718096;
-        --input-bg: #f8fafc;
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            function togglePassword() {
+                const input = document.getElementById('password-input');
+                const icon = document.getElementById('eye-icon');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'bi bi-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'bi bi-eye';
+                }
+            }
+        </script>
     }
 
-    .split-container {
-        display: flex;
-        min-height: 100vh;
-        width: 100%;
-        background-color: #fff;
-    }
-
-    /* ── Left Side (Brand Image) ── */
-    .brand-side {
-        flex: 1.2;
-        /* Replace the URL below with your local image path, e.g., /images/library.jpg */
-        background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px;
-        overflow: hidden;
-        color: white;
-    }
-
-    /* Darker overlay to make white text pop against the image */
-    .brand-side::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
-        z-index: 1;
-    }
-
-    .brand-content {
-        position: relative;
-        z-index: 10;
-        max-width: 440px;
-        text-align: left;
-    }
-
-    .brand-badge {
-        width: 64px;
-        height: 64px;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(12px);
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.2rem;
-        margin-bottom: 30px;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .brand-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 4rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        line-height: 1.1;
-        text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    .brand-tagline {
-        font-size: 1.2rem;
-        line-height: 1.6;
-        opacity: 0.9;
-        font-weight: 300;
-    }
-
-    /* ── Right Side (Form) ── */
-    .form-side {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px;
-        background-color: #fff;
-    }
-
-    .modern-card {
-        width: 100%;
-        max-width: 420px;
-    }
-
-    .form-header { margin-bottom: 40px; }
-
-    .card-title {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-        margin-bottom: 8px;
-    }
-
-    .card-subtitle {
-        color: var(--text-muted);
-        font-size: 1rem;
-    }
-
-    .form-group { margin-bottom: 24px; }
-
-    .custom-label {
-        display: block;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--text-main);
-        margin-bottom: 8px;
-    }
-
-    .custom-input {
-        width: 100%;
-        padding: 16px;
-        border: 1.5px solid #edf2f7;
-        background: var(--input-bg);
-        border-radius: 12px;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-    }
-
-    .custom-input:focus {
-        outline: none;
-        background: #fff;
-        border-color: var(--brand-dark);
-        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
-    }
-
-    .form-options {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        font-size: 0.9rem;
-    }
-
-    .forgot-link {
-        color: var(--text-main);
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .btn-modern-primary {
-        width: 100%;
-        padding: 16px;
-        background: var(--brand-dark);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s, background 0.2s;
-    }
-
-    .btn-modern-primary:hover {
-        background: #333;
-        transform: translateY(-2px);
-    }
-
-    @@media (max-width: 992px) {
-        .brand-side { display: none; }
-        .form-side { padding: 20px; }
-        .modern-card {
-            background: #fff;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    <style>
+        :root {
+            --brand-dark: #0f172a;
+            --brand-accent: #2563eb;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --input-bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-raised: #f1f5f9;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --blue: #2563eb;
+            --blue-bg: #eff6ff;
+            --amber: #d97706;
+            --amber-bg: #fffbeb;
         }
-    }
-</style>
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { font-family: 'DM Sans', sans-serif; }
+
+        .split-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ── Left Side ── */
+        .brand-side {
+            flex: 1.1;
+            background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            overflow: hidden;
+            color: white;
+        }
+
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.42) 100%);
+            z-index: 1;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 10;
+            max-width: 440px;
+        }
+
+        .brand-badge {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .brand-tagline {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            opacity: 0.85;
+            font-weight: 300;
+        }
+
+        /* ── Right Side ── */
+        .form-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 40px;
+            background: #f8fafc;
+            border-left: 1px solid var(--border);
+        }
+
+        .form-side-inner {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Status Bar */
+        .admin-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+            flex-shrink: 0;
+        }
+
+        .status-text { flex: 1; }
+
+        .status-badge {
+            background: var(--surface-raised);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Login Card */
+        .modern-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+        }
+
+        .form-header { margin-bottom: 28px; }
+
+        .card-title {
+            font-size: 1.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+        }
+
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .custom-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper { position: relative; }
+
+        .custom-input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1.5px solid var(--border);
+            background: var(--input-bg);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.18s ease;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--brand-accent);
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+        }
+
+        .custom-input::placeholder { color: var(--text-light); }
+
+        .input-wrapper .custom-input { padding-right: 44px; }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-password:hover { color: var(--text-main); }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 0.88rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .form-check-input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--brand-accent);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--brand-accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover { opacity: 0.75; }
+
+        .btn-modern-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--brand-dark);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.97rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px rgba(15,23,42,0.18);
+        }
+
+        .btn-modern-primary:hover {
+            background: #1e3a5f;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(15,23,42,0.22);
+        }
+
+        /* Stats Preview */
+        .admin-preview {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .preview-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 14px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-chip {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-raised);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .stat-icon-wrap {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon-wrap.green { background: var(--green-bg); color: var(--green); }
+        .stat-icon-wrap.blue  { background: var(--blue-bg);  color: var(--blue);  }
+        .stat-icon-wrap.amber { background: var(--amber-bg); color: var(--amber); }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .stat-num {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.3px;
+        }
+
+        .stat-desc {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .form-footer {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link:hover { color: var(--text-main); }
+
+        /* Responsive */
+        @@media (max-width: 992px) {
+            .brand-side { display: none; }
+            .form-side { background: #fff; border: none; padding: 24px 20px; }
+        }
+
+        @@media (max-width: 480px) {
+            .modern-card { padding: 24px 20px; }
+            .stats-row { flex-direction: column; }
+        }
+    </style>

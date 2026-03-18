@@ -54,7 +54,7 @@ public static class SeedData
                 new Book
                 {
                     Title = "Beyond the Moon",
-                    Author = "Ca    therine Taylor",
+                    Author = "Catherine Taylor",
                     YearPublished = 2022,
                     Publisher = "HarperCollins",
                     ImageUrl = "https://blog-cdn.reedsy.com/directories/gallery/139/large_6b475cacd2ad05ee513a65b91960173b.jpg",

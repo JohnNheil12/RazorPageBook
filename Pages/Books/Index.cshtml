@@ -1,130 +1,499 @@
 ﻿@page
 @model RazorPageBooks.Pages.Books.IndexModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 
 @{
     ViewData["Title"] = "The Book Cellar";
 }
 
-<div>
-    <div class="row align-items-center mb-5">
-        <div class="col-lg-6">
-            <h1 class="display-3 fw-bold text-serif text-dark mb-1">The Book Cellar.</h1>
-            <p class="lead text-secondary fw-light">Curating your literary collection.</p>
+<!-- Page Header -->
+<div class="admin-page-header">
+    <div class="header-left">
+        <div class="page-eyebrow">
+            <span class="eyebrow-dot"></span>
+            Book Management
         </div>
-
-        <div class="col-lg-6">
-            <form method="get" class="d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
-                <div class="input-group shadow-sm" style="border-radius: 50px; overflow: hidden;">
-                    <span class="input-group-text bg-white border-0 ps-4">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
-                    <input type="text" asp-for="SearchString"
-                           class="form-control border-0 py-3"
-                           placeholder="Search title..."
-                           style="box-shadow: none;">
-                    <button type="submit" class="btn btn-dark px-4">Find</button>
-                </div>
-                <a asp-page="Create" class="btn btn-primary d-flex align-items-center justify-content-center shadow-sm"
-                   style="width: 56px; height: 56px; border-radius: 50%;">
-                    <i class="bi bi-plus-lg fs-4"></i>
-                </a>
-            </form>
-        </div>
+        <h1 class="page-title">The Book Cellar</h1>
+        <p class="page-subtitle">Manage and oversee your entire book collection</p>
     </div>
-
-    @if (!Model.Book.Any())
-    {
-        <div class="text-center py-5">
-            <div class="h4 text-muted">No books found in the cellar.</div>
-            <a asp-page="./Index" class="btn btn-link">Clear search</a>
-        </div>
-    }
-    else
-    {
-        <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-            <div class="table-responsive">
-                <table class="table table-borderless align-middle mb-0">
-                    <thead class="bg-dark text-white">
-                        <tr>
-                            <th class="ps-4 py-3 text-uppercase small letter-spacing">Cover</th>
-                            <th class="py-3 text-uppercase small letter-spacing">Title</th>
-                            <th class="py-3 text-uppercase small letter-spacing">Author</th>
-                            <th class="py-3 text-uppercase small letter-spacing text-center">Year</th>
-                            <th class="pe-4 py-3 text-end text-uppercase small letter-spacing">Publisher</th>
-                            <th class="pe-4 py-3 text-end text-uppercase small letter-spacing">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Book)
-                        {
-                            <tr class="border-bottom">
-                                <td class="ps-4 py-3">
-                                    <div class="image-container shadow-sm">
-                                        <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://via.placeholder.com/150x200?text=No+Cover" : item.ImageUrl)"
-                                             alt="Cover" class="img-fluid rounded">
-                                    </div>
-                                </td>
-                                <td class="py-4">
-                                    <div class="fw-bold fs-5 text-dark">@item.Title</div>
-                                </td>
-                                <td class="text-secondary">@item.Author</td>
-                                <td class="text-center">
-                                    <span class="badge bg-light text-dark border fw-normal px-3 py-2">@item.YearPublished</span>
-                                </td>
-                                <td class="text-secondary text-end pe-4">@item.Publisher</td>
-                                <td class="pe-4 text-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-light btn-sm rounded-pill px-3 shadow-sm border" type="button" data-bs-toggle="dropdown">
-                                            Manage<i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                            <li><a class="dropdown-item" asp-page="/Books/Edit" asp-route-id="@item.Id"><i class="bi bi-pencil me-2 text-primary"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" asp-page="/Books/Details" asp-route-id="@item.Id"><i class="bi bi-eye me-2 text-info"></i>View</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item text-danger" asp-page="./Delete" asp-route-id="@item.Id"><i class="bi bi-trash me-2"></i>Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    }
+    <div class="header-right">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-page="Create" class="btn-admin-primary">
+                <i class="bi bi-plus-lg"></i> Add New Book
+            </a>
+        }
+    </div>
 </div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon indigo"><i class="bi bi-journals"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.Book.Count()</span>
+            <span class="stat-label">Total Books</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon emerald"><i class="bi bi-pen"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.Book.Select(b => b.Author).Distinct().Count()</span>
+            <span class="stat-label">Authors</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon amber"><i class="bi bi-building"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.Book.Select(b => b.Publisher).Distinct().Count()</span>
+            <span class="stat-label">Publishers</span>
+        </div>
+        <div class="stat-trend neutral"><i class="bi bi-dash"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon rose"><i class="bi bi-calendar3"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@(Model.Book.Any() ? Model.Book.Max(b => b.YearPublished) : 0)</span>
+            <span class="stat-label">Latest Year</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+</div>
+
+<!-- Toolbar -->
+<div class="admin-toolbar">
+    <form method="get" class="search-form">
+        <div class="search-box">
+            <i class="bi bi-search search-ico"></i>
+            <input type="text" asp-for="SearchString" class="search-input" placeholder="Search by title, author, publisher..." />
+            <button type="submit" class="search-btn">Search</button>
+        </div>
+    </form>
+    <div class="toolbar-meta">
+        <span class="results-pill">
+            <i class="bi bi-stack"></i>
+            @Model.Book.Count() book@(Model.Book.Count() != 1 ? "s" : "")
+        </span>
+        @if (!string.IsNullOrEmpty(Model.SearchString))
+        {
+            <a asp-page="./Index" class="clear-search">
+                <i class="bi bi-x"></i> Clear
+            </a>
+        }
+    </div>
+</div>
+
+<!-- Table / Empty -->
+@if (!Model.Book.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon-wrap"><i class="bi bi-book"></i></div>
+        <h3 class="empty-title">No books found</h3>
+        <p class="empty-desc">
+            @if (!string.IsNullOrEmpty(Model.SearchString))
+            {
+                <span>No results for "<strong>@Model.SearchString</strong>". Try a different search.</span>
+            }
+            else
+            {
+                <span>Your collection is empty. Add your first book to get started.</span>
+            }
+        </p>
+        <div class="empty-actions">
+            <a asp-page="./Index" class="btn-admin-ghost"><i class="bi bi-arrow-left"></i> Clear Search</a>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a asp-page="Create" class="btn-admin-primary"><i class="bi bi-plus-lg"></i> Add Book</a>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="admin-table-card">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th class="th-cover">Cover</th>
+                        <th class="th-title">Title</th>
+                        <th class="th-author">Author</th>
+                        <th class="th-year">Year</th>
+                        <th class="th-pub">Publisher</th>
+                        <th class="th-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Book)
+                    {
+                        <tr class="book-row">
+                            <td class="td-cover">
+                                <div class="book-thumb">
+                                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://via.placeholder.com/48x68?text=?" : item.ImageUrl)"
+                                         alt="@item.Title"
+                                         onerror="this.src='https://via.placeholder.com/48x68?text=?'" />
+                                </div>
+                            </td>
+                            <td class="td-title">
+                                <div class="book-title-text">@item.Title</div>
+                            </td>
+                            <td class="td-author">
+                                <div class="author-chip">
+                                    <div class="author-initial">@(item.Author?.Length > 0 ? item.Author[0].ToString().ToUpper() : "?")</div>
+                                    <span class="author-name-text">@item.Author</span>
+                                </div>
+                            </td>
+                            <td class="td-year">
+                                <span class="year-pill">@item.YearPublished</span>
+                            </td>
+                            <td class="td-pub">
+                                <span class="pub-text">@item.Publisher</span>
+                            </td>
+                            <td class="td-actions">
+                                <div class="action-cluster">
+                                       <a asp-page="/Books/Details" asp-route-id="@item.Id" class="act-btn act-view" title="View details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-page="/Books/Edit" asp-route-id="@item.Id" class="act-btn act-edit" title="Edit book">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="act-btn act-delete" title="Delete book">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <a asp-page="/Books/Edit" asp-route-id="@item.Id" class="act-btn act-edit" title="Edit book">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="act-btn act-delete" title="Delete book">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <span class="footer-count">Showing <strong>@Model.Book.Count()</strong> book@(Model.Book.Count() != 1 ? "s" : "")</span>
+        </div>
+    </div>
+}
 
 <style>
-    body {
-        background: #f4f7f6;
-        font-family: 'Inter', sans-serif;
+    :root {
+        --surface: #ffffff;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --border-light: #f1f5f9;
+        --txt: #0f172a;
+        --txt-muted: #64748b;
+        --txt-light: #94a3b8;
+        --accent: #0f172a;
+        --indigo: #4f46e5; --indigo-bg: #eef2ff; --indigo-border: #c7d2fe;
+        --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
+        --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
+        --rose: #e11d48; --rose-bg: #fff1f2; --rose-border: #fecdd3;
+        --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+        --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+        --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
     }
 
-    .text-serif {
+    .admin-page-header {
+        display: flex; align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 22px; gap: 16px; flex-wrap: wrap;
+    }
+
+    .page-eyebrow {
+        display: flex; align-items: center; gap: 7px;
+        font-size: 0.72rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 1.1px;
+        color: var(--txt-muted); margin-bottom: 5px;
+    }
+
+    .eyebrow-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+        display: inline-block;
+    }
+
+    .page-title {
         font-family: 'Playfair Display', serif;
+        font-size: 1.9rem; font-weight: 700;
+        color: var(--txt); letter-spacing: -0.5px;
+        margin: 0 0 3px; line-height: 1.15;
     }
 
-    /* Image Container Style */
-    .image-container {
-        width: 60px;
-        height: 85px;
-        overflow: hidden;
-        background-color: #eee;
-        border-radius: 6px;
+    .page-subtitle { font-size: 0.875rem; color: var(--txt-muted); margin: 0; }
+
+    .btn-admin-primary {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 10px 18px; background: var(--accent); color: #fff;
+        border: none; border-radius: 10px;
+        font-size: 0.85rem; font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        text-decoration: none; cursor: pointer;
+        transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+        box-shadow: 0 2px 8px rgba(15,23,42,0.18); white-space: nowrap;
     }
 
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .btn-admin-primary:hover {
+        background: #1e293b; color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(15,23,42,0.22);
+    }
 
-    .table-hover tbody tr:hover {
-        background-color: #ffffff;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        transition: 0.2s;
+    .btn-admin-ghost {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 10px 18px; background: var(--surface); color: var(--txt);
+        border: 1.5px solid var(--border); border-radius: 10px;
+        font-size: 0.85rem; font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        text-decoration: none; cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-admin-ghost:hover { background: #f1f5f9; border-color: #cbd5e1; color: var(--txt); }
+
+    .stats-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 14px; margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 14px; padding: 18px 20px;
+        display: flex; align-items: center; gap: 14px;
+        position: relative; overflow: hidden;
+        transition: box-shadow 0.15s, transform 0.15s;
+    }
+
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,23,42,0.07); }
+
+    .stat-card::before {
+        content: ''; position: absolute;
+        top: 0; left: 0; right: 0; height: 3px;
+    }
+
+    .stat-card:nth-child(1)::before { background: var(--indigo); }
+    .stat-card:nth-child(2)::before { background: var(--emerald); }
+    .stat-card:nth-child(3)::before { background: var(--amber); }
+    .stat-card:nth-child(4)::before { background: var(--rose); }
+
+    .stat-icon {
+        width: 44px; height: 44px; border-radius: 11px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.15rem; flex-shrink: 0;
+    }
+
+    .stat-icon.indigo  { background: var(--indigo-bg);  color: var(--indigo);  }
+    .stat-icon.emerald { background: var(--emerald-bg); color: var(--emerald); }
+    .stat-icon.amber   { background: var(--amber-bg);   color: var(--amber);   }
+    .stat-icon.rose    { background: var(--rose-bg);    color: var(--rose);    }
+
+    .stat-body { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; }
+
+    .stat-label {
+        font-size: 0.7rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.7px;
+        color: var(--txt-muted); margin-top: 2px;
+    }
+
+    .stat-trend {
+        width: 26px; height: 26px; border-radius: 7px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.8rem; flex-shrink: 0;
+    }
+
+    .stat-trend.up      { background: var(--emerald-bg); color: var(--emerald); }
+    .stat-trend.neutral { background: var(--border-light); color: var(--txt-light); }
+
+    .admin-toolbar {
+        display: flex; align-items: center;
+        justify-content: space-between;
+        gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+
+    .search-form { flex: 1; max-width: 400px; }
+
+    .search-box {
+        display: flex; align-items: center; gap: 8px;
+        background: var(--surface); border: 1.5px solid var(--border);
+        border-radius: 10px; padding: 0 7px 0 14px; height: 42px;
+        transition: border-color 0.18s, box-shadow 0.18s;
+    }
+
+    .search-box:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(15,23,42,0.06);
+    }
+
+    .search-ico { color: var(--txt-light); font-size: 0.9rem; flex-shrink: 0; }
+
+    .search-input {
+        flex: 1; border: none; outline: none; background: transparent;
+        font-size: 0.875rem; font-family: 'DM Sans', sans-serif;
+        color: var(--txt); min-width: 0;
+    }
+
+    .search-input::placeholder { color: var(--txt-light); }
+
+    .search-btn {
+        background: var(--accent); color: #fff; border: none;
+        border-radius: 7px; padding: 0 13px; height: 29px;
+        font-size: 0.78rem; font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer; flex-shrink: 0; transition: background 0.15s;
+    }
+
+    .search-btn:hover { background: #1e293b; }
+
+    .toolbar-meta { display: flex; align-items: center; gap: 10px; }
+
+    .results-pill {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 20px; padding: 4px 12px;
+        font-size: 0.78rem; font-weight: 500; color: var(--txt-muted);
+    }
+
+    .clear-search {
+        display: inline-flex; align-items: center; gap: 4px;
+        font-size: 0.78rem; font-weight: 600;
+        color: var(--txt-muted); text-decoration: none;
+        padding: 4px 10px; border-radius: 20px;
+        border: 1px solid var(--border); background: var(--surface);
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .clear-search:hover { background: #f1f5f9; color: var(--txt); }
+
+    .admin-table-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow: hidden;
+    }
+
+    .admin-table { width: 100%; border-collapse: collapse; font-family: 'DM Sans', sans-serif; }
+
+    .admin-table thead tr { background: #f8fafc; border-bottom: 1px solid var(--border); }
+
+    .admin-table thead th {
+        padding: 11px 16px; font-size: 0.7rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.9px;
+        color: var(--txt-light); white-space: nowrap;
+    }
+
+    .admin-table thead th.th-cover  { padding-left: 24px; }
+    .admin-table thead th.th-actions { text-align: right; padding-right: 24px; }
+    .admin-table thead th.th-year   { text-align: center; }
+
+    .book-row { border-bottom: 1px solid var(--border-light); transition: background 0.12s; }
+    .book-row:last-child { border-bottom: none; }
+    .book-row:hover { background: #fafbfc; }
+
+    .admin-table td { padding: 13px 16px; vertical-align: middle; }
+    .admin-table td.td-cover   { padding-left: 24px; }
+    .admin-table td.td-actions { padding-right: 24px; }
+
+    .book-thumb {
+        width: 44px; height: 62px; border-radius: 6px; overflow: hidden;
+        background: var(--border-light); border: 1px solid var(--border); flex-shrink: 0;
+    }
+
+    .book-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .book-title-text { font-size: 0.875rem; font-weight: 600; color: var(--txt); line-height: 1.3; }
+
+    .author-chip { display: flex; align-items: center; gap: 9px; }
+
+    .author-initial {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: var(--indigo-bg); color: var(--indigo);
+        font-size: 0.72rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .author-name-text { font-size: 0.85rem; color: var(--txt-muted); }
+
+    .td-year { text-align: center; }
+
+    .year-pill {
+        display: inline-block; padding: 3px 10px;
+        background: var(--border-light); border: 1px solid var(--border);
+        border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: var(--txt-muted);
+    }
+
+    .pub-text { font-size: 0.85rem; color: var(--txt-muted); }
+
+    .td-actions { text-align: right; }
+
+    .action-cluster { display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+
+    .act-btn {
+        width: 32px; height: 32px; border-radius: 8px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 0.82rem; text-decoration: none; border: 1px solid transparent;
+        transition: background 0.12s, border-color 0.12s, transform 0.12s;
+    }
+
+    .act-btn:hover { transform: translateY(-1px); }
+
+    .act-view   { background: var(--blue-bg);  color: var(--blue);  border-color: var(--blue-border);  }
+    .act-edit   { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+    .act-delete { background: var(--red-bg);   color: var(--red);   border-color: var(--red-border);   }
+
+    .act-view:hover   { background: #dbeafe; }
+    .act-edit:hover   { background: #dcfce7; }
+    .act-delete:hover { background: #fee2e2; }
+
+    .table-footer {
+        padding: 12px 24px; border-top: 1px solid var(--border-light); background: #fafbfc;
+    }
+
+    .footer-count { font-size: 0.8rem; color: var(--txt-light); }
+    .footer-count strong { color: var(--txt-muted); }
+
+    .empty-state {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 72px 32px; text-align: center;
+    }
+
+    .empty-icon-wrap {
+        width: 64px; height: 64px; background: var(--border-light);
+        border: 1px solid var(--border); border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.7rem; color: var(--txt-light); margin: 0 auto 20px;
+    }
+
+    .empty-title { font-size: 1.05rem; font-weight: 600; color: var(--txt); margin-bottom: 8px; }
+
+    .empty-desc {
+        font-size: 0.875rem; color: var(--txt-muted);
+        margin-bottom: 24px; max-width: 360px; margin-left: auto; margin-right: auto;
+    }
+
+    .empty-actions { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+    @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    @@media (max-width: 768px) {
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .admin-page-header { flex-direction: column; }
+        .search-form { max-width: 100%; }
+        .admin-toolbar { flex-direction: column; align-items: stretch; }
+        .th-pub, .td-pub { display: none; }
+    }
+
+    @@media (max-width: 480px) {
+        .stats-grid { grid-template-columns: 1fr 1fr; }
+        .th-year, .td-year { display: none; }
     }
 </style>
