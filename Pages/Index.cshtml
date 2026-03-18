@@ -27,19 +27,22 @@
                              class="book-img" alt="@item.Title">
 
                         <div class="floating-badge">@item.YearPublished</div>
-
+                        @if (User.Identity.IsAuthenticated && User.Identity.Name == "admin")
+                {
                         <div class="img-overlay">
                             <a asp-page="/Books/Details" asp-route-id="@item.Id" class="btn btn-glass btn-sm">
                                 <i class="bi bi-eye"></i> Quick View
                             </a>
                         </div>
+                }
                     </div>
 
                     <div class="card-content">
                         <div class="publisher-tag">@item.Publisher</div>
                         <h5 class="book-title">@item.Title</h5>
                         <p class="book-author text-muted">by <span class="text-dark">@item.Author</span></p>
-
+                        @if (User.Identity.IsAuthenticated && User.Identity.Name == "admin")
+                          {
                         <div class="action-footer">
                             <a asp-page="/Books/Edit" asp-route-id="@item.Id" class="action-btn edit">
                                 <i class="bi bi-pencil-square"></i>
@@ -48,6 +51,7 @@
                                 <i class="bi bi-trash"></i>
                             </a>
                         </div>
+                        }
                     </div>
                 </div>
             </div>
