@@ -10,10 +10,6 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item d-flex align-items-center">
-            <a class="nav-link manage-link d-flex align-items-center" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                <i class="bi bi-person-circle me-2"></i>
-                <span class="user-name">@UserManager.GetUserName(User)</span>
-            </a>
             <span class="auth-divider mx-2">|</span>
             <form id="logoutForm" class="d-inline" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
                 <button type="submit" class="nav-link btn-login d-flex align-items-center">

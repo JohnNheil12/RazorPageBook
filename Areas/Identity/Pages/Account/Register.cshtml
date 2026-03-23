@@ -52,23 +52,17 @@
                     <input asp-for="Input.Email" class="custom-input" placeholder="name@example.com" required />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="Input.Password" class="custom-label">Password</label>
-                            <input asp-for="Input.Password" class="custom-input" type="password" placeholder="••••••••" required />
+                            <label asp-for="Input.Password" class="custom-label">Temporary Password</label>
+                            <input asp-for="Input.Password" class="custom-input" type="password" required />
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="col-md-6">
+                    
                         <div class="form-group">
-                            <label asp-for="Input.ConfirmPassword" class="custom-label">Confirm</label>
-                            <input asp-for="Input.ConfirmPassword" class="custom-input" type="password" placeholder="••••••••" required />
+                            <label asp-for="Input.ConfirmPassword" class="custom-label">Confirm Temporary Password</label>
+                            <input asp-for="Input.ConfirmPassword" class="custom-input" type="password" required />
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
-                    </div>
-                </div>
 
                 <button type="submit" class="btn-modern-primary mt-2">Create Account</button>
 
