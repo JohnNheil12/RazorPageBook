@@ -1,0 +1,135 @@
+/* ══════════════════════════
+        INVENTORY SIDEBAR
+    ══════════════════════════ */
+.dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 2001; /* Higher than navbar */
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 10px 0 40px rgba(0,0,0,0.1);
+}
+
+    .dashboard-sidebar.active {
+        left: 0;
+    }
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+.sidebar-header-custom {
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.brand-icon-sidebar {
+    background: #111;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-right: 8px;
+}
+
+.menu-label {
+    padding: 20px 30px 10px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #aaa;
+    font-weight: 800;
+}
+
+.menu-item-custom {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 30px;
+    color: #444;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+    .menu-item-custom:hover {
+        background: #f8fafc;
+        color: #111;
+        padding-left: 35px;
+    }
+
+    .menu-item-custom i {
+        font-size: 1.1rem;
+    }
+
+.btn-close-sidebar {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    .btn-close-sidebar:hover {
+        color: #111;
+    }
+
+.sidebar-footer-custom {
+    margin-top: auto;
+    padding: 25px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.admin-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 12px;
+}
+
+.admin-avatar {
+    width: 32px;
+    height: 32px;
+    background: #111;
+    color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.admin-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: block;
+}
+
+.admin-status {
+    font-size: 0.7rem;
+    color: #999;
+}
