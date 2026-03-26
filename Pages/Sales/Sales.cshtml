@@ -1,0 +1,128 @@
+﻿@page
+@model RazorPageBooks.Pages.Sales.IndexModel
+
+@{
+    ViewData["Title"] = "Sales";
+    ViewData["ActivePage"] = "Sales";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="admin-page-header">
+    <div class="header-left">
+        <div class="page-eyebrow">
+            <span class="eyebrow-dot"></span>
+            Revenue Analytics
+        </div>
+        <h1 class="page-title">Sales <span class="title-accent">Overview</span></h1>
+        <p class="page-subtitle">Track revenue, best sellers, and order performance</p>
+    </div>
+    <div class="header-right">
+        <a class="btn-admin-ghost"><i class="bi bi-download"></i> Export Report</a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">₱ @Model.TotalRevenue.ToString("N0")</span>
+            <span class="stat-label">Total Revenue</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-bag-check"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.TotalOrders</span>
+            <span class="stat-label">Orders Fulfilled</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon violet"><i class="bi bi-graph-up"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">₱ @Model.AvgOrderValue.ToString("N0")</span>
+            <span class="stat-label">Avg. Order Value</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon amber"><i class="bi bi-book"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.TotalBooksSold</span>
+            <span class="stat-label">Books Sold</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+</div>
+
+<!-- Bar Chart -->
+<div class="sales-chart-wrap">
+    <div class="chart-header">
+        <div>
+            <div class="chart-title">Monthly Revenue</div>
+            <div class="chart-sub">Jan – Dec · All categories</div>
+        </div>
+        <span class="growth-badge"><i class="bi bi-arrow-up-right"></i> +18.4% vs last year</span>
+    </div>
+    <div class="bar-chart">
+        @foreach (var stat in Model.MonthlyStats)
+        {
+            var height = Model.BarHeight(stat.Revenue);
+            var isHighlight = stat.Revenue == Model.MonthlyStats.Max(m => m.Revenue);
+            <div class="bar-group">
+                <div class="bar @(isHighlight ? "highlight" : "")" style="height:@(height)%;" title="₱ @stat.Revenue.ToString("N0")"></div>
+                <div class="bar-label">@stat.Month</div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- This Month / This Week -->
+<div class="sales-split">
+    <div class="sales-summary-card">
+        <div class="sc-label">This Month</div>
+        <div class="sc-value">₱ @Model.ThisMonthRevenue.ToString("N0")</div>
+        <div class="sc-sub">From @Model.ThisMonthOrders completed orders</div>
+        <div class="sc-badge"><i class="bi bi-arrow-up-right"></i> +12% vs last month</div>
+    </div>
+    <div class="sales-summary-card">
+        <div class="sc-label">This Week</div>
+        <div class="sc-value">₱ @Model.ThisWeekRevenue.ToString("N0")</div>
+        <div class="sc-sub">From @Model.ThisWeekOrders completed orders</div>
+        <div class="sc-badge"><i class="bi bi-arrow-up-right"></i> +7% vs last week</div>
+    </div>
+</div>
+
+<!-- Best Sellers -->
+<div class="best-sellers-card">
+    <div class="bs-card-title">
+        <i class="bi bi-trophy" style="color:var(--amber);"></i>
+        Best Selling Books
+    </div>
+
+    @foreach (var book in Model.BestSellers)
+    {
+        var rankClass = book.Rank switch
+        {
+            1 => "gold",
+            2 => "silver",
+            3 => "bronze",
+            _ => ""
+        };
+
+        <div class="best-seller-row">
+            <div class="bs-rank @rankClass">@book.Rank</div>
+            <div class="bs-info">
+                <div class="bs-title">@book.Title</div>
+                <div class="bs-author">@book.Author</div>
+            </div>
+            <div class="bs-meta">
+                <div class="bs-qty">@book.UnitsSold sold</div>
+                <div class="bs-amount">₱ @book.Revenue.ToString("N0")</div>
+            </div>
+        </div>
+    }
+</div>

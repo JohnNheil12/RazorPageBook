@@ -1,0 +1,179 @@
+﻿@page
+@model RazorPageBooks.Pages.Orders.IndexModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["ActivePage"] = "Orders";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="admin-page-header">
+    <div class="header-left">
+        <div class="page-eyebrow">
+            <span class="eyebrow-dot"></span>
+            Order Management
+        </div>
+        <h1 class="page-title">Customer <span class="title-accent">Orders</span></h1>
+        <p class="page-subtitle">Track and manage all customer book orders</p>
+    </div>
+    <div class="header-right">
+        <a class="btn-admin-ghost"><i class="bi bi-download"></i> Export</a>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="btn-admin-primary"><i class="bi bi-plus-lg"></i> New Order</a>
+        }
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-bag-check"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.TotalOrders</span>
+            <span class="stat-label">Total Orders</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.PendingOrders</span>
+            <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-trend neutral"><i class="bi bi-dash"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon emerald"><i class="bi bi-check-circle"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.CompletedOrders</span>
+            <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon rose"><i class="bi bi-x-circle"></i></div>
+        <div class="stat-body">
+            <span class="stat-value">@Model.CancelledOrders</span>
+            <span class="stat-label">Cancelled</span>
+        </div>
+        <div class="stat-trend down"><i class="bi bi-arrow-down-right"></i></div>
+    </div>
+</div>
+
+<!-- Toolbar -->
+<div class="admin-toolbar">
+    <form method="get" class="search-form">
+        <div class="search-box">
+            <i class="bi bi-search search-ico"></i>
+            <input type="text" name="searchString" value="@Model.SearchString"
+                   class="search-input" placeholder="Search by order #, customer, book, status..." />
+            <button type="submit" class="search-btn">Search</button>
+        </div>
+    </form>
+    <div class="toolbar-meta">
+        <span class="results-pill">
+            <i class="bi bi-stack"></i>
+            @Model.Orders.Count order@(Model.Orders.Count != 1 ? "s" : "")
+        </span>
+        @if (!string.IsNullOrEmpty(Model.SearchString))
+        {
+            <a asp-page="./Index" class="clear-search"><i class="bi bi-x"></i> Clear</a>
+        }
+    </div>
+</div>
+
+<!-- Table / Empty -->
+@if (!Model.Orders.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon-wrap"><i class="bi bi-bag"></i></div>
+        <h3 class="empty-title">No orders found</h3>
+        <p class="empty-desc">
+            @if (!string.IsNullOrEmpty(Model.SearchString))
+            {
+                <span>No results for "<strong>@Model.SearchString</strong>". Try a different search.</span>
+            }
+            else
+            {
+                <span>No orders have been placed yet.</span>
+            }
+        </p>
+        <div class="empty-actions">
+            <a asp-page="./Index" class="btn-admin-ghost"><i class="bi bi-arrow-left"></i> Clear Search</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="admin-table-card">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Book Title</th>
+                        <th class="th-center">Qty</th>
+                        <th class="th-center">Status</th>
+                        <th>Date</th>
+                        <th class="th-center">Amount</th>
+                        <th class="th-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Orders)
+                    {
+                        var statusClass = item.Status switch
+                        {
+                            "Pending" => "os-pending",
+                            "Processing" => "os-processing",
+                            "Completed" => "os-completed",
+                            "Cancelled" => "os-cancelled",
+                            _ => "os-pending"
+                        };
+
+                        var initial = item.CustomerName?.Length > 0
+                            ? item.CustomerName[0].ToString().ToUpper() : "?";
+
+                        <tr class="data-row">
+                            <td><span class="order-id">#@item.OrderNumber</span></td>
+                            <td>
+                                <div class="author-chip">
+                                    <div class="author-initial" style="background:var(--indigo);color:#fff;">@initial</div>
+                                    <div>
+                                        <div style="font-size:0.85rem;font-weight:600;color:var(--txt);">@item.CustomerName</div>
+                                        <div style="font-size:0.74rem;color:var(--txt-muted);">@item.CustomerEmail</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><div class="book-title-text" style="font-size:0.83rem;">@item.BookTitle</div></td>
+                            <td class="td-center"><span class="year-pill">@item.Quantity</span></td>
+                            <td class="td-center"><span class="order-status @statusClass">@item.Status</span></td>
+                            <td><span class="order-date">@item.OrderDate.ToString("MMM dd, yyyy")</span></td>
+                            <td class="td-center"><span class="order-amount">₱ @item.Amount.ToString("N0")</span></td>
+                            <td class="td-actions">
+                                <div class="action-cluster">
+                                    <a class="act-btn act-view" title="View order"><i class="bi bi-eye"></i></a>
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <a class="act-btn act-edit" title="Edit order"><i class="bi bi-pencil"></i></a>
+                                        <a class="act-btn act-delete" title="Delete order"><i class="bi bi-trash"></i></a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <span class="footer-count">
+                Showing <strong>@Model.Orders.Count</strong> order@(Model.Orders.Count != 1 ? "s" : "")
+            </span>
+        </div>
+    </div>
+}

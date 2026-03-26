@@ -11,8 +11,8 @@
     @if (User.Identity.IsAuthenticated && User.Identity.Name == "admin")
     {
         <div class="banner-topbar">
-            <a asp-page="/Books/Index" class="btn btn-banner-inventory">
-                <i class="bi bi-archive me-2"></i> Dashboard
+            <a asp-page="/Books/Inventory" class="btn btn-banner-inventory">
+                <i class="bi bi-archive me-2"></i> Inventory
             </a>
         </div>
     }
@@ -294,7 +294,7 @@
             justify-content: center;
             gap: 6px;
             border-radius: 50px;
-            padding: 10px;a
+            padding: 10px;
             border: 1.5px solid #e0e0e0;
             transition: all 0.2s;
         }

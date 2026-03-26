@@ -44,7 +44,8 @@ namespace RazorPageBooks.Pages.Books
 
                 books = books.Where(s =>
                     (s.Title != null && s.Title.ToLower().Contains(lowerSearch)) ||
-                    (s.Author != null && s.Author.ToLower().Contains(lowerSearch)));
+                    (s.Author != null && s.Author.ToLower().Contains(lowerSearch)) ||
+                    (s.Publisher != null && s.Publisher.ToLower().Contains(lowerSearch)));
             }
 
             // 3. Optional: Filter by specific Title dropdown (if used in UI)
