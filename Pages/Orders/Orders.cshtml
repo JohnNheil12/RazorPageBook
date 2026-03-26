@@ -5,175 +5,270 @@
 
 @{
     ViewData["Title"] = "Orders";
-    ViewData["ActivePage"] = "Orders";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
+    Layout = null; 
 }
 
-<!-- Page Header -->
-<div class="admin-page-header">
-    <div class="header-left">
-        <div class="page-eyebrow">
-            <span class="eyebrow-dot"></span>
-            Order Management
-        </div>
-        <h1 class="page-title">Customer <span class="title-accent">Orders</span></h1>
-        <p class="page-subtitle">Track and manage all customer book orders</p>
-    </div>
-    <div class="header-right">
-        <a class="btn-admin-ghost"><i class="bi bi-download"></i> Export</a>
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <a class="btn-admin-primary"><i class="bi bi-plus-lg"></i> New Order</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - The Book Cellar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --surface: #ffffff;
+            --bg: #f8fafc;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --txt: #0f172a;
+            --txt-muted: #64748b;
+            --txt-light: #94a3b8;
+            --accent: #1d4ed8;
+            --sidebar-w: 260px;
+            --sidebar-bg: #0f172a;
+            --sidebar-border: #1e293b;
+            --sidebar-txt: #94a3b8;
+            --sidebar-txt-active: #f8fafc;
+            --sidebar-hover: #1e293b;
+            --sidebar-active-bg: #1e3a8a;
+
+            /* Order Specific Colors */
+            --indigo: #4f46e5; --indigo-bg: #eef2ff;
+            --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
+            --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
+            --rose: #e11d48; --rose-bg: #fff1f2; --rose-border: #fecdd3;
+            --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
         }
-    </div>
-</div>
 
-<!-- Stats -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon blue"><i class="bi bi-bag-check"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">@Model.TotalOrders</span>
-            <span class="stat-label">Total Orders</span>
-        </div>
-        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">@Model.PendingOrders</span>
-            <span class="stat-label">Pending</span>
-        </div>
-        <div class="stat-trend neutral"><i class="bi bi-dash"></i></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon emerald"><i class="bi bi-check-circle"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">@Model.CompletedOrders</span>
-            <span class="stat-label">Completed</span>
-        </div>
-        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon rose"><i class="bi bi-x-circle"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">@Model.CancelledOrders</span>
-            <span class="stat-label">Cancelled</span>
-        </div>
-        <div class="stat-trend down"><i class="bi bi-arrow-down-right"></i></div>
-    </div>
-</div>
+        body { margin: 0; padding: 0; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--txt); }
 
-<!-- Toolbar -->
-<div class="admin-toolbar">
-    <form method="get" class="search-form">
-        <div class="search-box">
-            <i class="bi bi-search search-ico"></i>
-            <input type="text" name="searchString" value="@Model.SearchString"
-                   class="search-input" placeholder="Search by order #, customer, book, status..." />
-            <button type="submit" class="search-btn">Search</button>
-        </div>
-    </form>
-    <div class="toolbar-meta">
-        <span class="results-pill">
-            <i class="bi bi-stack"></i>
-            @Model.Orders.Count order@(Model.Orders.Count != 1 ? "s" : "")
-        </span>
-        @if (!string.IsNullOrEmpty(Model.SearchString))
-        {
-            <a asp-page="./Index" class="clear-search"><i class="bi bi-x"></i> Clear</a>
+        .shell { display: flex; min-height: 100vh; }
+
+        /* ════════════ SIDEBAR ════════════ */
+        .sidebar {
+            width: var(--sidebar-w); min-width: var(--sidebar-w);
+            background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);
+            display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
         }
-    </div>
-</div>
 
-<!-- Table / Empty -->
-@if (!Model.Orders.Any())
-{
-    <div class="empty-state">
-        <div class="empty-icon-wrap"><i class="bi bi-bag"></i></div>
-        <h3 class="empty-title">No orders found</h3>
-        <p class="empty-desc">
-            @if (!string.IsNullOrEmpty(Model.SearchString))
-            {
-                <span>No results for "<strong>@Model.SearchString</strong>". Try a different search.</span>
-            }
-            else
-            {
-                <span>No orders have been placed yet.</span>
-            }
-        </p>
-        <div class="empty-actions">
-            <a asp-page="./Index" class="btn-admin-ghost"><i class="bi bi-arrow-left"></i> Clear Search</a>
+        .sidebar-brand { padding: 24px 20px; border-bottom: 1px solid var(--sidebar-border); display: flex; align-items: center; gap: 12px; }
+        .brand-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #1d4ed8, #4f46e5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
+        
+        .sidebar-nav { flex: 1; padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; color: var(--sidebar-txt); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+        .nav-item i { font-size: 1.1rem; }
+        .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
+        .nav-item.active { background: var(--sidebar-active-bg); color: #fff; font-weight: 600; }
+
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--sidebar-border); background: rgba(0,0,0,0.1); }
+        .sidebar-user { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: var(--sidebar-hover); border: 1px solid var(--sidebar-border); }
+        .user-avatar { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+        
+        .logout-btn { background: none; border: none; color: #ef4444; padding: 8px; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.1); transform: scale(1.1); }
+
+        /* ════════════ MAIN CONTENT ════════════ */
+        .main-content { flex: 1; padding: 32px; overflow-y: auto; }
+
+        .admin-page-header { 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 30px; margin-bottom: 28px; background: #fff; 
+            border: 1px solid var(--border); border-radius: 20px; 
+            border-left: 5px solid var(--accent); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+        }
+
+        .page-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; margin: 0; color: var(--txt); }
+        .title-accent { color: var(--accent); font-style: italic; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        
+        .admin-table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { background: #f8fafc; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--txt-muted); border-bottom: 1px solid var(--border); }
+        .admin-table td { padding: 16px 20px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+
+        .order-status { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
+        .os-pending { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+        .os-completed { background: var(--emerald-bg); color: var(--emerald); border-color: var(--emerald-border); }
+
+        .search-box { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0 8px 0 16px; height: 46px; width: 100%; max-width: 450px; transition: 0.2s; }
+        .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); }
+        .search-input { flex: 1; border: none; outline: none; font-size: 0.9rem; color: var(--txt); }
+
+        .btn-admin-primary { background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(29,78,216,0.3); }
+        .act-btn { width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: 0.2s; }
+        .act-view { background: #eff6ff; color: #2563eb; }
+        .act-view:hover { background: #2563eb; color: #fff; }
+
+        @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+    <div class="shell">
+
+        <!-- ══════════════════════════════════════
+             LEFT SIDEBAR
+        ══════════════════════════════════════ -->
+        <aside class="sidebar">
+            <!-- Brand -->
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <i class="bi bi-book-half"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">BookCellar</span>
+                    <span class="brand-tagline">Admin Panel</span>
+                </div>
+            </div>
+                 <nav class="sidebar-nav">
+                        <span class="nav-section-label">Main Menu</span>
+
+                        <a asp-page="/Books/Index" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Books/") ? "active" : "")">
+                    <span class="nav-icon-wrap"><i class="bi bi-journals"></i></span>
+                    <span class="nav-label">Books Inventory</span>
+                </a>
+
+                <a asp-page="/Sales/Sales" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Sales/") ? "active" : "")">
+                    <span class="nav-icon-wrap"><i class="bi bi-graph-up-arrow"></i></span>
+                    <span class="nav-label">Sales</span>
+                </a>
+
+                <a asp-page="/Orders/Orders" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Orders/") ? "active" : "")">
+                    <span class="nav-icon-wrap"><i class="bi bi-bag-check"></i></span>
+                    <span class="nav-label">Orders</span>
+                </a>
+
+                <a asp-page="/Users/Users" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Users/") ? "active" : "")">
+                    <span class="nav-icon-wrap"><i class="bi bi-people"></i></span>
+                    <span class="nav-label">User Management</span>
+                </a>
+
+            <!-- User footer -->
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar">A</div>
+                    <div class="user-meta">
+                        <span class="user-name">Admin</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <a href="#" class="user-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+                </div>
+            </div>
+        </aside>
+
+
+    <main class="main-content">
+        <div class="admin-page-header">
+            <div>
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.5px;">
+                    <i class="bi bi-circle-fill" style="font-size: 6px; vertical-align: middle; margin-right: 5px;"></i> Processing Hub
+                </div>
+                <h1 class="page-title">Sales <span class="title-accent">& Orders</span></h1>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-admin-ghost" style="background: #fff; border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;">
+                    <i class="bi bi-file-earmark-arrow-down"></i> Export
+                </button>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a class="btn-admin-primary"><i class="bi bi-plus-lg"></i> Create Order</a>
+                }
+            </div>
         </div>
-    </div>
-}
-else
-{
-    <div class="admin-table-card">
-        <div class="table-responsive">
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--blue-bg); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-cart-check"></i></div>
+                <div>
+                    <div style="font-size: 1.6rem; font-weight: 700;">@Model.TotalOrders</div>
+                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">Total Invoices</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--amber-bg); color: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-hourglass-split"></i></div>
+                <div>
+                    <div style="font-size: 1.6rem; font-weight: 700;">@Model.PendingOrders</div>
+                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">To Process</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--emerald-bg); color: var(--emerald); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-patch-check"></i></div>
+                <div>
+                    <div style="font-size: 1.6rem; font-weight: 700;">@Model.CompletedOrders</div>
+                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">Completed</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--rose-bg); color: var(--rose); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-cash-stack"></i></div>
+                <div>
+                    <div style="font-size: 1.6rem; font-weight: 700;">$@string.Format("{0:N0}", 12540)</div>
+                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">Net Revenue</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <form method="get">
+                <div class="search-box">
+                    <i class="bi bi-search" style="color: var(--txt-light);"></i>
+                    <input type="text" name="searchString" class="search-input" placeholder="Find by order number or customer name..." />
+                    <button type="submit" style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="admin-table-card">
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th>Order #</th>
+                        <th style="border-top-left-radius: 20px;">Order #</th>
                         <th>Customer</th>
-                        <th>Book Title</th>
-                        <th class="th-center">Qty</th>
-                        <th class="th-center">Status</th>
-                        <th>Date</th>
-                        <th class="th-center">Amount</th>
-                        <th class="th-actions">Actions</th>
+                        <th>Book Selection</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: center;">Status</th>
+                        <th style="text-align: right; border-top-right-radius: 20px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Orders)
                     {
-                        var statusClass = item.Status switch
-                        {
-                            "Pending" => "os-pending",
-                            "Processing" => "os-processing",
-                            "Completed" => "os-completed",
-                            "Cancelled" => "os-cancelled",
-                            _ => "os-pending"
-                        };
-
-                        var initial = item.CustomerName?.Length > 0
-                            ? item.CustomerName[0].ToString().ToUpper() : "?";
-
-                        <tr class="data-row">
-                            <td><span class="order-id">#@item.OrderNumber</span></td>
+                        var statusClass = item.Status == "Completed" ? "os-completed" : "os-pending";
+                        <tr>
+                            <td style="font-weight: 700; color: var(--accent);">#@item.OrderNumber</td>
                             <td>
-                                <div class="author-chip">
-                                    <div class="author-initial" style="background:var(--indigo);color:#fff;">@initial</div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">@item.CustomerName[0]</div>
                                     <div>
-                                        <div style="font-size:0.85rem;font-weight:600;color:var(--txt);">@item.CustomerName</div>
-                                        <div style="font-size:0.74rem;color:var(--txt-muted);">@item.CustomerEmail</div>
+                                        <div style="font-size: 0.85rem; font-weight: 600;">@item.CustomerName</div>
+                                        <div style="font-size: 0.7rem; color: var(--txt-muted);">@item.CustomerEmail</div>
                                     </div>
                                 </div>
                             </td>
-                            <td><div class="book-title-text" style="font-size:0.83rem;">@item.BookTitle</div></td>
-                            <td class="td-center"><span class="year-pill">@item.Quantity</span></td>
-                            <td class="td-center"><span class="order-status @statusClass">@item.Status</span></td>
-                            <td><span class="order-date">@item.OrderDate.ToString("MMM dd, yyyy")</span></td>
-                            <td class="td-center"><span class="order-amount">₱ @item.Amount.ToString("N0")</span></td>
-                            <td class="td-actions">
-                                <div class="action-cluster">
-                                    <a class="act-btn act-view" title="View order"><i class="bi bi-eye"></i></a>
-                                    @if (SignInManager.IsSignedIn(User))
-                                    {
-                                        <a class="act-btn act-edit" title="Edit order"><i class="bi bi-pencil"></i></a>
-                                        <a class="act-btn act-delete" title="Delete order"><i class="bi bi-trash"></i></a>
-                                    }
+                            <td><div style="font-size: 0.85rem; font-weight: 500;">@item.BookTitle</div></td>
+                            <td style="text-align: center;"><span style="background: #f1f5f9; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">@item.Quantity</span></td>
+                            <td style="text-align: center;"><span class="order-status @statusClass">@item.Status</span></td>
+                            <td>
+                                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                                    <a class="act-btn act-view"><i class="bi bi-eye"></i></a>
+                                    <a class="act-btn act-view" style="background: #ecfdf5; color: #059669;"><i class="bi bi-pencil-square"></i></a>
                                 </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <div style="padding: 16px 24px; background: #f8fafc; font-size: 0.8rem; color: var(--txt-muted); border-top: 1px solid var(--border-light);">
+                Showing <strong>@Model.Orders.Count</strong> customer transactions
+            </div>
         </div>
-        <div class="table-footer">
-            <span class="footer-count">
-                Showing <strong>@Model.Orders.Count</strong> order@(Model.Orders.Count != 1 ? "s" : "")
-            </span>
-        </div>
-    </div>
-}
+    </main>
+</div>
+
+</body>
+</html>
