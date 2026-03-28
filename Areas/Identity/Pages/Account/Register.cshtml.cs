@@ -9,16 +9,19 @@ using Microsoft.Extensions.Logging;
 
 namespace RazorPageBooks.Areas.Identity.Pages.Account
 {
-    [Authorize] // 🔒 Must be logged in
+    [Authorize]
     public class RegisterModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
 
         public RegisterModel(UserManager<IdentityUser> userManager,
+                             RoleManager<IdentityRole> roleManager,
                              ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _logger = logger;
         }
 
@@ -30,8 +33,12 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "Username")]
-            public string Username { get; set; }
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
 
             [Required]
             [EmailAddress]
@@ -49,11 +56,14 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
             [Display(Name = "Confirm Password")]
             [Compare("Password", ErrorMessage = "Passwords do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Role")]
+            public string Role { get; set; }
         }
 
         public IActionResult OnGet()
         {
-            // 🔒 Block non-admin even on GET
             if (User.Identity.Name != "admin")
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
 
@@ -62,18 +72,16 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // 🔒 Block non-admin on POST
             if (User.Identity.Name != "admin")
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
 
             if (!ModelState.IsValid)
                 return Page();
 
-            // Check duplicate username
-            var existingUser = await _userManager.FindByNameAsync(Input.Username);
-            if (existingUser != null)
+            // Validate role input
+            if (Input.Role != "Admin" && Input.Role != "Staff")
             {
-                ModelState.AddModelError(string.Empty, "Username already taken.");
+                ModelState.AddModelError(string.Empty, "Invalid role selected.");
                 return Page();
             }
 
@@ -85,19 +93,36 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
                 return Page();
             }
 
+            // Use FirstName.LastName as username internally
+            var username = $"{Input.FirstName}.{Input.LastName}".ToLower();
+
+            // Check duplicate username
+            var existingUser = await _userManager.FindByNameAsync(username);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError(string.Empty, "A user with that first and last name already exists.");
+                return Page();
+            }
+
             var newUser = new IdentityUser
             {
-                UserName = Input.Username,
+                UserName = username,
                 Email = Input.Email,
-                EmailConfirmed = true // ✅ No email verification needed
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(newUser, Input.Password);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("Admin created new user: {Username}", Input.Username);
-                StatusMessage = $"✅ User '{Input.Username}' created successfully!";
+                // Ensure role exists then assign it
+                if (!await _roleManager.RoleExistsAsync(Input.Role))
+                    await _roleManager.CreateAsync(new IdentityRole(Input.Role));
+
+                await _userManager.AddToRoleAsync(newUser, Input.Role);
+
+                _logger.LogInformation("Admin created new user: {Username} with role {Role}", username, Input.Role);
+                StatusMessage = $"✅ User '{Input.FirstName} {Input.LastName}' created successfully as {Input.Role}!";
                 ModelState.Clear();
                 Input = null;
                 return Page();

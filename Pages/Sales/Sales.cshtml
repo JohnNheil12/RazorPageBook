@@ -1,128 +1,417 @@
 ﻿@page
 @model RazorPageBooks.Pages.Sales.IndexModel
-
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 @{
     ViewData["Title"] = "Sales";
-    ViewData["ActivePage"] = "Sales";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales — The Book Cellar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #f8fafc; font-family: 'DM Sans', sans-serif; }
 
-<!-- Page Header -->
-<div class="admin-page-header">
-    <div class="header-left">
-        <div class="page-eyebrow">
-            <span class="eyebrow-dot"></span>
-            Revenue Analytics
-        </div>
-        <h1 class="page-title">Sales <span class="title-accent">Overview</span></h1>
-        <p class="page-subtitle">Track revenue, best sellers, and order performance</p>
-    </div>
-    <div class="header-right">
-        <a class="btn-admin-ghost"><i class="bi bi-download"></i> Export Report</a>
-    </div>
-</div>
+        :root {
+            --surface: #ffffff;
+            --bg: #f8fafc;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --txt: #0f172a;
+            --txt-muted: #64748b;
+            --txt-light: #94a3b8;
+            --accent: #1d4ed8;
+            --indigo: #4f46e5; --indigo-bg: #eef2ff;
+            --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
+            --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
+            --rose: #e11d48; --rose-bg: #fff1f2; --rose-border: #fecdd3;
+            --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+            --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+            --violet: #7c3aed; --violet-bg: #f5f3ff; --violet-border: #ddd6fe;
+            --sidebar-w: 240px;
+            --sidebar-bg: #0f172a;
+            --sidebar-border: #1e293b;
+            --sidebar-txt: #94a3b8;
+            --sidebar-txt-active: #f8fafc;
+            --sidebar-hover: #1e293b;
+        }
 
-<!-- Stats -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">₱ @Model.TotalRevenue.ToString("N0")</span>
-            <span class="stat-label">Total Revenue</span>
-        </div>
-        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon blue"><i class="bi bi-bag-check"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">@Model.TotalOrders</span>
-            <span class="stat-label">Orders Fulfilled</span>
-        </div>
-        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon violet"><i class="bi bi-graph-up"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">₱ @Model.AvgOrderValue.ToString("N0")</span>
-            <span class="stat-label">Avg. Order Value</span>
-        </div>
-        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon amber"><i class="bi bi-book"></i></div>
-        <div class="stat-body">
-            <span class="stat-value">@Model.TotalBooksSold</span>
-            <span class="stat-label">Books Sold</span>
-        </div>
-        <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-    </div>
-</div>
+        .shell { display: flex; min-height: 100vh; }
 
-<!-- Bar Chart -->
-<div class="sales-chart-wrap">
-    <div class="chart-header">
-        <div>
-            <div class="chart-title">Monthly Revenue</div>
-            <div class="chart-sub">Jan – Dec · All categories</div>
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-w); min-width: var(--sidebar-w);
+            background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);
+            display: flex; flex-direction: column;
+            position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 100;
+        }
+
+        .sidebar-brand { display: flex; align-items: center; gap: 11px; padding: 22px 20px 20px; border-bottom: 1px solid var(--sidebar-border); flex-shrink: 0; }
+        .brand-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1d4ed8 0%, #4f46e5 100%); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; flex-shrink: 0; box-shadow: 0 4px 12px rgba(79,70,229,0.4); }
+        .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+        .brand-name { font-size: 0.92rem; font-weight: 700; color: var(--sidebar-txt-active); letter-spacing: -0.2px; }
+        .brand-tagline { font-size: 0.65rem; font-weight: 500; color: var(--sidebar-txt); text-transform: uppercase; letter-spacing: 0.8px; }
+
+        .sidebar-nav {width: 280px; flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; }
+        .nav-section-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #334155; padding: 10px 8px 4px; display: block; }
+
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; text-decoration: none; color: var(--sidebar-txt); font-size: 0.85rem; font-weight: 500; transition: background 0.15s, color 0.15s; }
+        .nav-item:hover { background: var(--sidebar-hover); color: #cbd5e1; }
+        .nav-item.active { background: #1e3a8a; color: var(--sidebar-txt-active); font-weight: 600; box-shadow: inset 3px 0 0 #3b82f6; }
+        .nav-icon-wrap { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; background: rgba(255,255,255,0.04); }
+        .nav-item.active .nav-icon-wrap { background: rgba(59,130,246,0.2); color: #93c5fd; }
+        .nav-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .sidebar-footer { padding: 14px 12px; border-top: 1px solid var(--sidebar-border); flex-shrink: 0; }
+        .sidebar-user { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; background: var(--sidebar-hover); }
+        .user-avatar { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #1d4ed8, #7c3aed); color: #fff; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .user-meta { flex: 1; display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+        .user-name { font-size: 0.8rem; font-weight: 600; color: var(--sidebar-txt-active); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-role { font-size: 0.65rem; color: var(--sidebar-txt); }
+        .user-logout { color: var(--sidebar-txt); font-size: 0.9rem; background: none; border: none; cursor: pointer; display: flex; align-items: center; flex-shrink: 0; transition: color 0.15s; }
+        .user-logout:hover { color: #f87171; }
+
+        /* ── MAIN ── */
+        .main-content { flex: 1; padding: 28px; overflow-y: auto; min-width: 0; }
+
+        .admin-page-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px 32px; margin-bottom: 24px; background: #ffffff; border: 1px solid var(--border); border-radius: 16px; border-left: 4px solid var(--accent); box-shadow: 0 1px 6px rgba(15,23,42,0.05); }
+        .page-eyebrow { display: flex; align-items: center; gap: 7px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 6px; }
+        .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; margin: 0 0 4px; line-height: 1.15; }
+        .title-accent { color: var(--accent); font-style: italic; }
+        .page-subtitle { font-size: 0.85rem; color: var(--txt-muted); margin: 0; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .btn-admin-ghost { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--surface); color: var(--txt); border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background 0.15s; }
+        .btn-admin-ghost:hover { background: #f1f5f9; border-color: #cbd5e1; color: var(--txt); }
+
+        /* ── STATS ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; transition: box-shadow 0.15s, transform 0.15s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,23,42,0.07); }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+        .stat-card:nth-child(1)::before { background: var(--green); }
+        .stat-card:nth-child(2)::before { background: var(--blue); }
+        .stat-card:nth-child(3)::before { background: var(--violet); }
+        .stat-card:nth-child(4)::before { background: var(--amber); }
+
+        .stat-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+        .stat-icon.green  { background: var(--green-bg);  color: var(--green);  }
+        .stat-icon.blue   { background: var(--blue-bg);   color: var(--blue);   }
+        .stat-icon.violet { background: var(--violet-bg); color: var(--violet); }
+        .stat-icon.amber  { background: var(--amber-bg);  color: var(--amber);  }
+
+        .stat-body { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; }
+        .stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--txt-muted); margin-top: 2px; }
+        .stat-trend { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+        .stat-trend.up { background: var(--emerald-bg); color: var(--emerald); }
+
+        /* ── BAR CHART ── */
+        .chart-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px 28px; margin-bottom: 20px;
+        }
+
+        .chart-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 12px; flex-wrap: wrap; }
+        .chart-title { font-size: 1rem; font-weight: 700; color: var(--txt); margin-bottom: 3px; }
+        .chart-sub { font-size: 0.78rem; color: var(--txt-muted); }
+
+        .growth-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; border-radius: 20px;
+            background: var(--emerald-bg); color: var(--emerald);
+            border: 1px solid var(--emerald-border);
+            font-size: 0.75rem; font-weight: 700;
+        }
+
+        .bar-chart {
+            display: flex; align-items: flex-end; gap: 8px;
+            height: 180px; padding-bottom: 28px; position: relative;
+        }
+
+        .bar-chart::after {
+            content: ''; position: absolute;
+            bottom: 28px; left: 0; right: 0; height: 1px;
+            background: var(--border-light);
+        }
+
+        .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+        .bar {
+            width: 100%; border-radius: 6px 6px 0 0;
+            background: var(--indigo-bg);
+            border: 1px solid var(--indigo-border);
+            transition: background 0.2s, transform 0.2s;
+            cursor: pointer; min-height: 4px;
+        }
+
+        .bar:hover { background: var(--accent); border-color: var(--accent); transform: scaleY(1.03); }
+        .bar.highlight { background: var(--accent); border-color: #1e40af; box-shadow: 0 4px 14px rgba(29,78,216,0.25); }
+        .bar-label { font-size: 0.65rem; font-weight: 600; color: var(--txt-muted); text-transform: uppercase; }
+
+        /* ── SUMMARY SPLIT ── */
+        .sales-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+
+        .summary-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 14px; padding: 22px 24px;
+        }
+
+        .sc-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--txt-muted); margin-bottom: 6px; }
+        .sc-value { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--txt); margin-bottom: 4px; }
+        .sc-sub { font-size: 0.78rem; color: var(--txt-muted); margin-bottom: 10px; }
+        .sc-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; background: var(--emerald-bg); color: var(--emerald); border: 1px solid var(--emerald-border); font-size: 0.72rem; font-weight: 700; }
+
+        /* ── BEST SELLERS ── */
+        .bestsellers-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+
+        .bs-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .bs-header-title { font-size: 0.95rem; font-weight: 700; color: var(--txt); }
+
+        .bs-row {
+            display: flex; align-items: center; gap: 16px;
+            padding: 14px 24px; border-bottom: 1px solid var(--border-light);
+            transition: background 0.12s;
+        }
+
+        .bs-row:last-child { border-bottom: none; }
+        .bs-row:hover { background: #fafbfc; }
+
+        .bs-rank {
+            width: 28px; height: 28px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+            background: var(--border-light); color: var(--txt-muted);
+        }
+
+        .bs-rank.gold   { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+        .bs-rank.silver { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+        .bs-rank.bronze { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+
+        .bs-info { flex: 1; min-width: 0; }
+        .bs-title { font-size: 0.875rem; font-weight: 600; color: var(--txt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bs-author { font-size: 0.75rem; color: var(--txt-muted); }
+
+        .bs-meta { text-align: right; flex-shrink: 0; }
+        .bs-qty { font-size: 0.75rem; color: var(--txt-muted); }
+        .bs-amount { font-size: 0.9rem; font-weight: 700; color: var(--txt); }
+
+        @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .sales-split { grid-template-columns: 1fr; } }
+        @@media (max-width: 768px) {
+            .shell { flex-direction: column; }
+            .sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; }
+            .sidebar-nav { flex-direction: row; padding: 8px; overflow-x: auto; gap: 4px; flex: 1; }
+            .nav-section-label { display: none; }
+            .sidebar-footer { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-content { padding: 16px; }
+            .admin-page-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
+        }
+        @@media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+<div class="shell">
+
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="bi bi-book-half"></i></div>
+            <div class="brand-text">
+                <span class="brand-name">Book Cellar</span>
+                <span class="brand-tagline">Admin Panel</span>
+            </div>
         </div>
-        <span class="growth-badge"><i class="bi bi-arrow-up-right"></i> +18.4% vs last year</span>
-    </div>
-    <div class="bar-chart">
-        @foreach (var stat in Model.MonthlyStats)
+
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Library</span>
+            <a href="/Books/Inventory" class="nav-item">
+                <div class="nav-icon-wrap"><i class="bi bi-journals"></i></div>
+                <span class="nav-label">Inventory</span>
+            </a>
+            <a href="/Orders/Orders" class="nav-item">
+                <div class="nav-icon-wrap"><i class="bi bi-bag-check"></i></div>
+                <span class="nav-label">Orders</span>
+            </a>
+            <a href="/Sales/Sales" class="nav-item active">
+                <div class="nav-icon-wrap"><i class="bi bi-graph-up"></i></div>
+                <span class="nav-label">Sales</span>
+            </a>
+            <a href="/Users/Users" class="nav-item">
+                <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
+                <span class="nav-label">Users</span>
+            </a>
+
+
+            <span class="nav-section-label">Account</span>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="/Sales" style="margin:0;padding:0;">
+                    @Html.AntiForgeryToken()
+                </form>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="nav-item">
+                    <div class="nav-icon-wrap"><i class="bi bi-box-arrow-in-right"></i></div>
+                    <span class="nav-label">Login</span>
+                </a>
+            }
+        </nav>
+
+        @if (SignInManager.IsSignedIn(User))
         {
-            var height = Model.BarHeight(stat.Revenue);
-            var isHighlight = stat.Revenue == Model.MonthlyStats.Max(m => m.Revenue);
-            <div class="bar-group">
-                <div class="bar @(isHighlight ? "highlight" : "")" style="height:@(height)%;" title="₱ @stat.Revenue.ToString("N0")"></div>
-                <div class="bar-label">@stat.Month</div>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar">@(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "A")</div>
+                    <div class="user-meta">
+                        <span class="user-name">@User.Identity.Name</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="/Sales" style="margin:0;padding:0;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="user-logout" title="Logout">
+                            <i class="bi bi-box-arrow-left"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         }
-    </div>
-</div>
+    </aside>
 
-<!-- This Month / This Week -->
-<div class="sales-split">
-    <div class="sales-summary-card">
-        <div class="sc-label">This Month</div>
-        <div class="sc-value">₱ @Model.ThisMonthRevenue.ToString("N0")</div>
-        <div class="sc-sub">From @Model.ThisMonthOrders completed orders</div>
-        <div class="sc-badge"><i class="bi bi-arrow-up-right"></i> +12% vs last month</div>
-    </div>
-    <div class="sales-summary-card">
-        <div class="sc-label">This Week</div>
-        <div class="sc-value">₱ @Model.ThisWeekRevenue.ToString("N0")</div>
-        <div class="sc-sub">From @Model.ThisWeekOrders completed orders</div>
-        <div class="sc-badge"><i class="bi bi-arrow-up-right"></i> +7% vs last week</div>
-    </div>
-</div>
+    <!-- ══ MAIN ══ -->
+    <main class="main-content">
 
-<!-- Best Sellers -->
-<div class="best-sellers-card">
-    <div class="bs-card-title">
-        <i class="bi bi-trophy" style="color:var(--amber);"></i>
-        Best Selling Books
-    </div>
-
-    @foreach (var book in Model.BestSellers)
-    {
-        var rankClass = book.Rank switch
-        {
-            1 => "gold",
-            2 => "silver",
-            3 => "bronze",
-            _ => ""
-        };
-
-        <div class="best-seller-row">
-            <div class="bs-rank @rankClass">@book.Rank</div>
-            <div class="bs-info">
-                <div class="bs-title">@book.Title</div>
-                <div class="bs-author">@book.Author</div>
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div class="header-left">
+                <div class="page-eyebrow"><span class="eyebrow-dot"></span> Revenue Analytics</div>
+                <h1 class="page-title">Sales <span class="title-accent">Overview</span></h1>
+                <p class="page-subtitle">Track revenue, best sellers, and order performance</p>
             </div>
-            <div class="bs-meta">
-                <div class="bs-qty">@book.UnitsSold sold</div>
-                <div class="bs-amount">₱ @book.Revenue.ToString("N0")</div>
+            <div class="header-right">
+                <button class="btn-admin-ghost"><i class="bi bi-download"></i> Export Report</button>
             </div>
         </div>
-    }
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">₱ @Model.TotalRevenue.ToString("N0")</span>
+                    <span class="stat-label">Total Revenue</span>
+                </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="bi bi-bag-check"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">@Model.TotalOrders</span>
+                    <span class="stat-label">Orders Fulfilled</span>
+                </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon violet"><i class="bi bi-graph-up"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">₱ @Model.AvgOrderValue.ToString("N0")</span>
+                    <span class="stat-label">Avg. Order Value</span>
+                </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon amber"><i class="bi bi-book"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">@Model.TotalBooksSold</span>
+                    <span class="stat-label">Books Sold</span>
+                </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Monthly Revenue</div>
+                    <div class="chart-sub">Jan – Dec · All categories</div>
+                </div>
+                <span class="growth-badge"><i class="bi bi-arrow-up-right"></i> +18.4% vs last year</span>
+            </div>
+            <div class="bar-chart">
+                @foreach (var stat in Model.MonthlyStats)
+                {
+                    var height = Model.BarHeight(stat.Revenue);
+                    var isHighlight = stat.Revenue == Model.MonthlyStats.Max(m => m.Revenue);
+                    <div class="bar-group">
+                        <div class="bar @(isHighlight ? "highlight" : "")"
+                             style="height:@(height)%;"
+                             title="₱ @stat.Revenue.ToString("N0")">
+                        </div>
+                        <div class="bar-label">@stat.Month</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- This Month / This Week -->
+        <div class="sales-split">
+            <div class="summary-card">
+                <div class="sc-label">This Month</div>
+                <div class="sc-value">₱ @Model.ThisMonthRevenue.ToString("N0")</div>
+                <div class="sc-sub">From @Model.ThisMonthOrders completed orders</div>
+                <div class="sc-badge"><i class="bi bi-arrow-up-right"></i> +12% vs last month</div>
+            </div>
+            <div class="summary-card">
+                <div class="sc-label">This Week</div>
+                <div class="sc-value">₱ @Model.ThisWeekRevenue.ToString("N0")</div>
+                <div class="sc-sub">From @Model.ThisWeekOrders completed orders</div>
+                <div class="sc-badge"><i class="bi bi-arrow-up-right"></i> +7% vs last week</div>
+            </div>
+        </div>
+
+        <!-- Best Sellers -->
+        <div class="bestsellers-card">
+            <div class="bs-header">
+                <i class="bi bi-trophy" style="color:var(--amber); font-size:1rem;"></i>
+                <span class="bs-header-title">Best Selling Books</span>
+            </div>
+
+            @foreach (var book in Model.BestSellers)
+            {
+                var rankClass = book.Rank switch
+                {
+                    1 => "gold",
+                    2 => "silver",
+                    3 => "bronze",
+                    _ => ""
+                };
+
+                <div class="bs-row">
+                    <div class="bs-rank @rankClass">@book.Rank</div>
+                    <div class="bs-info">
+                        <div class="bs-title">@book.Title</div>
+                        <div class="bs-author">@book.Author</div>
+                    </div>
+                    <div class="bs-meta">
+                        <div class="bs-qty">@book.UnitsSold sold</div>
+                        <div class="bs-amount">₱ @book.Revenue.ToString("N0")</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </main>
 </div>
+</body>
+</html>

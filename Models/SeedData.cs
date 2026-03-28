@@ -31,6 +31,7 @@ public static class SeedData
                 {
                     Title = "Walk into the Shadow",
                     Author = "Estelle Darcy",
+                    Category = "Fiction",
                     YearPublished = 2019,
                     Publisher = "Contemporary Books",
                     ImageUrl = "https://marketplace.canva.com/EAFfSnGl7II/2/0/1003w/canva-elegant-dark-woods-fantasy-photo-book-cover-vAt8PH1CmqQ.jpg",

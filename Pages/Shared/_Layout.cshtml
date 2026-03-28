@@ -14,19 +14,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    @if (ViewData["Title"]?.ToString() != "Admin Dashboard")
+        {
+            <header>
+                <nav class="site-navbar">
+                    <div class="nav-inner">
 
-<header>
-    <nav class="site-navbar">
-        <div class="nav-inner">
-
-            <a class="nav-brand" asp-area="" asp-page="/Index">
-                <span class="brand-icon"><i class="bi bi-book-half"></i></span>
-                <span class="brand-text">The Book Cellar</span>
-            </a>
-                <div class="nav-right">
-            
-            </ul>
-
+                        <a class="nav-brand" asp-area="" asp-page="/Index">
+                            <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+                            <span class="brand-text">The Book Cellar</span>
+                        </a>
+                        <div class="nav-right">
             <div class="nav-auth">
                 <partial name="_LoginPartial" />
             </div>
@@ -34,44 +32,46 @@
             <button class="mobile-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
                 <i class="bi bi-list"></i>
             </button>
-        </div>
             </div>
-        <div class="collapse mobile-nav" id="mobileNav">
-            <div class="mobile-nav-inner">
-                <form method="get" asp-page="/Books/Index" class="mobile-search-form">
-                    <div class="mobile-search-box">
-                        <i class="bi bi-search" style="color:#aaa;"></i>
-                        <input type="text" name="SearchString" class="mobile-search-input" placeholder="Search books..." />
-                        <button type="submit" class="mobile-search-btn">
-                            <i class="bi bi-arrow-right"></i>
-                        </button>
+            </div>
+            <div class="collapse mobile-nav" id="mobileNav">
+                <div class="mobile-nav-inner">
+                    <form method="get" asp-page="/Books/Index" class="mobile-search-form">
+                        <div class="mobile-search-box">
+                            <i class="bi bi-search" style="color:#aaa;"></i>
+                            <input type="text" name="SearchString" class="mobile-search-input" placeholder="Search books..." />
+                            <button type="submit" class="mobile-search-btn">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <a class="mobile-nav-link" asp-area="" asp-page="/Books/Index"><i class="bi bi-house"></i> Home</a>
+                    <div class="mobile-nav-auth">
+                        <partial name="_LoginPartial" />
                     </div>
-                </form>
-                <a class="mobile-nav-link" asp-area="" asp-page="/Books/Index"><i class="bi bi-house"></i> Home</a>
-                <div class="mobile-nav-auth">
-                    <partial name="_LoginPartial" />
                 </div>
             </div>
-        </div>
-    </nav>
-</header>
-
-<div class="page-body">
+            </nav>
+            </header>
+            }
+        <div class="page-body">
     <main role="main" class="pb-5">
         @RenderBody()
     </main>
 </div>
-
-<footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-left">
-            <span class="footer-brand"><i class="bi bi-book-half"></i> The Book Cellar</span>
-            <span class="footer-tagline">Curating your literary collection.</span>
-        </div>
-    </div>
-</footer>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+}
+@if (ViewData["Title"]?.ToString() != "Admin Dashboard")
+        {
+            <footer class="site-footer">
+                <div class="footer-inner">
+                    <div class="footer-left">
+                        <span class="footer-brand"><i class="bi bi-book-half"></i> The Book Cellar</span>
+                        <span class="footer-tagline">Curating your literary collection.</span>
+                    </div>
+                </div>
+            </footer>
+        }
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)

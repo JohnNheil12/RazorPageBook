@@ -24,6 +24,7 @@ builder.Services.AddDbContext<RazorPageBooksContext>(options =>
     options.UseSqlServer(connectionString));
 
 // 3. Identity configuration
+// 3. Identity configuration
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -33,6 +34,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
 })
+.AddRoles<IdentityRole>()                          // ← added this
 .AddEntityFrameworkStores<RazorPageBooksContext>();
 
 // 4. Cookie configuration for Remember Me
@@ -63,6 +65,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "Naay sayop sa pag-migrate o pag-seed sa database.");
     }
 }
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

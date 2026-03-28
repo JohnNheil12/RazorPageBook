@@ -71,6 +71,32 @@
                         </div>
                     </div>
                 }
+                <div class="form-row two-col">
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i class="bi bi-currency-dollar"></i> Price
+                        </label>
+                        <div class="display-field">₱ @Model.Book.Price</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i class="bi bi-tags"></i> Category
+                        </label>
+                        <div class="display-field">@Model.Book.Category</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i class="bi bi-card-text"></i> Overview
+                        </label>
+                        <div class="display-field description-box">
+                            @Model.Book.Overview
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Actions -->

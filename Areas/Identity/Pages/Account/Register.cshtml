@@ -4,73 +4,93 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="split-container">
-    <div class="brand-side">
-        <div class="brand-content">
-            <div class="brand-badge">
-                <i class="bi bi-person-plus-fill"></i>
-            </div>
-            <h1 class="brand-title">Join the Cellar</h1>
-            <p class="brand-tagline">Create an account to save your favorite books, write reviews, and join our community of readers.</p>
-            
-            <div class="feature-list mt-4">
-                <div class="feature-item d-flex align-items-center mb-3">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    <span>Personalized Book Lists</span>
+<div class="register-page-wrapper">
+    <div class="split-container">
+        <div class="brand-side">
+            <div class="brand-content">
+                <div class="brand-badge">
+                    <i class="bi bi-person-plus-fill"></i>
                 </div>
-                <div class="feature-item d-flex align-items-center mb-3">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    <span>Exclusive Member Discounts</span>
+                <h1 class="brand-title">Join the Cellar</h1>
+                <p class="brand-tagline">Create an account to save your favorite books, write reviews, and join our community of readers.</p>
+                
+                <div class="feature-list mt-4">
+                    <div class="feature-item d-flex align-items-center mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <span>Personalized Book Lists</span>
+                    </div>
+                    <div class="feature-item d-flex align-items-center mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <span>Exclusive Member Discounts</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-side">
-        <div class="modern-card">
-            <form method="post">
-                <div class="form-header">
-                    <h2 class="card-title">Create Account</h2>
-                    <p class="card-subtitle">Enter your details to get started</p>
-                </div>
+        <div class="form-side">
+            <div class="modern-card">
+                <form method="post">
+                    <div class="form-header">
+                        <h2 class="card-title">Create Account</h2>
+                        <p class="card-subtitle">Enter your details to get started</p>
+                    </div>
 
-                @if (!string.IsNullOrEmpty(Model.StatusMessage))
-                {
-                    <div class="alert alert-success">@Model.StatusMessage</div>
-                }
+                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                    {
+                        <div class="alert alert-success">@Model.StatusMessage</div>
+                    }
 
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
 
-                <div class="form-group">
-                    <label asp-for="Input.Username" class="custom-label">Username</label>
-                    <input asp-for="Input.Username" class="custom-input" placeholder="e.g. reader_joe" required />
-                    <span asp-validation-for="Input.Username" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Input.Email" class="custom-label">Email Address</label>
-                    <input asp-for="Input.Email" class="custom-input" placeholder="name@example.com" required />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
+                    <div class="name-row">
                         <div class="form-group">
-                            <label asp-for="Input.Password" class="custom-label">Password</label>
-                            <input asp-for="Input.Password" class="custom-input" type="password" placeholder="Password" required />
-                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            <label asp-for="Input.FirstName" class="custom-label">First Name</label>
+                            <input asp-for="Input.FirstName" class="custom-input" placeholder="e.g. John" required />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                         </div>
-                    
                         <div class="form-group">
-                            <label asp-for="Input.ConfirmPassword" class="custom-label">Confirm Password</label>
-                            <input asp-for="Input.ConfirmPassword" class="custom-input" type="password" placeholder="Confirm Password" required />
-                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            <label asp-for="Input.LastName" class="custom-label">Last Name</label>
+                            <input asp-for="Input.LastName" class="custom-input" placeholder="e.g. Doe" required />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
                         </div>
+                    </div>
 
-                <button type="submit" class="btn-modern-primary mt-2">Create Account</button>
+                    <div class="form-group">
+                        <label asp-for="Input.Email" class="custom-label">Email Address</label>
+                        <input asp-for="Input.Email" class="custom-input" placeholder="name@example.com" required />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
 
-                <div class="footer-links">
-                    <p class="small-text">Already a member? <a asp-page="./Login">Log in instead</a></p>
-                    <a asp-page="/Index" class="small-link">Return to Home</a>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label asp-for="Input.Password" class="custom-label">Password</label>
+                        <input asp-for="Input.Password" class="custom-input" type="password" placeholder="Password" required />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmPassword" class="custom-label">Confirm Password</label>
+                        <input asp-for="Input.ConfirmPassword" class="custom-input" type="password" placeholder="Confirm Password" required />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.Role" class="custom-label">Role</label>
+                        <select asp-for="Input.Role" class="custom-input custom-select" required>
+                            <option value="" disabled selected>Select a role...</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Staff">Staff</option>
+                        </select>
+                        <span asp-validation-for="Input.Role" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn-modern-primary mt-2">Create Account</button>
+
+                    <div class="footer-links">
+                        <p class="small-text">Already a member? <a asp-page="./Login">Log in instead</a></p>
+                        <a asp-page="/Index" class="small-link">Return to Home</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -87,14 +107,19 @@
         --input-bg: #f8fafc;
     }
 
+    /* ✅ FIX: Ensure the register page doesn't hide under the navbar */
+    .register-page-wrapper {
+        margin-top: 0;
+        overflow-x: hidden;
+    }
+
     .split-container {
         display: flex;
-        min-height: 100vh;
+        min-height: calc(100vh - 64px); /* Subtract navbar height */
         width: 100%;
         background-color: #fff;
     }
 
-    /* ── Left Side (Brand Image) ── */
     .brand-side {
         flex: 1.2;
         background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2000&auto=format&fit=crop');
@@ -105,7 +130,6 @@
         align-items: center;
         justify-content: center;
         padding: 60px;
-        overflow: hidden;
         color: white;
     }
 
@@ -117,150 +141,53 @@
         z-index: 1;
     }
 
-    .brand-content {
-        position: relative;
-        z-index: 10;
-        max-width: 440px;
-    }
+    .brand-content { position: relative; z-index: 10; max-width: 440px; }
 
     .brand-badge {
-        width: 64px;
-        height: 64px;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(12px);
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.2rem;
-        margin-bottom: 30px;
-        border: 1px solid rgba(255,255,255,0.2);
+        width: 64px; height: 64px; background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px); border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.2rem; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.2);
     }
 
-    .brand-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        line-height: 1.1;
-    }
+    .brand-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1; }
 
-    .feature-item {
-        font-size: 1.1rem;
-        opacity: 0.9;
-    }
-
-    .feature-item i {
-        color: #fff;
-    }
-
-    /* ── Right Side (Form) ── */
     .form-side {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px;
-        background-color: #fff;
+        flex: 1; display: flex; align-items: center; justify-content: center;
+        padding: 40px; background-color: #fff;
     }
 
-    .modern-card {
-        width: 100%;
-        max-width: 480px; /* Slightly wider for the row inputs */
-    }
+    .modern-card { width: 100%; max-width: 480px; }
 
-    .form-header { margin-bottom: 35px; }
+    /* Fix for your click issue: ensuring inputs aren't covered */
+    .form-group { margin-bottom: 20px; position: relative; z-index: 5; }
 
-    .card-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-        margin-bottom: 8px;
-    }
-
-    .card-subtitle {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-    }
-
-    .form-group { margin-bottom: 20px; }
+    .name-row { display: flex; gap: 16px; }
+    .name-row .form-group { flex: 1; }
 
     .custom-label {
-        display: block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--text-main);
-        margin-bottom: 8px;
+        display: block; font-size: 0.75rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); margin-bottom: 8px;
     }
 
     .custom-input {
-        width: 100%;
-        padding: 14px;
-        border: 1.5px solid #edf2f7;
-        background: var(--input-bg);
-        border-radius: 12px;
-        font-size: 0.95rem;
-        transition: all 0.2s ease;
+        width: 100%; padding: 14px; border: 1.5px solid #edf2f7;
+        background: var(--input-bg); border-radius: 12px; font-size: 0.95rem; transition: all 0.2s;
     }
 
-    .custom-input:focus {
-        outline: none;
-        background: #fff;
-        border-color: var(--brand-dark);
-        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
-    }
+    .custom-input:focus { outline: none; background: #fff; border-color: var(--brand-dark); box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
 
     .btn-modern-primary {
-        width: 100%;
-        padding: 16px;
-        background: var(--brand-dark);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s, background 0.2s;
-        margin-top: 10px;
+        width: 100%; padding: 16px; background: var(--brand-dark); color: #fff;
+        border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer;
     }
 
-    .btn-modern-primary:hover {
-        background: #333;
-        transform: translateY(-2px);
-    }
-
-    .footer-links {
-        margin-top: 25px;
-        text-align: center;
-        border-top: 1px solid #f1f5f9;
-        padding-top: 20px;
-    }
-
-    .footer-links a {
-        color: var(--brand-dark);
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .small-link {
-        display: block;
-        font-size: 0.85rem;
-        margin-top: 10px;
-        color: var(--text-muted) !important;
-        font-weight: 400 !important;
-    }
+    .footer-links { margin-top: 25px; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px; }
 
     @@media (max-width: 992px) {
         .brand-side { display: none; }
-        .form-side { padding: 20px; }
-        .modern-card {
-            background: #fff;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
+        .split-container { min-height: auto; }
+        .form-side { padding: 40px 20px; }
+        .name-row { flex-direction: column; gap: 0; }
     }
 </style>

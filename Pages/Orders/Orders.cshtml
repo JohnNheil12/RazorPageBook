@@ -2,22 +2,22 @@
 @model RazorPageBooks.Pages.Orders.IndexModel
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
-
 @{
     ViewData["Title"] = "Orders";
-    Layout = null; 
+    Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - The Book Cellar</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-    
+    <title>Orders — The Book Cellar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #f8fafc; font-family: 'DM Sans', sans-serif; }
+
         :root {
             --surface: #ffffff;
             --bg: #f8fafc;
@@ -27,248 +27,391 @@
             --txt-muted: #64748b;
             --txt-light: #94a3b8;
             --accent: #1d4ed8;
-            --sidebar-w: 260px;
+            --indigo: #4f46e5; --indigo-bg: #eef2ff; --indigo-border: #c7d2fe;
+            --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
+            --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
+            --rose: #e11d48; --rose-bg: #fff1f2; --rose-border: #fecdd3;
+            --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+            --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+            --sidebar-w: 240px;
             --sidebar-bg: #0f172a;
             --sidebar-border: #1e293b;
             --sidebar-txt: #94a3b8;
             --sidebar-txt-active: #f8fafc;
             --sidebar-hover: #1e293b;
-            --sidebar-active-bg: #1e3a8a;
-
-            /* Order Specific Colors */
-            --indigo: #4f46e5; --indigo-bg: #eef2ff;
-            --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
-            --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
-            --rose: #e11d48; --rose-bg: #fff1f2; --rose-border: #fecdd3;
-            --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
         }
-
-        body { margin: 0; padding: 0; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--txt); }
 
         .shell { display: flex; min-height: 100vh; }
 
-        /* ════════════ SIDEBAR ════════════ */
+        /* ── SIDEBAR ── */
         .sidebar {
             width: var(--sidebar-w); min-width: var(--sidebar-w);
             background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);
-            display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+            display: flex; flex-direction: column;
+            position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 100;
         }
 
-        .sidebar-brand { padding: 24px 20px; border-bottom: 1px solid var(--sidebar-border); display: flex; align-items: center; gap: 12px; }
-        .brand-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #1d4ed8, #4f46e5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
-        
-        .sidebar-nav { flex: 1; padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; color: var(--sidebar-txt); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
-        .nav-item i { font-size: 1.1rem; }
-        .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
-        .nav-item.active { background: var(--sidebar-active-bg); color: #fff; font-weight: 600; }
+        .sidebar-brand { display: flex; align-items: center; gap: 11px; padding: 22px 20px 20px; border-bottom: 1px solid var(--sidebar-border); flex-shrink: 0; }
+        .brand-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1d4ed8 0%, #4f46e5 100%); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; flex-shrink: 0; box-shadow: 0 4px 12px rgba(79,70,229,0.4); }
+        .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+        .brand-name { font-size: 0.92rem; font-weight: 700; color: var(--sidebar-txt-active); letter-spacing: -0.2px; }
+        .brand-tagline { font-size: 0.65rem; font-weight: 500; color: var(--sidebar-txt); text-transform: uppercase; letter-spacing: 0.8px; }
 
-        .sidebar-footer { padding: 16px; border-top: 1px solid var(--sidebar-border); background: rgba(0,0,0,0.1); }
-        .sidebar-user { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: var(--sidebar-hover); border: 1px solid var(--sidebar-border); }
-        .user-avatar { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
-        
-        .logout-btn { background: none; border: none; color: #ef4444; padding: 8px; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .logout-btn:hover { background: rgba(239, 68, 68, 0.1); transform: scale(1.1); }
+        .sidebar-nav {width: 280px; flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; }
 
-        /* ════════════ MAIN CONTENT ════════════ */
-        .main-content { flex: 1; padding: 32px; overflow-y: auto; }
+        .nav-section-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #334155; padding: 10px 8px 4px; display: block; }
 
-        .admin-page-header { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 30px; margin-bottom: 28px; background: #fff; 
-            border: 1px solid var(--border); border-radius: 20px; 
-            border-left: 5px solid var(--accent); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
-        }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; text-decoration: none; color: var(--sidebar-txt); font-size: 0.85rem; font-weight: 500; transition: background 0.15s, color 0.15s; }
+        .nav-item:hover { background: var(--sidebar-hover); color: #cbd5e1; }
+        .nav-item.active { background: #1e3a8a; color: var(--sidebar-txt-active); font-weight: 600; box-shadow: inset 3px 0 0 #3b82f6; }
 
-        .page-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; margin: 0; color: var(--txt); }
+        .nav-icon-wrap { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; background: rgba(255,255,255,0.04); }
+        .nav-item.active .nav-icon-wrap { background: rgba(59,130,246,0.2); color: #93c5fd; }
+        .nav-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .nav-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; }
+        .nav-badge.amber { background: #78350f; color: #fcd34d; }
+
+        .sidebar-footer { padding: 14px 12px; border-top: 1px solid var(--sidebar-border); flex-shrink: 0; }
+        .sidebar-user { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; background: var(--sidebar-hover); }
+        .user-avatar { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #1d4ed8, #7c3aed); color: #fff; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .user-meta { flex: 1; display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+        .user-name { font-size: 0.8rem; font-weight: 600; color: var(--sidebar-txt-active); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-role { font-size: 0.65rem; color: var(--sidebar-txt); }
+        .user-logout { color: var(--sidebar-txt); font-size: 0.9rem; background: none; border: none; cursor: pointer; display: flex; align-items: center; flex-shrink: 0; transition: color 0.15s; }
+        .user-logout:hover { color: #f87171; }
+
+        /* ── MAIN ── */
+        .main-content { flex: 1; padding: 28px; overflow-y: auto; min-width: 0; }
+
+        .admin-page-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px 32px; margin-bottom: 24px; background: #ffffff; border: 1px solid var(--border); border-radius: 16px; border-left: 4px solid var(--accent); box-shadow: 0 1px 6px rgba(15,23,42,0.05); }
+
+        .page-eyebrow { display: flex; align-items: center; gap: 7px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 6px; }
+        .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; margin: 0 0 4px; line-height: 1.15; }
         .title-accent { color: var(--accent); font-style: italic; }
+        .page-subtitle { font-size: 0.85rem; color: var(--txt-muted); margin: 0; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        
-        .admin-table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
-        .admin-table { width: 100%; border-collapse: collapse; }
-        .admin-table th { background: #f8fafc; padding: 14px 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--txt-muted); border-bottom: 1px solid var(--border); }
-        .admin-table td { padding: 16px 20px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+        .btn-admin-primary { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background 0.15s, transform 0.15s; box-shadow: 0 2px 8px rgba(29,78,216,0.22); white-space: nowrap; }
+        .btn-admin-primary:hover { background: #1e40af; color: #fff; transform: translateY(-1px); }
 
-        .order-status { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
-        .os-pending { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+        .btn-admin-ghost { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--surface); color: var(--txt); border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background 0.15s; }
+        .btn-admin-ghost:hover { background: #f1f5f9; border-color: #cbd5e1; color: var(--txt); }
+
+        /* ── STATS ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; transition: box-shadow 0.15s, transform 0.15s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,23,42,0.07); }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+        .stat-card:nth-child(1)::before { background: var(--blue); }
+        .stat-card:nth-child(2)::before { background: var(--amber); }
+        .stat-card:nth-child(3)::before { background: var(--emerald); }
+        .stat-card:nth-child(4)::before { background: var(--rose); }
+
+        .stat-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+        .stat-icon.blue    { background: var(--blue-bg);    color: var(--blue);    }
+        .stat-icon.amber   { background: var(--amber-bg);   color: var(--amber);   }
+        .stat-icon.emerald { background: var(--emerald-bg); color: var(--emerald); }
+        .stat-icon.rose    { background: var(--rose-bg);    color: var(--rose);    }
+
+        .stat-body { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; }
+        .stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--txt-muted); margin-top: 2px; }
+        .stat-trend { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+        .stat-trend.up      { background: var(--emerald-bg); color: var(--emerald); }
+        .stat-trend.neutral { background: var(--border-light); color: var(--txt-light); }
+
+        /* ── TOOLBAR ── */
+        .admin-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+        .search-form { flex: 1; max-width: 420px; }
+        .search-box { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 0 7px 0 14px; height: 42px; transition: border-color 0.18s, box-shadow 0.18s; }
+        .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(29,78,216,0.08); }
+        .search-ico { color: var(--txt-light); font-size: 0.9rem; flex-shrink: 0; }
+        .search-input { flex: 1; border: none; outline: none; background: transparent; font-size: 0.875rem; font-family: 'DM Sans', sans-serif; color: var(--txt); min-width: 0; }
+        .search-input::placeholder { color: var(--txt-light); }
+        .search-btn { background: var(--accent); color: #fff; border: none; border-radius: 7px; padding: 0 13px; height: 29px; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
+        .search-btn:hover { background: #1e40af; }
+        .toolbar-meta { display: flex; align-items: center; gap: 10px; }
+        .results-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; font-weight: 500; color: var(--txt-muted); }
+
+        /* ── TABLE ── */
+        .admin-table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .table-responsive { overflow-x: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; font-family: 'DM Sans', sans-serif; }
+        .admin-table thead tr { background: #f8fafc; border-bottom: 1px solid var(--border); }
+        .admin-table thead th { padding: 11px 16px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.9px; color: var(--txt-light); white-space: nowrap; }
+        .admin-table thead th:first-child { padding-left: 24px; }
+        .admin-table thead th:last-child  { text-align: right; padding-right: 24px; }
+        .admin-table thead th.center      { text-align: center; }
+
+        .order-row { border-bottom: 1px solid var(--border-light); transition: background 0.12s; }
+        .order-row:last-child { border-bottom: none; }
+        .order-row:hover { background: #fafbfc; }
+
+        .admin-table td { padding: 14px 16px; vertical-align: middle; font-size: 0.875rem; }
+        .admin-table td:first-child { padding-left: 24px; }
+        .admin-table td:last-child  { padding-right: 24px; }
+        .admin-table td.center      { text-align: center; }
+
+        .order-num { font-weight: 700; color: var(--accent); font-size: 0.85rem; font-family: 'DM Sans', sans-serif; }
+
+        .customer-chip { display: flex; align-items: center; gap: 10px; }
+        .customer-initial { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-bg); color: var(--blue); font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .customer-name  { font-size: 0.85rem; font-weight: 600; color: var(--txt); }
+        .customer-email { font-size: 0.72rem; color: var(--txt-muted); }
+
+        .book-title-text { font-size: 0.85rem; font-weight: 500; color: var(--txt); }
+
+        .qty-pill { display: inline-block; padding: 3px 10px; background: var(--border-light); border: 1px solid var(--border); border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: var(--txt-muted); }
+
+        .order-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; border: 1px solid transparent; }
+        .os-pending   { background: var(--amber-bg);   color: var(--amber);   border-color: var(--amber-border);   }
         .os-completed { background: var(--emerald-bg); color: var(--emerald); border-color: var(--emerald-border); }
+        .os-cancelled { background: var(--rose-bg);    color: var(--rose);    border-color: var(--rose-border);    }
 
-        .search-box { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0 8px 0 16px; height: 46px; width: 100%; max-width: 450px; transition: 0.2s; }
-        .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); }
-        .search-input { flex: 1; border: none; outline: none; font-size: 0.9rem; color: var(--txt); }
+        .action-cluster { display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+        .act-btn { width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.82rem; text-decoration: none; border: 1px solid transparent; transition: background 0.12s, transform 0.12s; }
+        .act-btn:hover { transform: translateY(-1px); }
+        .act-view { background: var(--blue-bg);  color: var(--blue);  border-color: var(--blue-border);  }
+        .act-edit { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+        .act-view:hover { background: #dbeafe; }
+        .act-edit:hover { background: #dcfce7; }
 
-        .btn-admin-primary { background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(29,78,216,0.3); }
-        .act-btn { width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: 0.2s; }
-        .act-view { background: #eff6ff; color: #2563eb; }
-        .act-view:hover { background: #2563eb; color: #fff; }
+        .table-footer { padding: 12px 24px; border-top: 1px solid var(--border-light); background: #fafbfc; }
+        .footer-count { font-size: 0.8rem; color: var(--txt-light); }
+        .footer-count strong { color: var(--txt-muted); }
+
+        .empty-state { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 72px 32px; text-align: center; }
+        .empty-icon-wrap { width: 64px; height: 64px; background: var(--border-light); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: var(--txt-light); margin: 0 auto 20px; }
+        .empty-title { font-size: 1.05rem; font-weight: 600; color: var(--txt); margin-bottom: 8px; }
+        .empty-desc { font-size: 0.875rem; color: var(--txt-muted); max-width: 320px; margin: 0 auto; }
 
         @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @@media (max-width: 768px) {
+            .shell { flex-direction: column; }
+            .sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; }
+            .sidebar-nav { flex-direction: row; padding: 8px; overflow-x: auto; gap: 4px; flex: 1; }
+            .nav-section-label { display: none; }
+            .sidebar-footer { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-content { padding: 16px; }
+            .admin-page-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
+        }
+        @@media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
+<div class="shell">
 
-    <div class="shell">
-
-        <!-- ══════════════════════════════════════
-             LEFT SIDEBAR
-        ══════════════════════════════════════ -->
-        <aside class="sidebar">
-            <!-- Brand -->
-            <div class="sidebar-brand">
-                <div class="brand-icon">
-                    <i class="bi bi-book-half"></i>
-                </div>
-                <div class="brand-text">
-                    <span class="brand-name">BookCellar</span>
-                    <span class="brand-tagline">Admin Panel</span>
-                </div>
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="bi bi-book-half"></i></div>
+            <div class="brand-text">
+                <span class="brand-name">Book Cellar</span>
+                <span class="brand-tagline">Admin Panel</span>
             </div>
-                 <nav class="sidebar-nav">
-                        <span class="nav-section-label">Main Menu</span>
+        </div>
 
-                        <a asp-page="/Books/Index" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Books/") ? "active" : "")">
-                    <span class="nav-icon-wrap"><i class="bi bi-journals"></i></span>
-                    <span class="nav-label">Books Inventory</span>
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Library</span>
+            <a href="/Books/Inventory" class="nav-item">
+                <div class="nav-icon-wrap"><i class="bi bi-journals"></i></div>
+                <span class="nav-label">Inventory</span>
+            </a>
+            <a href="/Orders/Orders" class="nav-item active">
+                <div class="nav-icon-wrap"><i class="bi bi-bag-check"></i></div>
+                <span class="nav-label">Orders</span>
+                <span class="nav-badge amber">@Model.PendingOrders</span>
+            </a>
+            <a href="/Sales/Sales" class="nav-item">
+                <div class="nav-icon-wrap"><i class="bi bi-graph-up"></i></div>
+                <span class="nav-label">Sales</span>
+            </a>
+            <a href="/Users/Users" class="nav-item">
+                <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
+                <span class="nav-label">Users</span>
+            </a>
+            <span class="nav-section-label">Account</span>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="/Orders" style="margin:0;padding:0;">
+                </form>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="nav-item">
+                    <div class="nav-icon-wrap"><i class="bi bi-box-arrow-in-right"></i></div>
+                    <span class="nav-label">Login</span>
                 </a>
+            }
+        </nav>
 
-                <a asp-page="/Sales/Sales" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Sales/") ? "active" : "")">
-                    <span class="nav-icon-wrap"><i class="bi bi-graph-up-arrow"></i></span>
-                    <span class="nav-label">Sales</span>
-                </a>
-
-                <a asp-page="/Orders/Orders" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Orders/") ? "active" : "")">
-                    <span class="nav-icon-wrap"><i class="bi bi-bag-check"></i></span>
-                    <span class="nav-label">Orders</span>
-                </a>
-
-                <a asp-page="/Users/Users" class="nav-item @(ViewContext.RouteData.Values["page"].ToString().Contains("/Users/") ? "active" : "")">
-                    <span class="nav-icon-wrap"><i class="bi bi-people"></i></span>
-                    <span class="nav-label">User Management</span>
-                </a>
-
-            <!-- User footer -->
+        @if (SignInManager.IsSignedIn(User))
+        {
             <div class="sidebar-footer">
                 <div class="sidebar-user">
-                    <div class="user-avatar">A</div>
+                    <div class="user-avatar">@(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "A")</div>
                     <div class="user-meta">
-                        <span class="user-name">Admin</span>
+                        <span class="user-name">@User.Identity.Name</span>
                         <span class="user-role">Administrator</span>
                     </div>
-                    <a href="#" class="user-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+                    <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="/Orders" style="margin:0;padding:0;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="user-logout" title="Logout">
+                            <i class="bi bi-box-arrow-left"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
-        </aside>
+        }
+    </aside>
 
-
+    <!-- ══ MAIN ══ -->
     <main class="main-content">
+
         <div class="admin-page-header">
-            <div>
-                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.5px;">
-                    <i class="bi bi-circle-fill" style="font-size: 6px; vertical-align: middle; margin-right: 5px;"></i> Processing Hub
-                </div>
-                <h1 class="page-title">Sales <span class="title-accent">& Orders</span></h1>
+            <div class="header-left">
+                <div class="page-eyebrow"><span class="eyebrow-dot"></span> Processing Hub</div>
+                <h1 class="page-title">Sales <span class="title-accent">&amp; Orders</span></h1>
+                <p class="page-subtitle">Manage customer transactions and fulfillment</p>
             </div>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn-admin-ghost" style="background: #fff; border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;">
-                    <i class="bi bi-file-earmark-arrow-down"></i> Export
-                </button>
+            <div class="header-right">
+                <button class="btn-admin-ghost"><i class="bi bi-file-earmark-arrow-down"></i> Export</button>
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a class="btn-admin-primary"><i class="bi bi-plus-lg"></i> Create Order</a>
+                    <a href="#" class="btn-admin-primary"><i class="bi bi-plus-lg"></i> Create Order</a>
                 }
             </div>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--blue-bg); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-cart-check"></i></div>
-                <div>
-                    <div style="font-size: 1.6rem; font-weight: 700;">@Model.TotalOrders</div>
-                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">Total Invoices</div>
+                <div class="stat-icon blue"><i class="bi bi-cart-check"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">@Model.TotalOrders</span>
+                    <span class="stat-label">Total Orders</span>
                 </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
             </div>
             <div class="stat-card">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--amber-bg); color: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-hourglass-split"></i></div>
-                <div>
-                    <div style="font-size: 1.6rem; font-weight: 700;">@Model.PendingOrders</div>
-                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">To Process</div>
+                <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">@Model.PendingOrders</span>
+                    <span class="stat-label">To Process</span>
                 </div>
+                <div class="stat-trend neutral"><i class="bi bi-dash"></i></div>
             </div>
             <div class="stat-card">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--emerald-bg); color: var(--emerald); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-patch-check"></i></div>
-                <div>
-                    <div style="font-size: 1.6rem; font-weight: 700;">@Model.CompletedOrders</div>
-                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">Completed</div>
+                <div class="stat-icon emerald"><i class="bi bi-patch-check"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">@Model.CompletedOrders</span>
+                    <span class="stat-label">Completed</span>
                 </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
             </div>
             <div class="stat-card">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--rose-bg); color: var(--rose); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-cash-stack"></i></div>
-                <div>
-                    <div style="font-size: 1.6rem; font-weight: 700;">$@string.Format("{0:N0}", 12540)</div>
-                    <div style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--txt-muted);">Net Revenue</div>
+                <div class="stat-icon rose"><i class="bi bi-cash-stack"></i></div>
+                <div class="stat-body">
+                    <span class="stat-value">₱ @string.Format("{0:N0}", 12540)</span>
+                    <span class="stat-label">Net Revenue</span>
                 </div>
+                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
             </div>
         </div>
 
-        <div style="margin-bottom: 24px;">
-            <form method="get">
+        <div class="admin-toolbar">
+            <form method="get" action="/Orders" class="search-form">
                 <div class="search-box">
-                    <i class="bi bi-search" style="color: var(--txt-light);"></i>
-                    <input type="text" name="searchString" class="search-input" placeholder="Find by order number or customer name..." />
-                    <button type="submit" style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">Search</button>
+                    <i class="bi bi-search search-ico"></i>
+                    <input type="text" name="searchString" class="search-input"
+                           placeholder="Search by order number or customer..." />
+                    <button type="submit" class="search-btn">Search</button>
                 </div>
             </form>
-        </div>
-
-        <div class="admin-table-card">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th style="border-top-left-radius: 20px;">Order #</th>
-                        <th>Customer</th>
-                        <th>Book Selection</th>
-                        <th style="text-align: center;">Qty</th>
-                        <th style="text-align: center;">Status</th>
-                        <th style="text-align: right; border-top-right-radius: 20px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Orders)
-                    {
-                        var statusClass = item.Status == "Completed" ? "os-completed" : "os-pending";
-                        <tr>
-                            <td style="font-weight: 700; color: var(--accent);">#@item.OrderNumber</td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">@item.CustomerName[0]</div>
-                                    <div>
-                                        <div style="font-size: 0.85rem; font-weight: 600;">@item.CustomerName</div>
-                                        <div style="font-size: 0.7rem; color: var(--txt-muted);">@item.CustomerEmail</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><div style="font-size: 0.85rem; font-weight: 500;">@item.BookTitle</div></td>
-                            <td style="text-align: center;"><span style="background: #f1f5f9; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">@item.Quantity</span></td>
-                            <td style="text-align: center;"><span class="order-status @statusClass">@item.Status</span></td>
-                            <td>
-                                <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                                    <a class="act-btn act-view"><i class="bi bi-eye"></i></a>
-                                    <a class="act-btn act-view" style="background: #ecfdf5; color: #059669;"><i class="bi bi-pencil-square"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div style="padding: 16px 24px; background: #f8fafc; font-size: 0.8rem; color: var(--txt-muted); border-top: 1px solid var(--border-light);">
-                Showing <strong>@Model.Orders.Count</strong> customer transactions
+            <div class="toolbar-meta">
+                <span class="results-pill">
+                    <i class="bi bi-receipt"></i>
+                    @Model.Orders.Count order@(Model.Orders.Count != 1 ? "s" : "")
+                </span>
             </div>
         </div>
+
+        @if (!Model.Orders.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon-wrap"><i class="bi bi-bag"></i></div>
+                <h3 class="empty-title">No orders found</h3>
+                <p class="empty-desc">No customer orders have been placed yet, or your search returned no results.</p>
+            </div>
+        }
+        else
+        {
+            <div class="admin-table-card">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Book Selection</th>
+                                <th class="center">Qty</th>
+                                <th class="center">Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Orders)
+                            {
+                                var statusClass = item.Status == "Completed" ? "os-completed"
+                                                : item.Status == "Cancelled"  ? "os-cancelled"
+                                                : "os-pending";
+                                var statusIcon  = item.Status == "Completed" ? "bi-check-circle-fill"
+                                                : item.Status == "Cancelled"  ? "bi-x-circle-fill"
+                                                : "bi-clock-fill";
+                                <tr class="order-row">
+                                    <td><span class="order-num">#@item.OrderNumber</span></td>
+                                    <td>
+                                        <div class="customer-chip">
+                                            <div class="customer-initial">@(item.CustomerName?.Length > 0 ? item.CustomerName[0].ToString().ToUpper() : "?")</div>
+                                            <div>
+                                                <div class="customer-name">@item.CustomerName</div>
+                                                <div class="customer-email">@item.CustomerEmail</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><div class="book-title-text">@item.BookTitle</div></td>
+                                    <td class="center"><span class="qty-pill">@item.Quantity</span></td>
+                                    <td class="center">
+                                        <span class="order-status @statusClass">
+                                            <i class="bi @statusIcon" style="font-size:0.65rem;"></i>
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-cluster">
+                                            <a href="#" class="act-btn act-view" title="View"><i class="bi bi-eye"></i></a>
+                                            @if (SignInManager.IsSignedIn(User))
+                                            {
+                                                <a href="#" class="act-btn act-edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span class="footer-count">Showing <strong>@Model.Orders.Count</strong> order@(Model.Orders.Count != 1 ? "s" : "")</span>
+                </div>
+            </div>
+        }
+
     </main>
 </div>
-
 </body>
 </html>

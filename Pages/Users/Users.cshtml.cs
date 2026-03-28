@@ -1,93 +1,120 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RazorPageBooks.Data;
-using RazorPageBooks.Models;
 
-namespace RazorPageBooks.Pages.Books
+namespace RazorPageBooks.Pages.Users
 {
-    // Note: Use [IgnoreAntiforgeryToken] only if you have specific cross-site needs. 
-    // Generally, Razor Pages handles this automatically.
-    public class UsersModel : PageModel
+    // ── Moved OUTSIDE IndexModel to fix CS0246 ──
+    public class UserViewModel
     {
-        private readonly RazorPageBooks.Data.RazorPageBooksContext _context;
+        public string Id { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = "Customer";
+        public DateTime? LastLoginDate { get; set; }
+        public DateTime? JoinedDate { get; set; }
+    }
 
-        public UsersModel(RazorPageBooks.Data.RazorPageBooksContext context)
+    [Authorize(Roles = "Admin")]
+    public class IndexModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<IndexModel> _logger;
+
+        public IndexModel(UserManager<IdentityUser> userManager, ILogger<IndexModel> logger)
         {
-            _context = context;
+            _userManager = userManager;
+            _logger = logger;
         }
 
-        public IList<Book> Book { get; set; } = default!;
+        public List<UserViewModel> Users { get; set; } = new();
+        public string CurrentUserId { get; set; } = string.Empty;
 
-        [BindProperty(SupportsGet = true)]
-        public string? SearchString { get; set; }
+        public int TotalUsers { get; set; }
+        public int ActiveToday { get; set; }
+        public int AdminCount { get; set; }
+        public int NewThisMonth { get; set; }
 
-        // Added this to allow filtering by a specific Title via dropdown if needed
-        [BindProperty(SupportsGet = true)]
-        public string? BookTitle { get; set; }
-        public SelectList? Titles { get; set; }
-
+        // ────────────────────────────────────────────
+        // GET
+        // ────────────────────────────────────────────
         public async Task OnGetAsync()
         {
-            // 1. Start with a LINQ query
-            var books = from b in _context.Book
-                        select b;
+            // HttpContext.User avoids CS0119 ("User is a type" error on PageModel)
+            CurrentUserId = _userManager.GetUserId(HttpContext.User) ?? string.Empty;
 
-            // 2. Filter by SearchString (Search in Title OR Author)
-            if (!string.IsNullOrWhiteSpace(SearchString))
+            var allUsers = await _userManager.Users.ToListAsync();
+
+            var list = new List<UserViewModel>();
+
+            foreach (var u in allUsers)
             {
-                // We use ToLower() to ensure the search is case-insensitive
-                // Note: EF Core usually handles this automatically for SQL Server, 
-                // but SQLite and PostgreSQL can be strict.
-                var lowerSearch = SearchString.ToLower();
+                var roles = await _userManager.GetRolesAsync(u);
+                var role = roles.Contains("Admin") ? "Admin" : "Customer";
 
-                books = books.Where(s =>
-                    (s.Title != null && s.Title.ToLower().Contains(lowerSearch)) ||
-                    (s.Author != null && s.Author.ToLower().Contains(lowerSearch)) ||
-                    (s.Publisher != null && s.Publisher.ToLower().Contains(lowerSearch)));
+                // Standard IdentityUser has no LastLoginDate / JoinedDate columns.
+                // They will show as null / "Never" in the UI.
+                // See the note at the bottom of this file if you want to add them.
+                list.Add(new UserViewModel
+                {
+                    Id = u.Id,
+                    UserName = u.UserName ?? u.Email ?? "Unknown",
+                    Email = u.Email ?? "—",
+                    Role = role,
+                    LastLoginDate = null,
+                    JoinedDate = null,
+                });
             }
 
-            // 3. Optional: Filter by specific Title dropdown (if used in UI)
-            if (!string.IsNullOrEmpty(BookTitle))
-            {
-                books = books.Where(x => x.Title == BookTitle);
-            }
+            Users = list.OrderBy(u => u.UserName).ToList();
 
-            // 4. Populate the SelectList for the dropdown (Distinct titles)
-            IQueryable<string> titleQuery = from b in _context.Book
-                                            orderby b.Title
-                                            select b.Title;
-
-            Titles = new SelectList(await titleQuery.Distinct().ToListAsync());
-
-            // 5. Execute the final list
-            Book = await books.ToListAsync();
+            TotalUsers = Users.Count;
+            AdminCount = Users.Count(u => u.Role == "Admin");
+            ActiveToday = 0; // requires LastLoginDate column
+            NewThisMonth = 0; // requires JoinedDate column
         }
 
-        // ✅ Live search handler for AJAX requests
-        public async Task<JsonResult> OnGetSearchAsync(string searchString)
+        // ────────────────────────────────────────────
+        // POST – Delete
+        // ────────────────────────────────────────────
+        public async Task<IActionResult> OnPostDeleteUserAsync(string userId)
         {
-            if (string.IsNullOrWhiteSpace(searchString))
-                return new JsonResult(new List<object>());
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["DeleteError"] = "Invalid user ID.";
+                return RedirectToPage();
+            }
 
-            var lowerSearch = searchString.ToLower();
+            var currentId = _userManager.GetUserId(HttpContext.User);
+            if (userId == currentId)
+            {
+                TempData["DeleteError"] = "You cannot delete your own account.";
+                return RedirectToPage();
+            }
 
-            var results = await _context.Book
-                .Where(b =>
-                    (b.Title != null && b.Title.ToLower().Contains(lowerSearch)) ||
-                    (b.Author != null && b.Author.ToLower().Contains(lowerSearch)))
-                .Select(b => new
-                {
-                    b.Id,
-                    b.Title,
-                    b.Author,
-                    b.YearPublished,
-                })
-                .Take(10)
-                .ToListAsync();
+            var target = await _userManager.FindByIdAsync(userId);
+            if (target == null)
+            {
+                TempData["DeleteError"] = "User not found.";
+                return RedirectToPage();
+            }
 
-            return new JsonResult(results);
+            var result = await _userManager.DeleteAsync(target);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("Admin deleted user {Id} ({Email})", userId, target.Email);
+                TempData["DeleteSuccess"] = true;
+            }
+            else
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                TempData["DeleteError"] = $"Delete failed: {errors}";
+            }
+
+            return RedirectToPage();
         }
     }
 }

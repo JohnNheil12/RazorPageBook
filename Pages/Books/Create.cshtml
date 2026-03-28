@@ -5,15 +5,15 @@
     ViewData["Title"] = "Add New Book";
 }
 
- <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <div class="page-wrapper">
 
-    <!-- Page Header -->
+    <!-- HEADER -->
     <div class="page-header">
-        <div class="text-center">
+        <div>
             <h1 class="page-title">New Entry.</h1>
             <p class="page-subtitle">Add a new book to the cellar.</p>
         </div>
@@ -22,21 +22,22 @@
         </a>
     </div>
 
-    <!-- Form Card -->
+    <!-- FORM CARD -->
     <div class="form-card">
         <div class="card-accent"></div>
 
         <div class="card-inner">
             <form method="post" class="book-form">
+
                 <div asp-validation-summary="ModelOnly" class="validation-alert"></div>
 
+                <!-- TITLE + AUTHOR -->
                 <div class="form-row two-col">
                     <div class="field-group">
                         <label asp-for="Book.Title" class="field-label">
                             <i class="bi bi-book"></i> Book Title
                         </label>
-                        <input asp-for="Book.Title" class="field-input"
-                               placeholder="e.g. The Great Gatsby" autocomplete="off" />
+                        <input asp-for="Book.Title" class="field-input" placeholder="The Great Gatsby" />
                         <span asp-validation-for="Book.Title" class="field-error"></span>
                     </div>
 
@@ -44,19 +45,18 @@
                         <label asp-for="Book.Author" class="field-label">
                             <i class="bi bi-person"></i> Author Name
                         </label>
-                        <input asp-for="Book.Author" class="field-input"
-                               placeholder="e.g. F. Scott Fitzgerald" autocomplete="off" />
+                        <input asp-for="Book.Author" class="field-input" placeholder="F. Scott Fitzgerald" />
                         <span asp-validation-for="Book.Author" class="field-error"></span>
                     </div>
                 </div>
 
+                <!-- YEAR + PUBLISHER -->
                 <div class="form-row two-col">
                     <div class="field-group">
                         <label asp-for="Book.YearPublished" class="field-label">
                             <i class="bi bi-calendar3"></i> Year Published
                         </label>
-                        <input asp-for="Book.YearPublished" class="field-input"
-                               placeholder="YYYY" autocomplete="off" />
+                        <input asp-for="Book.YearPublished" class="field-input" placeholder="YYYY" />
                         <span asp-validation-for="Book.YearPublished" class="field-error"></span>
                     </div>
 
@@ -64,31 +64,83 @@
                         <label asp-for="Book.Publisher" class="field-label">
                             <i class="bi bi-building"></i> Publisher
                         </label>
-                        <input asp-for="Book.Publisher" class="field-input"
-                               placeholder="Publishing House Name" autocomplete="off" />
+                        <input asp-for="Book.Publisher" class="field-input" placeholder="Publisher Name" />
                         <span asp-validation-for="Book.Publisher" class="field-error"></span>
                     </div>
                 </div>
 
+                <!-- PRICE + CATEGORY -->
+                <div class="form-row two-col">
+                    <div class="field-group">
+                        <label asp-for="Book.Price" class="field-label">
+                            <i class="bi bi-currency-dollar"></i> Price
+                        </label>
+
+                        <div class="price-input-wrap">
+                            <span>₱</span>
+                            <input asp-for="Book.Price" class="field-input" placeholder="0.00" />
+                        </div>
+
+                        <span asp-validation-for="Book.Price" class="field-error"></span>
+                    </div>
+
+                    <div class="field-group">
+                        <label asp-for="Book.Category" class="field-label">
+                            <i class="bi bi-tags"></i> Category
+                        </label>
+
+                        <select asp-for="Book.Category" class="field-input">
+                            <option value="">Select category</option>
+                            <option>Fiction</option>
+                            <option>Non-Fiction</option>
+                            <option>Science</option>
+                            <option>Romance</option>
+                            <option>History</option>
+                        </select>
+
+                        <span asp-validation-for="Book.Category" class="field-error"></span>
+                    </div>
+                </div>
+
+                <!-- OVERVIEW -->
+                <div class="form-row">
+                    <div class="field-group">
+                        <label asp-for="Book.Overview" class="field-label">
+                            <i class="bi bi-card-text"></i> Overview
+                        </label>
+
+                        <textarea asp-for="Book.Overview" class="field-input"
+                                  placeholder="Write a short description..."></textarea>
+
+                        <span asp-validation-for="Book.Overview" class="field-error"></span>
+                    </div>
+                </div>
+
+                <!-- IMAGE -->
                 <div class="form-row">
                     <div class="field-group">
                         <label asp-for="Book.ImageUrl" class="field-label">
                             <i class="bi bi-image"></i> Cover Image URL
                         </label>
+
                         <div class="url-field-wrap">
                             <input asp-for="Book.ImageUrl" class="field-input"
-                                   placeholder="https://example.com/cover.jpg" autocomplete="off"
-                                   id="imageUrlInput" />
-                            <div class="cover-preview" id="coverPreview">
-                                <img id="previewImg" src="" alt="" />
-                                <span class="preview-placeholder"><i class="bi bi-image"></i></span>
+                                   id="imageUrlInput"
+                                   placeholder="https://example.com/image.jpg" />
+
+                            <div class="cover-preview">
+                                <img id="previewImg" />
+                                <span class="preview-placeholder">
+                                    <i class="bi bi-image"></i>
+                                </span>
                             </div>
                         </div>
+
                         <span asp-validation-for="Book.ImageUrl" class="field-error"></span>
                     </div>
                 </div>
 
-                <!-- Centered Buttons -->
+                <!-- BUTTONS -->
                 <div class="form-actions">
                     <button type="submit" class="btn-create">
                         <i class="bi bi-plus-lg"></i> Create Record
@@ -123,5 +175,7 @@
             }
         });
     </script>
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
