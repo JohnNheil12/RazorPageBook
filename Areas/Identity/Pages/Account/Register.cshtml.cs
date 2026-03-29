@@ -1,5 +1,6 @@
 ﻿#nullable disable
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,6 @@ using Microsoft.Extensions.Logging;
 
 namespace RazorPageBooks.Areas.Identity.Pages.Account
 {
-    // FIX #2: Only Admins can register new users (role-based, not username-based)
     [Authorize(Roles = "Admin")]
     public class RegisterModel : PageModel
     {
@@ -29,8 +29,6 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
-        // FIX #2: TempData instead of StatusMessage so the message survives
-        // the redirect back to the Users management page.
         [TempData]
         public string SuccessMessage { get; set; }
 
@@ -71,14 +69,12 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
             if (!ModelState.IsValid)
                 return Page();
 
-            // Validate role input
             if (Input.Role != "Admin" && Input.Role != "Staff")
             {
                 ModelState.AddModelError(string.Empty, "Invalid role selected. Choose Admin or Staff.");
                 return Page();
             }
 
-            // Check duplicate email
             var existingEmail = await _userManager.FindByEmailAsync(Input.Email);
             if (existingEmail != null)
             {
@@ -86,10 +82,8 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            // Use FirstName.LastName as username internally
             var username = $"{Input.FirstName.Trim()}.{Input.LastName.Trim()}".ToLower();
 
-            // Check duplicate username
             var existingUser = await _userManager.FindByNameAsync(username);
             if (existingUser != null)
             {
@@ -115,16 +109,20 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
 
                 await _userManager.AddToRoleAsync(newUser, Input.Role);
 
+                // ✅ Store JoinedDate as a claim so the Users page can display it
+                await _userManager.AddClaimAsync(newUser, new Claim(
+                    "JoinedDate",
+                    DateTime.UtcNow.ToString("o") // ISO 8601 round-trip format
+                ));
+
                 _logger.LogInformation("Admin created new user: {Username} with role {Role}", username, Input.Role);
 
-                // FIX #2: Set TempData success message and redirect back to
-                // the Users management page so the admin sees the updated list
-                // with the same green toast style used by the book CRUD.
-                SuccessMessage = $"User '{Input.FirstName} {Input.LastName}' created successfully as {Input.Role}.";
-                return RedirectToPage("/Users/Users", new { partial = "true", registered = "true" });
+                // ✅ Redirect to Dashboard with ?tab=users&registered=true
+                // Dashboard's DOMContentLoaded reads these params, opens the Users
+                // tab automatically, and shows the success toast.
+                return Redirect("/?tab=users&registered=true");
             }
 
-            // Surface Identity errors with friendlier messages
             foreach (var error in result.Errors)
             {
                 var message = error.Code switch

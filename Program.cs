@@ -4,7 +4,10 @@ using RazorPageBooks.Data;
 using RazorPageBooks.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 // 1. Add services to the container.
 builder.Services.AddRazorPages(options =>
 {

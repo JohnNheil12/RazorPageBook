@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Antiforgery;
+using System.Security.Claims;
 
 namespace RazorPageBooks.Pages.Users
 {
-    // ── Moved OUTSIDE IndexModel to fix CS0246 ──
     public class UserViewModel
     {
         public string Id { get; set; } = string.Empty;
@@ -22,31 +23,31 @@ namespace RazorPageBooks.Pages.Users
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<IndexModel> _logger;
+        private readonly IAntiforgery _antiforgery;
 
-        public IndexModel(UserManager<IdentityUser> userManager, ILogger<IndexModel> logger)
+        public IndexModel(
+            UserManager<IdentityUser> userManager,
+            ILogger<IndexModel> logger,
+            IAntiforgery antiforgery)
         {
             _userManager = userManager;
             _logger = logger;
+            _antiforgery = antiforgery;
         }
 
         public List<UserViewModel> Users { get; set; } = new();
         public string CurrentUserId { get; set; } = string.Empty;
-
         public int TotalUsers { get; set; }
         public int ActiveToday { get; set; }
         public int AdminCount { get; set; }
         public int NewThisMonth { get; set; }
 
-        // ────────────────────────────────────────────
-        // GET
-        // ────────────────────────────────────────────
+        // GET – main page
         public async Task OnGetAsync()
         {
-            // HttpContext.User avoids CS0119 ("User is a type" error on PageModel)
             CurrentUserId = _userManager.GetUserId(HttpContext.User) ?? string.Empty;
 
             var allUsers = await _userManager.Users.ToListAsync();
-
             var list = new List<UserViewModel>();
 
             foreach (var u in allUsers)
@@ -54,67 +55,77 @@ namespace RazorPageBooks.Pages.Users
                 var roles = await _userManager.GetRolesAsync(u);
                 var role = roles.Contains("Admin") ? "Admin" : "Staff";
 
-                // Standard IdentityUser has no LastLoginDate / JoinedDate columns.
-                // They will show as null / "Never" in the UI.
-                // See the note at the bottom of this file if you want to add them.
+                var claims = await _userManager.GetClaimsAsync(u);
+
+                DateTime? joinedDate = null;
+                var joinedClaim = claims.FirstOrDefault(c => c.Type == "JoinedDate");
+                if (joinedClaim != null && DateTime.TryParse(joinedClaim.Value, out var pj))
+                    joinedDate = pj;
+
+                DateTime? lastLoginDate = null;
+                var loginClaim = claims.FirstOrDefault(c => c.Type == "LastLoginDate");
+                if (loginClaim != null && DateTime.TryParse(loginClaim.Value, out var pl))
+                    lastLoginDate = pl;
+
                 list.Add(new UserViewModel
                 {
                     Id = u.Id,
                     UserName = u.UserName ?? u.Email ?? "Unknown",
-                    Email = u.Email ?? "—",
+                    Email = u.Email ?? "---",
                     Role = role,
-                    LastLoginDate = null,
-                    JoinedDate = null,
+                    LastLoginDate = lastLoginDate,
+                    JoinedDate = joinedDate,
                 });
             }
 
             Users = list.OrderBy(u => u.UserName).ToList();
-
             TotalUsers = Users.Count;
             AdminCount = Users.Count(u => u.Role == "Admin");
-            ActiveToday = 0; // requires LastLoginDate column
-            NewThisMonth = 0; // requires JoinedDate column
+            var now = DateTime.UtcNow;
+            ActiveToday = Users.Count(u => u.LastLoginDate.HasValue && u.LastLoginDate.Value.Date == now.Date);
+            NewThisMonth = Users.Count(u => u.JoinedDate.HasValue
+                                         && u.JoinedDate.Value.Year == now.Year
+                                         && u.JoinedDate.Value.Month == now.Month);
         }
 
-        // ────────────────────────────────────────────
-        // POST – Delete
-        // ────────────────────────────────────────────
+        // GET handler=AntiforgeryToken
+        // Returns a fresh token as JSON so JS can always use a valid token.
+        public IActionResult OnGetAntiforgeryToken()
+        {
+            var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
+            return new JsonResult(new { token = tokens.RequestToken });
+        }
+
+        // POST handler=DeleteUser
+        // Accepts plain FormData: userId + __RequestVerificationToken
+        // Returns JSON { success, error }
         public async Task<IActionResult> OnPostDeleteUserAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
-            {
-                TempData["DeleteError"] = "Invalid user ID.";
-                return RedirectToPage();
-            }
+                return new JsonResult(new { success = false, error = "Invalid user ID." }) { StatusCode = 400 };
 
             var currentId = _userManager.GetUserId(HttpContext.User);
             if (userId == currentId)
-            {
-                TempData["DeleteError"] = "You cannot delete your own account.";
-                return RedirectToPage();
-            }
+                return new JsonResult(new { success = false, error = "You cannot delete your own account." }) { StatusCode = 400 };
 
             var target = await _userManager.FindByIdAsync(userId);
             if (target == null)
-            {
-                TempData["DeleteError"] = "User not found.";
-                return RedirectToPage();
-            }
+                return new JsonResult(new { success = false, error = "User not found." }) { StatusCode = 404 };
+
+            var roles = await _userManager.GetRolesAsync(target);
+            if (roles.Contains("Admin"))
+                return new JsonResult(new { success = false, error = "Admin accounts cannot be deleted." }) { StatusCode = 403 };
 
             var result = await _userManager.DeleteAsync(target);
 
             if (result.Succeeded)
             {
                 _logger.LogInformation("Admin deleted user {Id} ({Email})", userId, target.Email);
-                TempData["DeleteSuccess"] = true;
-            }
-            else
-            {
-                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                TempData["DeleteError"] = $"Delete failed: {errors}";
+                return new JsonResult(new { success = true });
             }
 
-            return RedirectToPage();
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            return new JsonResult(new { success = false, error = errors }) { StatusCode = 400 };
         }
     }
 }

@@ -36,104 +36,6 @@
             --violet: #7c3aed; --violet-bg: #f5f3ff; --violet-border: #ddd6fe;
         }
 
-        /* ══ SHELL ══ */
-        .shell { display: flex; min-height: 100vh; }
-
-        /* ══ SIDEBAR ══ */
-        .sidebar {
-            width: 260px; min-width: 260px; max-width: 260px;
-            flex-shrink: 0; flex-grow: 0;
-            background: #0b1120;
-            border-right: 1px solid rgba(255,255,255,0.06);
-            display: flex; flex-direction: column;
-            position: sticky; top: 0; height: 100vh;
-            overflow-y: auto; overflow-x: hidden; z-index: 200;
-            box-shadow: 2px 0 20px rgba(0,0,0,0.25);
-        }
-        .sidebar-brand {
-            display: flex; align-items: center; gap: 12px;
-            padding: 24px 20px 22px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            flex-shrink: 0;
-        }
-        .brand-icon {
-            width: 38px; height: 38px; border-radius: 11px;
-            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.05rem; color: #fff; flex-shrink: 0;
-            box-shadow: 0 4px 14px rgba(79,70,229,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-        .brand-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
-        .brand-name  { font-size: 0.9rem; font-weight: 700; color: #f1f5f9; letter-spacing: -0.2px; white-space: nowrap; }
-        .brand-tagline { font-size: 0.6rem; font-weight: 600; color: #6b7fa3; text-transform: uppercase; letter-spacing: 1.2px; }
-
-        .sidebar-nav {
-            flex: 1; padding: 18px 12px;
-            display: flex; flex-direction: column; gap: 1px;
-            overflow: hidden; width: 100%; box-sizing: border-box;
-        }
-        .nav-section-label {
-            font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1.4px; color: #2d3f5e;
-            padding: 14px 10px 5px; display: block; user-select: none;
-        }
-        .nav-item {
-            display: flex; align-items: center; gap: 11px;
-            padding: 10px 11px; border-radius: 10px;
-            text-decoration: none; color: #6b7fa3;
-            font-size: 0.84rem; font-weight: 500;
-            box-sizing: border-box; width: 100%;
-            border: 1px solid transparent;
-            transition: background 0.18s, color 0.18s, border-color 0.18s;
-            cursor: pointer; background: none; font-family: 'DM Sans', sans-serif;
-        }
-        .nav-item:hover  { background: rgba(255,255,255,0.04); color: #c8d6ef; border-color: rgba(255,255,255,0.04); }
-        .nav-item.active { background: rgba(59,130,246,0.12); color: #93c5fd; font-weight: 600; border-color: rgba(59,130,246,0.18); box-shadow: inset 3px 0 0 #3b82f6; }
-        .nav-icon-wrap {
-            width: 32px; height: 32px; min-width: 32px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem; flex-shrink: 0; background: rgba(255,255,255,0.03);
-            transition: background 0.18s;
-        }
-        .nav-item:hover  .nav-icon-wrap { background: rgba(255,255,255,0.06); }
-        .nav-item.active .nav-icon-wrap { background: rgba(59,130,246,0.18); color: #93c5fd; }
-        .nav-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1; font-size: 0.84rem; }
-        .nav-badge { font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
-        .nav-badge.indigo { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
-        .nav-badge.amber  { background: rgba(217,119,6,0.15); color: #fcd34d; border: 1px solid rgba(217,119,6,0.25); }
-        .nav-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 10px; flex-shrink: 0; }
-
-        .sidebar-footer {
-            padding: 14px 12px; border-top: 1px solid rgba(255,255,255,0.06);
-            flex-shrink: 0; width: 100%; box-sizing: border-box;
-        }
-        .sidebar-user {
-            display: flex; align-items: center; gap: 10px; padding: 10px 11px;
-            border-radius: 10px; background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.05);
-            width: 100%; box-sizing: border-box;
-        }
-        .user-avatar {
-            width: 32px; height: 32px; min-width: 32px; border-radius: 9px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            color: #fff; font-size: 0.82rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(99,102,241,0.35);
-        }
-        .user-meta { flex: 1; display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
-        .user-name  { font-size: 0.8rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .user-role  { font-size: 0.62rem; color: #6b7fa3; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; }
-        .user-logout {
-            color: #4b5e7a; font-size: 0.9rem; background: none; border: none;
-            cursor: pointer; width: 28px; height: 28px; border-radius: 7px;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-            transition: color 0.18s, background 0.18s; padding: 0;
-        }
-        .user-logout:hover { color: #f87171; background: rgba(248,113,113,0.1); }
-
-        /* ══ MAIN ══ */
-        .main-content { flex: 1; min-width: 0; padding: 28px; overflow-y: auto; background: #f8fafc; }
-
         /* ══ PAGE HEADER ══ */
         .admin-page-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px 32px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; border-left: 4px solid var(--accent); box-shadow: 0 1px 6px rgba(15,23,42,0.05); }
         .page-eyebrow { display: flex; align-items: center; gap: 7px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 6px; }
@@ -195,41 +97,16 @@
         .status-text { font-size: 0.8rem; color: var(--txt-muted); }
         .btn-delete { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 9px; background: var(--rose-bg); color: var(--rose); border: 1px solid var(--rose-border); font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s, transform 0.1s; }
         .btn-delete:hover { background: #ffe4e6; transform: scale(1.03); }
-
-        /* ══ MODAL ══ */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.55); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; }
-        .modal-overlay.open { display: flex; }
-        .modal-box { background: var(--surface); border-radius: 18px; padding: 32px 28px; max-width: 420px; width: 90%; box-shadow: 0 20px 60px rgba(15,23,42,0.2); text-align: center; }
-        .modal-icon { width: 56px; height: 56px; border-radius: 16px; background: var(--rose-bg); border: 1px solid var(--rose-border); color: var(--rose); font-size: 1.4rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-        .modal-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--txt); margin-bottom: 8px; }
-        .modal-body { font-size: 0.875rem; color: var(--txt-muted); margin-bottom: 24px; line-height: 1.5; }
-        .modal-body strong { color: var(--txt); }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .btn-cancel { padding: 10px 22px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface); color: var(--txt); font-size: 0.875rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s; }
-        .btn-cancel:hover { background: var(--bg); }
-        .btn-confirm-delete { padding: 10px 22px; border-radius: 10px; border: none; background: var(--rose); color: #fff; font-size: 0.875rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s; }
-        .btn-confirm-delete:hover { background: #be123c; }
+        /* ✅ Disabled delete button style for admin rows */
+        .btn-delete:disabled { opacity: 0.4; cursor: not-allowed; transform: none; pointer-events: none; }
 
         /* ══ EMPTY STATE ══ */
         .empty-state { padding: 60px 20px; text-align: center; color: var(--txt-muted); }
         .empty-state i { font-size: 2.5rem; color: var(--border); margin-bottom: 12px; display: block; }
         .empty-state p { font-size: 0.9rem; margin: 0; }
 
-        /* ══ TOAST ══ */
-        .toast-bar { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--txt); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; z-index: 99999; box-shadow: 0 8px 24px rgba(15,23,42,0.2); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap; pointer-events: none; }
-        .toast-bar.show { transform: translateX(-50%) translateY(0); }
-        .toast-bar.error { background: var(--rose); }
-
         @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
         @@media (max-width: 768px) {
-            .shell { flex-direction: column; }
-            .sidebar { width: 100% !important; min-width: unset !important; max-width: unset !important; height: auto; position: relative; flex-direction: row; }
-            .sidebar-brand { padding: 14px 16px; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.06); }
-            .sidebar-nav { flex-direction: row; padding: 8px; overflow-x: auto; gap: 4px; flex: 1; }
-            .nav-section-label { display: none; }
-            .nav-divider { display: none; }
-            .sidebar-footer { display: none; }
-            .main-content { padding: 16px; }
             .admin-page-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
         }
@@ -237,240 +114,192 @@
     </style>
 </head>
 <body>
-    <!-- ══ MAIN ══ -->
-    <main class="main-content">
 
-        <div class="admin-page-header">
-            <div class="header-left">
-                <div class="page-eyebrow"><span class="eyebrow-dot"></span> Account Management</div>
-                <h1 class="page-title">Registered <span class="title-accent">Users</span></h1>
-                <p class="page-subtitle">Manage accounts, roles, and access across the platform</p>
-            </div>
-            <div class="header-right">
-                <a href="/Identity/Account/Register" class="btn-admin-ghost">
-                    <i class="bi bi-person-plus"></i> Register New User
-                </a>
+    @*
+        This page is injected as a content fragment into Dashboard's #pageContent.
+        - No sidebar / shell — Dashboard owns that.
+        - No modal HTML — lives in Dashboard so injectHTML() never strips it.
+        - No <script> with modal/search logic — lives in Dashboard so it always exists.
+        - CSRF token is extracted from the server-rendered hidden input and passed
+          to Dashboard's openDeleteModal() as a plain string argument on every button click.
+    *@
+
+
+
+    <div class="admin-page-header">
+        <div class="header-left">
+            <div class="page-eyebrow"><span class="eyebrow-dot"></span> Account Management</div>
+            <h1 class="page-title">Registered <span class="title-accent">Users</span></h1>
+            <p class="page-subtitle">Manage accounts, roles, and access across the platform</p>
+        </div>
+        <div class="header-right">
+            <a href="/Identity/Account/Register" class="btn-admin-ghost">
+                <i class="bi bi-person-plus"></i> Register New User
+            </a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="bi bi-people"></i></div>
+            <div class="stat-body">
+                <span class="stat-value">@Model.TotalUsers</span>
+                <span class="stat-label">Total Users</span>
             </div>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue"><i class="bi bi-people"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.TotalUsers</span>
-                    <span class="stat-label">Total Users</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon green"><i class="bi bi-person-check"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.ActiveToday</span>
-                    <span class="stat-label">Active Today</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon violet"><i class="bi bi-shield-check"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.AdminCount</span>
-                    <span class="stat-label">Administrators</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon amber"><i class="bi bi-person-plus"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.NewThisMonth</span>
-                    <span class="stat-label">New This Month</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="bi bi-person-check"></i></div>
+            <div class="stat-body">
+                <span class="stat-value">@Model.ActiveToday</span>
+                <span class="stat-label">Active Today</span>
             </div>
         </div>
-
-        <div class="table-toolbar">
-            <div class="toolbar-search">
-                <i class="bi bi-search"></i>
-                <input type="text" id="searchInput" placeholder="Search by name or email..." oninput="filterTable()" />
+        <div class="stat-card">
+            <div class="stat-icon violet"><i class="bi bi-shield-check"></i></div>
+            <div class="stat-body">
+                <span class="stat-value">@Model.AdminCount</span>
+                <span class="stat-label">Administrators</span>
             </div>
-            <select class="filter-select" id="roleFilter" onchange="filterTable()">
-                <option value="">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="staff">Staff</option>
-            </select>
-            <span class="toolbar-count" id="rowCount">@Model.TotalUsers user@(Model.TotalUsers != 1 ? "s" : "")</span>
         </div>
+        <div class="stat-card">
+            <div class="stat-icon amber"><i class="bi bi-person-plus"></i></div>
+            <div class="stat-body">
+                <span class="stat-value">@Model.NewThisMonth</span>
+                <span class="stat-label">New This Month</span>
+            </div>
+        </div>
+    </div>
 
-        <div class="users-card">
-            @if (!Model.Users.Any())
-            {
-                <div class="empty-state">
-                    <i class="bi bi-people"></i>
-                    <p>No registered users found.</p>
-                </div>
-            }
-            else
-            {
-                <div style="overflow-x:auto;">
-                    <table class="users-table" id="usersTable">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Role</th>
-                                <th>Last Login</th>
-                                <th>Status</th>
-                                <th>Joined</th>
-                                <th style="text-align:right;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var u in Model.Users)
-                            {
-                                var initials = u.UserName?.Length > 0
-                                    ? u.UserName.Substring(0, 1).ToUpper()
-                                    : "?";
+    <div class="table-toolbar">
+        <div class="toolbar-search">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput" placeholder="Search by name or email..." oninput="filterTable()" />
+        </div>
+        <select class="filter-select" id="roleFilter" onchange="filterTable()">
+            <option value="">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="staff">Staff</option>
+        </select>
+        <span class="toolbar-count" id="rowCount">@Model.TotalUsers user@(Model.TotalUsers != 1 ? "s" : "")</span>
+    </div>
 
-                                var isAdmin   = u.Role == "Admin";
-                                var roleClass = isAdmin ? "admin" : "staff";
-                                var roleLabel = isAdmin ? "Admin" : "Staff";
+    <div class="users-card">
+        @if (!Model.Users.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-people"></i>
+                <p>No registered users found.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto;">
+                <table class="users-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Last Login</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.Users)
+                        {
+                            var initials = u.UserName?.Length > 0
+                                ? u.UserName.Substring(0, 1).ToUpper()
+                                : "?";
 
-                                // Online = the currently signed-in user only
-                                var isOnline  = u.Id == Model.CurrentUserId;
+                            var isAdmin   = u.Role == "Admin";
+                            var roleClass = isAdmin ? "admin" : "staff";
+                            var roleLabel = isAdmin ? "Admin" : "Staff";
+                            var isOnline  = u.Id == Model.CurrentUserId;
 
-                                var lastLoginDisplay = u.LastLoginDate.HasValue
-                                    ? u.LastLoginDate.Value.ToString("MMM d, yyyy · h:mm tt")
-                                    : "Never";
-                                var lastLoginRel = u.LastLoginDate.HasValue
-                                    ? RelativeTime(u.LastLoginDate.Value)
-                                    : "—";
-                                var joinedDisplay = u.JoinedDate.HasValue
-                                    ? u.JoinedDate.Value.ToString("MMM d, yyyy")
-                                    : "—";
+                            var lastLoginDisplay = u.LastLoginDate.HasValue
+                                ? u.LastLoginDate.Value.ToString("MMM d, yyyy · h:mm tt")
+                                : "Never";
+                            var lastLoginRel = u.LastLoginDate.HasValue
+                                ? RelativeTime(u.LastLoginDate.Value)
+                                : "—";
+                            var joinedDisplay = u.JoinedDate.HasValue
+                                ? u.JoinedDate.Value.ToString("MMM d, yyyy")
+                                : "—";
 
-                                <tr data-name="@u.UserName?.ToLower()"
-                                    data-email="@u.Email?.ToLower()"
-                                    data-role="@roleClass">
-                                    <td>
-                                        <div class="user-cell">
-                                            <div class="table-avatar">@initials</div>
-                                            <div>
-                                                <div class="user-display-name">@u.UserName</div>
-                                                <div class="user-display-email">@u.Email</div>
-                                            </div>
+                            @* Escape backslashes and single quotes so values are safe inside JS string literals *@
+                            var safeId   = u.Id.Replace("\\", "\\\\").Replace("'", "\\'");
+                            var safeName = (u.UserName ?? "").Replace("\\", "\\\\").Replace("'", "\\'");
+
+                            @* ✅ Pass isAdmin as 4th argument so Dashboard can disable the confirm button *@
+                            var isAdminJs = isAdmin ? "true" : "false";
+
+                            <tr data-name="@u.UserName?.ToLower()"
+                                data-email="@u.Email?.ToLower()"
+                                data-role="@roleClass">
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="table-avatar">@initials</div>
+                                        <div>
+                                            <div class="user-display-name">@u.UserName</div>
+                                            <div class="user-display-email">@u.Email</div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <span class="role-badge @roleClass">
-                                            <i class="bi @(isAdmin ? "bi-shield-check" : "bi-person-badge")"></i>
-                                            @roleLabel
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="last-login-main">@lastLoginDisplay</div>
-                                        <div class="last-login-rel">@lastLoginRel</div>
-                                    </td>
-                                    <td>
-                                        <span class="status-dot @(isOnline ? "active" : "inactive")"></span>
-                                        <span class="status-text">@(isOnline ? "Online" : "Offline")</span>
-                                    </td>
-                                    <td>
-                                        <span style="font-size:0.82rem; color:var(--txt-muted);">@joinedDisplay</span>
-                                    </td>
-                                    <td style="text-align:right;">
-                                        @if (u.Id != Model.CurrentUserId)
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="role-badge @roleClass">
+                                        <i class="bi @(isAdmin ? "bi-shield-check" : "bi-person-badge")"></i>
+                                        @roleLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="last-login-main">@lastLoginDisplay</div>
+                                    <div class="last-login-rel">@lastLoginRel</div>
+                                </td>
+                                <td>
+                                    <span class="status-dot @(isOnline ? "active" : "inactive")"></span>
+                                    <span class="status-text">@(isOnline ? "Online" : "Offline")</span>
+                                </td>
+                                <td>
+                                    <span style="font-size:0.82rem; color:var(--txt-muted);">@joinedDisplay</span>
+                                </td>
+                                <td style="text-align:right;">
+                                    @if (u.Id != Model.CurrentUserId)
+                                    {
+                                        if (isAdmin)
                                         {
-                                            <button class="btn-delete"
-                                                    onclick="openDeleteModal('@u.Id', '@u.UserName')">
-                                                <i class="bi bi-trash3"></i> Delete
+                                            @* ✅ Admin rows: button is visually disabled and non-clickable *@
+                                            <button class="btn-delete" disabled title="Admin accounts cannot be deleted">
+                                                <i class="bi bi-shield-lock"></i> Protected
                                             </button>
                                         }
                                         else
                                         {
-                                            <span style="font-size:0.75rem; color:var(--txt-light); padding:7px 13px; display:inline-block;">You</span>
+                                            @* ✅ Staff rows: pass isAdmin=false so modal confirm button stays enabled *@
+                                            <button class="btn-delete"
+                                                    onclick="openDeleteModal('@safeId', '@safeName', @isAdminJs)">
+                                                <i class="bi bi-trash3"></i> Delete
+                                            </button>
                                         }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div style="padding:12px 24px; border-top:1px solid var(--border-light); background:#fafbfc;">
-                    <span style="font-size:0.8rem; color:var(--txt-light);">
-                        Showing <strong>@Model.Users.Count()</strong> user@(Model.Users.Count() != 1 ? "s" : "")
-                    </span>
-                </div>
-            }
-        </div>
-
-    </main>
-</div>
-
-<!-- ══ DELETE MODAL ══ -->
-<div class="modal-overlay" id="deleteModal">
-    <div class="modal-box">
-        <div class="modal-icon"><i class="bi bi-trash3"></i></div>
-        <div class="modal-title">Delete Account?</div>
-        <div class="modal-body">
-            You're about to permanently delete <strong id="modalUserName"></strong>'s account.
-            This action cannot be undone and will remove all associated data.
-        </div>
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
-            <form id="deleteForm" method="post" asp-page-handler="DeleteUser" style="margin:0;">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="userId" id="modalUserId" />
-                <button type="submit" class="btn-confirm-delete">
-                    <i class="bi bi-trash3"></i> Yes, Delete
-                </button>
-            </form>
-        </div>
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size:0.75rem; color:var(--txt-light); padding:7px 13px; display:inline-block;">You</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding:12px 24px; border-top:1px solid var(--border-light); background:#fafbfc;">
+                <span style="font-size:0.8rem; color:var(--txt-light);">
+                    Showing <strong>@Model.Users.Count()</strong> user@(Model.Users.Count() != 1 ? "s" : "")
+                </span>
+            </div>
+        }
     </div>
-</div>
 
-<div class="toast-bar" id="toastBar"></div>
-
-<script>
-    function openDeleteModal(userId, userName) {
-        document.getElementById('modalUserId').value = userId;
-        document.getElementById('modalUserName').textContent = userName;
-        document.getElementById('deleteModal').classList.add('open');
-    }
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.remove('open');
-    }
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) closeDeleteModal();
-    });
-
-    function filterTable() {
-        const q    = document.getElementById('searchInput').value.toLowerCase();
-        const role = document.getElementById('roleFilter').value.toLowerCase();
-        const rows = document.querySelectorAll('#usersTable tbody tr');
-        let visible = 0;
-        rows.forEach(row => {
-            const name  = row.dataset.name  || '';
-            const email = row.dataset.email || '';
-            const r     = row.dataset.role  || '';
-            const ok = (!q || name.includes(q) || email.includes(q)) && (!role || r === role);
-            row.style.display = ok ? '' : 'none';
-            if (ok) visible++;
-        });
-        document.getElementById('rowCount').textContent = visible + ' user' + (visible !== 1 ? 's' : '');
-    }
-
-    function showToast(msg, isError = false) {
-        const t = document.getElementById('toastBar');
-        t.textContent = msg;
-        t.className = 'toast-bar' + (isError ? ' error' : '');
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
-    }
-
-    @if (TempData["DeleteSuccess"] != null)
-    {
-        @:showToast('User deleted successfully.');
-    }
-    @if (TempData["DeleteError"] != null)
-    {
-        @:showToast('@TempData["DeleteError"]', true);
-    }
-</script>
 </body>
 </html>
 

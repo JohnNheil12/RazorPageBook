@@ -42,13 +42,13 @@
                 <div class="nav-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
                 <span class="nav-label">Profit</span>
             </a>
-                 @if (User.IsInRole("Admin"))
-             {
-                    <a href="#" class="nav-item" data-page="users" onclick="loadTab(this,'users')">
-                        <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
-                        <span class="nav-label">Users</span>
-                    </a>
-            }   
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="#" class="nav-item" data-page="users" onclick="loadTab(this,'users')">
+                    <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
+                    <span class="nav-label">Users</span>
+                </a>
+            }
             @if (!SignInManager.IsSignedIn(User))
             {
                 <a asp-area="Identity" asp-page="/Account/Login" class="nav-item">
@@ -57,46 +57,42 @@
                 </a>
             }
         </nav>
-@if (SignInManager.IsSignedIn(User))
-{
-    <div class="sidebar-footer">
-        <div class="sidebar-user">
-            @* Dynamic Avatar: Uses the first letter of the name *@
-            <div class="user-avatar">
-                @(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "U")
-            </div>
 
-            <div class="user-meta">
-                <span class="user-name">@User.Identity.Name</span>
-                
-                @* Logic to display the correct role label *@
-                <span class="user-role">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        @:Administrator
-                    }
-                    else if (User.IsInRole("Staff"))
-                    {
-                        @:Staff
-                    }
-                    else
-                    {
-                        @:User
-                    }
-                </span>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar">
+                        @(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "U")
+                    </div>
+                    <div class="user-meta">
+                        <span class="user-name">@User.Identity.Name</span>
+                        <span class="user-role">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @:Administrator
+                            }
+                            else if (User.IsInRole("Staff"))
+                            {
+                                @:Staff
+                            }
+                            else
+                            {
+                                @:User
+                            }
+                        </span>
+                    </div>
+                    <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"
+                          style="margin:0;padding:0;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="user-logout" title="Sign out">
+                            <i class="bi bi-box-arrow-left"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
-
-            <form method="post" asp-area="Identity" asp-page="/Account/Logout"
-                  asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"
-                  style="margin:0;padding:0;">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="user-logout" title="Sign out">
-                    <i class="bi bi-box-arrow-left"></i>
-                </button>
-            </form>
-        </div>
-    </div>
-}
+        }
     </aside>
 
     <main class="main-content" id="mainContent">
@@ -108,6 +104,33 @@
         </div>
     </main>
 </div>
+
+<!-- ══ DELETE MODAL ══ -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-icon"><i class="bi bi-trash3"></i></div>
+        <div class="modal-title">Delete Account?</div>
+        <div class="modal-body">
+            You're about to permanently delete <strong id="modalUserName"></strong>'s account.
+            This action cannot be undone and will remove all associated data.
+        </div>
+        <div class="modal-actions">
+            <p id="modalAdminWarning"
+               style="display:none; width:100%; font-size:0.8rem; color:#e11d48;
+                      margin:0 0 12px; text-align:center; font-weight:600;">
+                <i class="bi bi-shield-lock"></i> Admin accounts cannot be deleted.
+            </p>
+            <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+            <!-- Plain button — no form, no CSRF complexity. JS handles the fetch. -->
+            <button class="btn-confirm-delete" id="btnConfirmDelete" onclick="doDeleteUser()">
+                <i class="bi bi-trash3"></i> Yes, Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ TOAST (lives in Dashboard so it's always available) ══ -->
+<div class="toast-bar" id="toastBar"></div>
 
 <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -122,6 +145,13 @@
         --sidebar-hover: rgba(255,255,255,0.04);
         --sidebar-active-bg: rgba(59,130,246,0.12);
         --sidebar-accent: #3b82f6;
+        --rose: #e11d48;
+        --rose-bg: #fff1f2;
+        --rose-border: #fecdd3;
+        --surface: #ffffff;
+        --border: #e2e8f0;
+        --txt: #0f172a;
+        --txt-muted: #64748b;
     }
 
     .shell { display: flex; height: 100vh; overflow: hidden; }
@@ -168,21 +198,43 @@
     .page-fade-in { animation: fadeUp 0.25s ease forwards; }
     @@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Toast notifications */
+    /* Toast notifications (Dashboard-level) */
     .toast-notify {
         position: fixed; bottom: 28px; right: 28px;
         padding: 13px 20px; border-radius: 12px;
         font-size: 0.84rem; font-weight: 500; color: #fff;
         display: flex; align-items: center; gap: 9px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-        z-index: 9999;
+        z-index: 99999;
         animation: toastIn 0.3s ease;
         max-width: 320px;
     }
     .toast-notify.success { background: #059669; }
     .toast-notify.error   { background: #dc2626; }
+
+    /* Toast bar (Users page style, kept for compatibility) */
+    .toast-bar { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--txt); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; z-index: 99999; box-shadow: 0 8px 24px rgba(15,23,42,0.2); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap; pointer-events: none; }
+    .toast-bar.show { transform: translateX(-50%) translateY(0); }
+    .toast-bar.error { background: var(--rose); }
+
     @@keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     @@keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(12px); } }
+
+    /* DELETE MODAL styles (live here so they're never stripped) */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.55); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--surface); border-radius: 18px; padding: 32px 28px; max-width: 420px; width: 90%; box-shadow: 0 20px 60px rgba(15,23,42,0.2); text-align: center; }
+    .modal-icon { width: 56px; height: 56px; border-radius: 16px; background: var(--rose-bg); border: 1px solid var(--rose-border); color: var(--rose); font-size: 1.4rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--txt); margin-bottom: 8px; }
+    .modal-body { font-size: 0.875rem; color: var(--txt-muted); margin-bottom: 24px; line-height: 1.5; }
+    .modal-body strong { color: var(--txt); }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .btn-cancel { padding: 10px 22px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface); color: var(--txt); font-size: 0.875rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s; }
+    .btn-cancel:hover { background: #f1f5f9; }
+    .btn-confirm-delete { padding: 10px 22px; border-radius: 10px; border: none; background: var(--rose); color: #fff; font-size: 0.875rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s, opacity 0.15s; }
+    .btn-confirm-delete:hover:not(:disabled) { background: #be123c; }
+    /* ✅ Disabled state for confirm button when target is Admin */
+    .btn-confirm-delete:disabled { opacity: 0.4; cursor: not-allowed; }
 
     @@media (max-width: 768px) {
         .shell { flex-direction: column; }
@@ -204,7 +256,7 @@
         users:    '/Users/Users'
     };
 
-    /* ── Toast helper ── */
+    /* ── Toast (append-style, used by CRUD operations) ── */
     function showToast(msg, type = 'success') {
         const t = document.createElement('div');
         t.className = 'toast-notify ' + type;
@@ -214,6 +266,113 @@
             t.style.animation = 'toastOut 0.3s ease forwards';
             setTimeout(() => t.remove(), 300);
         }, 3000);
+    }
+
+    /* ── Delete modal state ── */
+    let _deleteUserId = '';
+
+    function openDeleteModal(userId, userName, isAdmin) {
+        _deleteUserId = userId;
+        document.getElementById('modalUserName').textContent = userName;
+
+        const btn     = document.getElementById('btnConfirmDelete');
+        const warning = document.getElementById('modalAdminWarning');
+
+        // Always reset button state first
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="bi bi-trash3"></i> Yes, Delete';
+
+        if (isAdmin) {
+            btn.disabled = true;
+            warning.style.display = 'block';
+        } else {
+            warning.style.display = 'none';
+        }
+
+        document.getElementById('deleteModal').classList.add('open');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('open');
+    }
+
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+    });
+
+    /* ── doDeleteUser: called by the confirm button directly (no form involved) ── */
+    async function doDeleteUser() {
+        if (!_deleteUserId) return;
+
+        const btn = document.getElementById('btnConfirmDelete');
+        btn.disabled  = true;
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Deleting…';
+
+        try {
+            // Fetch a fresh antiforgery token from the server each time,
+            // so stale tokens never cause a 400 rejection.
+            const tokenRes = await fetch('/Users/Users?handler=AntiforgeryToken', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const tokenJson = await tokenRes.json();
+
+            const fd = new FormData();
+            fd.append('__RequestVerificationToken', tokenJson.token);
+            fd.append('userId', _deleteUserId);
+
+            const res  = await fetch('/Users/Users?handler=DeleteUser', {
+                method: 'POST',
+                body: fd
+            });
+
+            // Try to parse as JSON; fall back gracefully if server returns HTML
+            let json = { success: false, error: 'Unexpected server response.' };
+            const ct = res.headers.get('content-type') || '';
+            if (ct.includes('application/json')) {
+                json = await res.json();
+            } else if (res.ok) {
+                json = { success: true };
+            }
+
+            closeDeleteModal();
+
+            if (json.success) {
+                showToast('✓ User deleted successfully.', 'success');
+                const usersNav = document.querySelector('.nav-item[data-page="users"]');
+                if (usersNav) loadTab(usersNav, 'users');
+            } else {
+                showToast(json.error || 'Delete failed. Please try again.', 'error');
+                btn.disabled  = false;
+                btn.innerHTML = '<i class="bi bi-trash3"></i> Yes, Delete';
+            }
+        } catch (err) {
+            console.error('Delete error:', err);
+            closeDeleteModal();
+            showToast('Network error — please try again.', 'error');
+            btn.disabled  = false;
+            btn.innerHTML = '<i class="bi bi-trash3"></i> Yes, Delete';
+        }
+    }
+
+    /* ── Users search/filter (must live here — never gets stripped by injectHTML) ── */
+    function filterTable() {
+        const searchEl = document.getElementById('searchInput');
+        const roleEl   = document.getElementById('roleFilter');
+        if (!searchEl) return;
+        const q    = searchEl.value.toLowerCase();
+        const role = roleEl ? roleEl.value.toLowerCase() : '';
+        const rows = document.querySelectorAll('#usersTable tbody tr');
+        let visible = 0;
+        rows.forEach(row => {
+            const name  = row.dataset.name  || '';
+            const email = row.dataset.email || '';
+            const r     = row.dataset.role  || '';
+            const ok = (!q || name.includes(q) || email.includes(q)) && (!role || r === role);
+            row.style.display = ok ? '' : 'none';
+            if (ok) visible++;
+        });
+        const countEl = document.getElementById('rowCount');
+        if (countEl) countEl.textContent = visible + ' user' + (visible !== 1 ? 's' : '');
     }
 
     /* ── Safe HTML injector ── */
@@ -238,35 +397,29 @@
     }
 
     /* ── Core content loader (GET) ── */
-   async function loadContent(url) {
-    const container = document.getElementById('pageContent');
-    try {
-        const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-        
-        // KUNG GI-BLOCK KA (401 o 403), I-REFRESH ANG PAGE PARA MO-LOGIN
-        if (res.status === 401 || res.status === 403) {
-            window.location.reload(); 
-            return;
+    async function loadContent(url) {
+        const container = document.getElementById('pageContent');
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            if (res.status === 401 || res.status === 403) {
+                window.location.reload();
+                return;
+            }
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const html = await res.text();
+            injectHTML(container, html);
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = `<div class="loading-state">Access Denied or Error loading page.</div>`;
         }
-
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        
-        const html = await res.text();
-        injectHTML(container, html);
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = `<div class="loading-state">Access Denied o Error loading page.</div>`;
     }
-}
+
     /* ── Tab navigation ── */
     function loadTab(el, page) {
-        /* prevent default link navigation */
         if (window.event) window.event.preventDefault();
-
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         if (el) el.classList.add('active');
         document.getElementById('mainContent').scrollTop = 0;
-
         const base = pageUrls[page];
         if (!base) return;
         const url = base + (base.includes('?') ? '&' : '?') + 'partial=true';
@@ -277,7 +430,7 @@
     document.addEventListener('submit', async function (e) {
         const form = e.target;
 
-        /* ── Search form: GET request, reload Products area ── */
+        /* ── Search form: GET request ── */
         if (form.classList.contains('search-form')) {
             e.preventDefault();
             const params = new URLSearchParams(new FormData(form)).toString();
@@ -289,42 +442,24 @@
         /* ── Book CRUD forms (Create / Edit / Delete): POST via fetch ── */
         if (form.classList.contains('crud-form')) {
             e.preventDefault();
-            const action = form.getAttribute('action') || window.location.pathname;
+            const action   = form.getAttribute('action') || window.location.pathname;
             const formData = new FormData(form);
-
-            /* Show submitting state on the button */
             const submitBtn = form.querySelector('[type="submit"]');
             const origLabel = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving…';
-            }
-
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving…'; }
             try {
-                const res = await fetch(action, { method: 'POST', body: formData });
+                const res  = await fetch(action, { method: 'POST', body: formData });
                 const html = await res.text();
-
-                if (res.ok && html.trim() === '') {
-                    /* Empty body = OkResult() success — reload the active tab */
+                if (res.ok && (html.trim() === '' || !html.includes('crud-form'))) {
                     showToast('Done! Changes saved successfully.', 'success');
-                    // Reload whichever tab is currently active, defaulting to products
                     const activeNav = document.querySelector('.nav-item.active') ||
                                       document.querySelector('.nav-item[data-page="products"]');
                     const activePage = activeNav ? activeNav.dataset.page : 'products';
                     loadTab(activeNav, activePage);
                 } else if (res.ok && html.includes('crud-form')) {
-                    /* 200 OK but contains a form = validation errors, show in place */
                     injectHTML(document.getElementById('pageContent'), html);
                     if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origLabel; }
-                } else if (res.ok) {
-                    /* Any other 200 = treat as success */
-                    showToast('Done! Changes saved successfully.', 'success');
-                    const activeNav = document.querySelector('.nav-item.active') ||
-                                      document.querySelector('.nav-item[data-page="products"]');
-                    const activePage = activeNav ? activeNav.dataset.page : 'products';
-                    loadTab(activeNav, activePage);
                 } else {
-                    /* Non-2xx: show error HTML in container */
                     document.getElementById('pageContent').innerHTML = html;
                     if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origLabel; }
                 }
@@ -338,8 +473,23 @@
 
     /* ── Initial page load ── */
     window.addEventListener('DOMContentLoaded', () => {
-        const first = document.querySelector('.nav-item[data-page="products"]');
-        if (first) loadTab(first, 'products');
+        // If redirected from Register page with ?tab=users, open Users tab + show toast
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        const registered = urlParams.get('registered');
+
+        if (tab === 'users') {
+            const usersNav = document.querySelector('.nav-item[data-page="users"]');
+            if (usersNav) {
+                loadTab(usersNav, 'users');
+                if (registered === 'true') {
+                    setTimeout(() => showToast('User registered successfully!', 'success'), 400);
+                }
+            }
+        } else {
+            const first = document.querySelector('.nav-item[data-page="products"]');
+            if (first) loadTab(first, 'products');
+        }
     });
 </script>
 </body>
