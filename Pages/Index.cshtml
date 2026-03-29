@@ -36,20 +36,6 @@
                              class="book-img" alt="@item.Title">
 
                         <div class="floating-badge">@item.YearPublished</div>
-                        <div class="img-overlay">
-                            <a asp-page="/Books/Details" asp-route-id="@item.Id" class="btn btn-glass btn-sm">
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <i class="bi bi-eye"></i>
-                                    <span>Quick View</span>
-                                }
-                                else
-                                {
-                                    <i class="bi bi-book-open"></i>
-                                    <span>View Details</span>
-                                }
-                            </a>
-                        </div>
                     </div>
 
                     <div class="card-content">

@@ -105,6 +105,10 @@
         .empty-state i { font-size: 2.5rem; color: var(--border); margin-bottom: 12px; display: block; }
         .empty-state p { font-size: 0.9rem; margin: 0; }
 
+        @@media (max-width: 640px) {
+            .admin-page-wrapper { padding: 16px !important; }
+        }
+
         @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
         @@media (max-width: 768px) {
             .admin-page-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
@@ -125,6 +129,8 @@
     *@
 
 
+
+    <div class="admin-page-wrapper" style="padding: 28px;">
 
     <div class="admin-page-header">
         <div class="header-left">
@@ -299,6 +305,8 @@
             </div>
         }
     </div>
+
+    </div><!-- /padding wrapper -->
 
 </body>
 </html>

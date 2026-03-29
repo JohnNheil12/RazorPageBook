@@ -4,18 +4,111 @@
     ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity?.IsAuthenticated ?? false)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" style="
+        display: none;
+        position: fixed; inset: 0; z-index: 9999;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        align-items: center;
+        justify-content: center;">
+
+        <div style="
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 36px 32px 28px;
+            width: 100%;
+            max-width: 400px;
+            margin: 16px;
+            box-shadow: 0 24px 64px rgba(15,23,42,0.18);
+            text-align: center;
+            font-family: 'DM Sans', sans-serif;
+            animation: modalPop 0.2s ease;">
+
+            <!-- Icon -->
+            <div style="
+                width: 60px; height: 60px;
+                background: #fff1f2;
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 18px;
+                border: 2px solid #fecdd3;">
+                <i class="bi bi-box-arrow-right" style="font-size: 1.5rem; color: #e11d48;"></i>
+            </div>
+
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #0f172a; margin: 0 0 8px;">
+                Log out?
+            </h2>
+            <p style="font-size: 0.88rem; color: #64748b; margin: 0 0 28px; line-height: 1.5;">
+                Are you sure you want to log out? You'll need to sign in again to access your account.
+            </p>
+
+            <div style="display: flex; gap: 10px;">
+                <!-- Cancel -->
+                <button onclick="closeLogoutModal()" style="
+                    flex: 1; padding: 11px 16px;
+                    background: #f1f5f9;
+                    color: #475569;
+                    border: 1.5px solid #e2e8f0;
+                    border-radius: 11px;
+                    font-size: 0.88rem; font-weight: 600;
+                    font-family: 'DM Sans', sans-serif;
+                    cursor: pointer;
+                    transition: background 0.15s;">
+                    Cancel
+                </button>
+
+                <!-- Confirm logout form -->
+                <form asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Page("/", new { area = "" })"
+                      method="post" style="flex: 1;">
+                    <button type="submit" style="
+                        width: 100%; padding: 11px 16px;
+                        background: #e11d48;
+                        color: #ffffff;
+                        border: none;
+                        border-radius: 11px;
+                        font-size: 0.88rem; font-weight: 600;
+                        font-family: 'DM Sans', sans-serif;
+                        cursor: pointer;
+                        transition: background 0.15s;">
+                        Yes, Log out
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @@keyframes modalPop {
+            from { opacity: 0; transform: scale(0.94) translateY(8px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
         }
-        else
-        {
-            <p>You have successfully logged out of the application.</p>
+    </style>
+
+    <script>
+        function openLogoutModal() {
+            const m = document.getElementById('logoutModal');
+            m.style.display = 'flex';
         }
-    }
-</header>
+        function closeLogoutModal() {
+            const m = document.getElementById('logoutModal');
+            m.style.display = 'none';
+        }
+        // Close on backdrop click
+        document.getElementById('logoutModal').addEventListener('click', function (e) {
+            if (e.target === this) closeLogoutModal();
+        });
+        // Close on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeLogoutModal();
+        });
+    </script>
+}
+else
+{
+    <p>You have successfully logged out of the application.</p>
+}
