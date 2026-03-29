@@ -42,10 +42,13 @@
                 <div class="nav-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
                 <span class="nav-label">Profit</span>
             </a>
-            <a href="#" class="nav-item" data-page="users" onclick="loadTab(this,'users')">
-                <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
-                <span class="nav-label">Users</span>
-            </a>
+                 @if (User.IsInRole("Admin"))
+             {
+                    <a href="#" class="nav-item" data-page="users" onclick="loadTab(this,'users')">
+                        <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
+                        <span class="nav-label">Users</span>
+                    </a>
+            }   
             @if (!SignInManager.IsSignedIn(User))
             {
                 <a asp-area="Identity" asp-page="/Account/Login" class="nav-item">
@@ -235,29 +238,26 @@
     }
 
     /* ── Core content loader (GET) ── */
-    async function loadContent(url) {
-        const container = document.getElementById('pageContent');
-        container.innerHTML = `
-            <div class="loading-state">
-                <div class="spinner"></div>
-                <span>Loading...</span>
-            </div>`;
-        try {
-            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            const html = await res.text();
-            if (/<aside|<html/i.test(html)) throw new Error('Full page returned instead of partial');
-            injectHTML(container, html);
-        } catch (err) {
-            console.error('loadContent error:', err);
-            container.innerHTML = `
-                <div class="loading-state" style="color:#ef4444;">
-                    <i class="bi bi-exclamation-octagon" style="font-size:2rem;"></i>
-                    <span>Failed to load content. Please try again.</span>
-                </div>`;
+   async function loadContent(url) {
+    const container = document.getElementById('pageContent');
+    try {
+        const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        
+        // KUNG GI-BLOCK KA (401 o 403), I-REFRESH ANG PAGE PARA MO-LOGIN
+        if (res.status === 401 || res.status === 403) {
+            window.location.reload(); 
+            return;
         }
-    }
 
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        
+        const html = await res.text();
+        injectHTML(container, html);
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="loading-state">Access Denied o Error loading page.</div>`;
+    }
+}
     /* ── Tab navigation ── */
     function loadTab(el, page) {
         /* prevent default link navigation */
