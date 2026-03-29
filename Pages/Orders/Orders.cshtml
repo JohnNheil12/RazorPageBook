@@ -1,417 +1,523 @@
-﻿@page
-@model RazorPageBooks.Pages.Orders.IndexModel
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
+﻿@* Orders.cshtml - DISPLAY ONLY (demo data) - no model required *@
+@page "/Orders/Orders"
 @{
-    ViewData["Title"] = "Orders";
     Layout = null;
+    if (Request.Query["partial"] != "true") {
+        Response.Redirect("/Dashboard");
+        return;
+    }
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Orders — The Book Cellar</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; background: #f8fafc; font-family: 'DM Sans', sans-serif; }
 
-        :root {
-            --surface: #ffffff;
-            --bg: #f8fafc;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --txt: #0f172a;
-            --txt-muted: #64748b;
-            --txt-light: #94a3b8;
-            --accent: #1d4ed8;
-            --indigo: #4f46e5; --indigo-bg: #eef2ff; --indigo-border: #c7d2fe;
-            --emerald: #059669; --emerald-bg: #ecfdf5; --emerald-border: #a7f3d0;
-            --amber: #d97706; --amber-bg: #fffbeb; --amber-border: #fde68a;
-            --rose: #e11d48; --rose-bg: #fff1f2; --rose-border: #fecdd3;
-            --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
-            --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
-            --sidebar-w: 240px;
-            --sidebar-bg: #0f172a;
-            --sidebar-border: #1e293b;
-            --sidebar-txt: #94a3b8;
-            --sidebar-txt-active: #f8fafc;
-            --sidebar-hover: #1e293b;
-        }
+<div class="ord-page">
+    <div class="ord-shell">
 
-        .shell { display: flex; min-height: 100vh; }
+        <!-- LEFT: Orders List -->
+        <div class="ord-list-panel">
 
-        /* ── SIDEBAR ── */
-        .sidebar {
-            width: var(--sidebar-w); min-width: var(--sidebar-w);
-            background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);
-            display: flex; flex-direction: column;
-            position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 100;
-        }
+            <div class="ord-panel-header">
+                <div>
+                    <div class="ord-eyebrow"><span class="ord-eyebrow-dot"></span> Order Management</div>
+                    <h1 class="ord-title">Customer <span class="ord-title-accent">Orders</span></h1>
+                </div>
+                <button class="ord-btn-ghost" onclick="alert('Export coming soon!')">
+                    <i class="bi bi-download"></i> Export
+                </button>
+            </div>
 
-        .sidebar-brand { display: flex; align-items: center; gap: 11px; padding: 22px 20px 20px; border-bottom: 1px solid var(--sidebar-border); flex-shrink: 0; }
-        .brand-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1d4ed8 0%, #4f46e5 100%); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; flex-shrink: 0; box-shadow: 0 4px 12px rgba(79,70,229,0.4); }
-        .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-        .brand-name { font-size: 0.92rem; font-weight: 700; color: var(--sidebar-txt-active); letter-spacing: -0.2px; }
-        .brand-tagline { font-size: 0.65rem; font-weight: 500; color: var(--sidebar-txt); text-transform: uppercase; letter-spacing: 0.8px; }
+            <!-- Stats strip -->
+            <div class="ord-stats-strip">
+                <div class="ord-stat">
+                    <span class="ord-stat-val">8</span>
+                    <span class="ord-stat-lbl">Total</span>
+                </div>
+                <div class="ord-stat">
+                    <span class="ord-stat-val" style="color:#d97706;">3</span>
+                    <span class="ord-stat-lbl">Pending</span>
+                </div>
+                <div class="ord-stat">
+                    <span class="ord-stat-val" style="color:#2563eb;">2</span>
+                    <span class="ord-stat-lbl">Processing</span>
+                </div>
+                <div class="ord-stat">
+                    <span class="ord-stat-val" style="color:#059669;">3</span>
+                    <span class="ord-stat-lbl">Completed</span>
+                </div>
+            </div>
 
-        .sidebar-nav {width: 280px; flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; }
+            <!-- Toolbar -->
+            <div class="ord-toolbar">
+                <div class="ord-search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="ordSearch" placeholder="Search orders, customers…" oninput="filterOrders()" />
+                </div>
+                <select class="ord-filter-sel" id="ordStatusFilter" onchange="filterOrders()">
+                    <option value="">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
 
-        .nav-section-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #334155; padding: 10px 8px 4px; display: block; }
-
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; text-decoration: none; color: var(--sidebar-txt); font-size: 0.85rem; font-weight: 500; transition: background 0.15s, color 0.15s; }
-        .nav-item:hover { background: var(--sidebar-hover); color: #cbd5e1; }
-        .nav-item.active { background: #1e3a8a; color: var(--sidebar-txt-active); font-weight: 600; box-shadow: inset 3px 0 0 #3b82f6; }
-
-        .nav-icon-wrap { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; background: rgba(255,255,255,0.04); }
-        .nav-item.active .nav-icon-wrap { background: rgba(59,130,246,0.2); color: #93c5fd; }
-        .nav-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .nav-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; }
-        .nav-badge.amber { background: #78350f; color: #fcd34d; }
-
-        .sidebar-footer { padding: 14px 12px; border-top: 1px solid var(--sidebar-border); flex-shrink: 0; }
-        .sidebar-user { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; background: var(--sidebar-hover); }
-        .user-avatar { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #1d4ed8, #7c3aed); color: #fff; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .user-meta { flex: 1; display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
-        .user-name { font-size: 0.8rem; font-weight: 600; color: var(--sidebar-txt-active); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .user-role { font-size: 0.65rem; color: var(--sidebar-txt); }
-        .user-logout { color: var(--sidebar-txt); font-size: 0.9rem; background: none; border: none; cursor: pointer; display: flex; align-items: center; flex-shrink: 0; transition: color 0.15s; }
-        .user-logout:hover { color: #f87171; }
-
-        /* ── MAIN ── */
-        .main-content { flex: 1; padding: 28px; overflow-y: auto; min-width: 0; }
-
-        .admin-page-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px 32px; margin-bottom: 24px; background: #ffffff; border: 1px solid var(--border); border-radius: 16px; border-left: 4px solid var(--accent); box-shadow: 0 1px 6px rgba(15,23,42,0.05); }
-
-        .page-eyebrow { display: flex; align-items: center; gap: 7px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 6px; }
-        .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
-        .page-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; margin: 0 0 4px; line-height: 1.15; }
-        .title-accent { color: var(--accent); font-style: italic; }
-        .page-subtitle { font-size: 0.85rem; color: var(--txt-muted); margin: 0; }
-        .header-right { display: flex; align-items: center; gap: 12px; }
-
-        .btn-admin-primary { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background 0.15s, transform 0.15s; box-shadow: 0 2px 8px rgba(29,78,216,0.22); white-space: nowrap; }
-        .btn-admin-primary:hover { background: #1e40af; color: #fff; transform: translateY(-1px); }
-
-        .btn-admin-ghost { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--surface); color: var(--txt); border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background 0.15s; }
-        .btn-admin-ghost:hover { background: #f1f5f9; border-color: #cbd5e1; color: var(--txt); }
-
-        /* ── STATS ── */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; transition: box-shadow 0.15s, transform 0.15s; }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,23,42,0.07); }
-        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-        .stat-card:nth-child(1)::before { background: var(--blue); }
-        .stat-card:nth-child(2)::before { background: var(--amber); }
-        .stat-card:nth-child(3)::before { background: var(--emerald); }
-        .stat-card:nth-child(4)::before { background: var(--rose); }
-
-        .stat-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
-        .stat-icon.blue    { background: var(--blue-bg);    color: var(--blue);    }
-        .stat-icon.amber   { background: var(--amber-bg);   color: var(--amber);   }
-        .stat-icon.emerald { background: var(--emerald-bg); color: var(--emerald); }
-        .stat-icon.rose    { background: var(--rose-bg);    color: var(--rose);    }
-
-        .stat-body { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
-        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--txt); letter-spacing: -0.5px; }
-        .stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--txt-muted); margin-top: 2px; }
-        .stat-trend { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
-        .stat-trend.up      { background: var(--emerald-bg); color: var(--emerald); }
-        .stat-trend.neutral { background: var(--border-light); color: var(--txt-light); }
-
-        /* ── TOOLBAR ── */
-        .admin-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-        .search-form { flex: 1; max-width: 420px; }
-        .search-box { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 0 7px 0 14px; height: 42px; transition: border-color 0.18s, box-shadow 0.18s; }
-        .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(29,78,216,0.08); }
-        .search-ico { color: var(--txt-light); font-size: 0.9rem; flex-shrink: 0; }
-        .search-input { flex: 1; border: none; outline: none; background: transparent; font-size: 0.875rem; font-family: 'DM Sans', sans-serif; color: var(--txt); min-width: 0; }
-        .search-input::placeholder { color: var(--txt-light); }
-        .search-btn { background: var(--accent); color: #fff; border: none; border-radius: 7px; padding: 0 13px; height: 29px; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
-        .search-btn:hover { background: #1e40af; }
-        .toolbar-meta { display: flex; align-items: center; gap: 10px; }
-        .results-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; font-weight: 500; color: var(--txt-muted); }
-
-        /* ── TABLE ── */
-        .admin-table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-        .table-responsive { overflow-x: auto; }
-        .admin-table { width: 100%; border-collapse: collapse; font-family: 'DM Sans', sans-serif; }
-        .admin-table thead tr { background: #f8fafc; border-bottom: 1px solid var(--border); }
-        .admin-table thead th { padding: 11px 16px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.9px; color: var(--txt-light); white-space: nowrap; }
-        .admin-table thead th:first-child { padding-left: 24px; }
-        .admin-table thead th:last-child  { text-align: right; padding-right: 24px; }
-        .admin-table thead th.center      { text-align: center; }
-
-        .order-row { border-bottom: 1px solid var(--border-light); transition: background 0.12s; }
-        .order-row:last-child { border-bottom: none; }
-        .order-row:hover { background: #fafbfc; }
-
-        .admin-table td { padding: 14px 16px; vertical-align: middle; font-size: 0.875rem; }
-        .admin-table td:first-child { padding-left: 24px; }
-        .admin-table td:last-child  { padding-right: 24px; }
-        .admin-table td.center      { text-align: center; }
-
-        .order-num { font-weight: 700; color: var(--accent); font-size: 0.85rem; font-family: 'DM Sans', sans-serif; }
-
-        .customer-chip { display: flex; align-items: center; gap: 10px; }
-        .customer-initial { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-bg); color: var(--blue); font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .customer-name  { font-size: 0.85rem; font-weight: 600; color: var(--txt); }
-        .customer-email { font-size: 0.72rem; color: var(--txt-muted); }
-
-        .book-title-text { font-size: 0.85rem; font-weight: 500; color: var(--txt); }
-
-        .qty-pill { display: inline-block; padding: 3px 10px; background: var(--border-light); border: 1px solid var(--border); border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: var(--txt-muted); }
-
-        .order-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; border: 1px solid transparent; }
-        .os-pending   { background: var(--amber-bg);   color: var(--amber);   border-color: var(--amber-border);   }
-        .os-completed { background: var(--emerald-bg); color: var(--emerald); border-color: var(--emerald-border); }
-        .os-cancelled { background: var(--rose-bg);    color: var(--rose);    border-color: var(--rose-border);    }
-
-        .action-cluster { display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
-        .act-btn { width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.82rem; text-decoration: none; border: 1px solid transparent; transition: background 0.12s, transform 0.12s; }
-        .act-btn:hover { transform: translateY(-1px); }
-        .act-view { background: var(--blue-bg);  color: var(--blue);  border-color: var(--blue-border);  }
-        .act-edit { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
-        .act-view:hover { background: #dbeafe; }
-        .act-edit:hover { background: #dcfce7; }
-
-        .table-footer { padding: 12px 24px; border-top: 1px solid var(--border-light); background: #fafbfc; }
-        .footer-count { font-size: 0.8rem; color: var(--txt-light); }
-        .footer-count strong { color: var(--txt-muted); }
-
-        .empty-state { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 72px 32px; text-align: center; }
-        .empty-icon-wrap { width: 64px; height: 64px; background: var(--border-light); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: var(--txt-light); margin: 0 auto 20px; }
-        .empty-title { font-size: 1.05rem; font-weight: 600; color: var(--txt); margin-bottom: 8px; }
-        .empty-desc { font-size: 0.875rem; color: var(--txt-muted); max-width: 320px; margin: 0 auto; }
-
-        @@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-        @@media (max-width: 768px) {
-            .shell { flex-direction: column; }
-            .sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; }
-            .sidebar-nav { flex-direction: row; padding: 8px; overflow-x: auto; gap: 4px; flex: 1; }
-            .nav-section-label { display: none; }
-            .sidebar-footer { display: none; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .main-content { padding: 16px; }
-            .admin-page-header { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
-        }
-        @@media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
-    </style>
-</head>
-<body>
-<div class="shell">
-
-    <!-- ══ SIDEBAR ══ -->
-    <aside class="sidebar">
-        <div class="sidebar-brand">
-            <div class="brand-icon"><i class="bi bi-book-half"></i></div>
-            <div class="brand-text">
-                <span class="brand-name">Book Cellar</span>
-                <span class="brand-tagline">Admin Panel</span>
+            <!-- Order cards -->
+            <div class="ord-cards-list" id="ordCardsList">
+                <!-- generated by JS from demoOrders -->
             </div>
         </div>
 
-        <nav class="sidebar-nav">
-            <span class="nav-section-label">Library</span>
-            <a href="/Books/Inventory" class="nav-item">
-                <div class="nav-icon-wrap"><i class="bi bi-journals"></i></div>
-                <span class="nav-label">Inventory</span>
-            </a>
-            <a href="/Orders/Orders" class="nav-item active">
-                <div class="nav-icon-wrap"><i class="bi bi-bag-check"></i></div>
-                <span class="nav-label">Orders</span>
-                <span class="nav-badge amber">@Model.PendingOrders</span>
-            </a>
-            <a href="/Sales/Sales" class="nav-item">
-                <div class="nav-icon-wrap"><i class="bi bi-graph-up"></i></div>
-                <span class="nav-label">Sales</span>
-            </a>
-            <a href="/Users/Users" class="nav-item">
-                <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
-                <span class="nav-label">Users</span>
-            </a>
-            <span class="nav-section-label">Account</span>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <form method="post" asp-area="Identity" asp-page="/Account/Logout"
-                      asp-route-returnUrl="/Orders" style="margin:0;padding:0;">
-                </form>
-            }
-            else
-            {
-                <a asp-area="Identity" asp-page="/Account/Login" class="nav-item">
-                    <div class="nav-icon-wrap"><i class="bi bi-box-arrow-in-right"></i></div>
-                    <span class="nav-label">Login</span>
-                </a>
-            }
-        </nav>
+        <!-- RIGHT: Detail Panel -->
+        <div class="ord-detail-panel" id="ordDetailPanel">
 
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="user-avatar">@(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "A")</div>
-                    <div class="user-meta">
-                        <span class="user-name">@User.Identity.Name</span>
-                        <span class="user-role">Administrator</span>
+            <div class="ord-detail-empty" id="ordDetailEmpty">
+                <div class="ord-empty-icon"><i class="bi bi-bag-check"></i></div>
+                <h3>Select an Order</h3>
+                <p>Click any order from the list to view its details</p>
+            </div>
+
+            <div class="ord-detail-body" id="ordDetailBody" style="display:none;">
+
+                <div class="ord-detail-header">
+                    <div>
+                        <div class="ord-detail-num" id="dOrderNum">#ORD-001</div>
+                        <div class="ord-detail-date" id="dOrderDate">Jan 1, 2025</div>
                     </div>
-                    <form method="post" asp-area="Identity" asp-page="/Account/Logout"
-                          asp-route-returnUrl="/Orders" style="margin:0;padding:0;">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="user-logout" title="Logout">
-                            <i class="bi bi-box-arrow-left"></i>
+                    <div class="ord-detail-header-right">
+                        <span class="ord-status-badge" id="dStatusBadge">Pending</span>
+                        <button class="ord-btn-ghost ord-btn-sm" onclick="closeOrdDetail()"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="ord-timeline">
+                    <div class="ord-tl-step" data-step="Pending">
+                        <div class="ord-tl-dot"><i class="bi bi-clock"></i></div>
+                        <span class="ord-tl-label">Pending</span>
+                    </div>
+                    <div class="ord-tl-conn"></div>
+                    <div class="ord-tl-step" data-step="Processing">
+                        <div class="ord-tl-dot"><i class="bi bi-gear"></i></div>
+                        <span class="ord-tl-label">Processing</span>
+                    </div>
+                    <div class="ord-tl-conn"></div>
+                    <div class="ord-tl-step" data-step="Shipped">
+                        <div class="ord-tl-dot"><i class="bi bi-truck"></i></div>
+                        <span class="ord-tl-label">Shipped</span>
+                    </div>
+                    <div class="ord-tl-conn"></div>
+                    <div class="ord-tl-step" data-step="Completed">
+                        <div class="ord-tl-dot"><i class="bi bi-check-circle"></i></div>
+                        <span class="ord-tl-label">Completed</span>
+                    </div>
+                </div>
+
+                <!-- Customer -->
+                <div class="ord-section">
+                    <div class="ord-section-title"><i class="bi bi-person-circle"></i> Customer</div>
+                    <div class="ord-cust-card">
+                        <div class="ord-cust-avatar" id="dCustAvatar">A</div>
+                        <div>
+                            <div class="ord-cust-name" id="dCustName">—</div>
+                            <div class="ord-cust-meta" id="dCustEmail">—</div>
+                            <div class="ord-cust-meta" id="dCustPhone">—</div>
+                        </div>
+                    </div>
+                    <div class="ord-address-box" id="dAddress">—</div>
+                </div>
+
+                <!-- Items -->
+                <div class="ord-section">
+                    <div class="ord-section-title"><i class="bi bi-bag"></i> Order Items</div>
+                    <div class="ord-items-list" id="dItems"></div>
+                </div>
+
+                <!-- Summary -->
+                <div class="ord-section">
+                    <div class="ord-summary" id="dSummary"></div>
+                </div>
+
+                <!-- Update Status -->
+                <div class="ord-section">
+                    <div class="ord-section-title"><i class="bi bi-pencil-square"></i> Update Status</div>
+                    <div class="ord-update-row">
+                        <select class="ord-status-select" id="ordStatusSelect">
+                            <option value="Pending">Pending</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                        <button class="ord-btn-update" onclick="updateStatus()">
+                            <i class="bi bi-check2"></i> Update
                         </button>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        }
-    </aside>
 
-    <!-- ══ MAIN ══ -->
-    <main class="main-content">
-
-        <div class="admin-page-header">
-            <div class="header-left">
-                <div class="page-eyebrow"><span class="eyebrow-dot"></span> Processing Hub</div>
-                <h1 class="page-title">Sales <span class="title-accent">&amp; Orders</span></h1>
-                <p class="page-subtitle">Manage customer transactions and fulfillment</p>
-            </div>
-            <div class="header-right">
-                <button class="btn-admin-ghost"><i class="bi bi-file-earmark-arrow-down"></i> Export</button>
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <a href="#" class="btn-admin-primary"><i class="bi bi-plus-lg"></i> Create Order</a>
-                }
             </div>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue"><i class="bi bi-cart-check"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.TotalOrders</span>
-                    <span class="stat-label">Total Orders</span>
-                </div>
-                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.PendingOrders</span>
-                    <span class="stat-label">To Process</span>
-                </div>
-                <div class="stat-trend neutral"><i class="bi bi-dash"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon emerald"><i class="bi bi-patch-check"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">@Model.CompletedOrders</span>
-                    <span class="stat-label">Completed</span>
-                </div>
-                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon rose"><i class="bi bi-cash-stack"></i></div>
-                <div class="stat-body">
-                    <span class="stat-value">₱ @string.Format("{0:N0}", 12540)</span>
-                    <span class="stat-label">Net Revenue</span>
-                </div>
-                <div class="stat-trend up"><i class="bi bi-arrow-up-right"></i></div>
-            </div>
-        </div>
-
-        <div class="admin-toolbar">
-            <form method="get" action="/Orders" class="search-form">
-                <div class="search-box">
-                    <i class="bi bi-search search-ico"></i>
-                    <input type="text" name="searchString" class="search-input"
-                           placeholder="Search by order number or customer..." />
-                    <button type="submit" class="search-btn">Search</button>
-                </div>
-            </form>
-            <div class="toolbar-meta">
-                <span class="results-pill">
-                    <i class="bi bi-receipt"></i>
-                    @Model.Orders.Count order@(Model.Orders.Count != 1 ? "s" : "")
-                </span>
-            </div>
-        </div>
-
-        @if (!Model.Orders.Any())
-        {
-            <div class="empty-state">
-                <div class="empty-icon-wrap"><i class="bi bi-bag"></i></div>
-                <h3 class="empty-title">No orders found</h3>
-                <p class="empty-desc">No customer orders have been placed yet, or your search returned no results.</p>
-            </div>
-        }
-        else
-        {
-            <div class="admin-table-card">
-                <div class="table-responsive">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Order #</th>
-                                <th>Customer</th>
-                                <th>Book Selection</th>
-                                <th class="center">Qty</th>
-                                <th class="center">Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Orders)
-                            {
-                                var statusClass = item.Status == "Completed" ? "os-completed"
-                                                : item.Status == "Cancelled"  ? "os-cancelled"
-                                                : "os-pending";
-                                var statusIcon  = item.Status == "Completed" ? "bi-check-circle-fill"
-                                                : item.Status == "Cancelled"  ? "bi-x-circle-fill"
-                                                : "bi-clock-fill";
-                                <tr class="order-row">
-                                    <td><span class="order-num">#@item.OrderNumber</span></td>
-                                    <td>
-                                        <div class="customer-chip">
-                                            <div class="customer-initial">@(item.CustomerName?.Length > 0 ? item.CustomerName[0].ToString().ToUpper() : "?")</div>
-                                            <div>
-                                                <div class="customer-name">@item.CustomerName</div>
-                                                <div class="customer-email">@item.CustomerEmail</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><div class="book-title-text">@item.BookTitle</div></td>
-                                    <td class="center"><span class="qty-pill">@item.Quantity</span></td>
-                                    <td class="center">
-                                        <span class="order-status @statusClass">
-                                            <i class="bi @statusIcon" style="font-size:0.65rem;"></i>
-                                            @item.Status
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="action-cluster">
-                                            <a href="#" class="act-btn act-view" title="View"><i class="bi bi-eye"></i></a>
-                                            @if (SignInManager.IsSignedIn(User))
-                                            {
-                                                <a href="#" class="act-btn act-edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                            }
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="table-footer">
-                    <span class="footer-count">Showing <strong>@Model.Orders.Count</strong> order@(Model.Orders.Count != 1 ? "s" : "")</span>
-                </div>
-            </div>
-        }
-
-    </main>
+    </div>
 </div>
-</body>
-</html>
+
+<style>
+    .ord-page {
+        height: 100%;
+        --os: #ffffff; --ob: #f8fafc; --obr: #e2e8f0; --obrl: #f1f5f9;
+        --ot: #0f172a; --otm: #64748b; --otl: #94a3b8;
+        --oa: #1d4ed8;
+        --oe: #059669; --oebg: #ecfdf5; --oebr: #a7f3d0;
+        --oam: #d97706; --oambg: #fffbeb; --oambr: #fde68a;
+        --oro: #e11d48; --orobg: #fff1f2; --orobr: #fecdd3;
+        --obl: #2563eb; --oblbg: #eff6ff; --oblbr: #bfdbfe;
+        --ov: #7c3aed; --ovbg: #f5f3ff; --ovbr: #ddd6fe;
+        --osl: #64748b; --oslbg: #f1f5f9; --oslbr: #e2e8f0;
+    }
+
+    .ord-shell { display: flex; height: 100vh; overflow: hidden; }
+
+    /* List panel */
+    .ord-list-panel { width: 360px; min-width: 300px; flex-shrink: 0; background: var(--os); border-right: 1px solid var(--obr); display: flex; flex-direction: column; overflow: hidden; }
+
+    .ord-panel-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 22px 18px 14px; border-bottom: 1px solid var(--obr); flex-shrink: 0; gap: 10px; }
+    .ord-eyebrow { display: flex; align-items: center; gap: 6px; font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--oa); margin-bottom: 3px; }
+    .ord-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--oa); display: inline-block; }
+    .ord-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 700; color: var(--ot); margin: 0; line-height: 1.2; }
+    .ord-title-accent { color: var(--oa); font-style: italic; }
+
+    .ord-btn-ghost { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; background: var(--os); color: var(--ot); border: 1.5px solid var(--obr); border-radius: 9px; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .ord-btn-ghost:hover { background: #f1f5f9; }
+    .ord-btn-sm { padding: 5px 9px; font-size: 0.76rem; }
+
+    .ord-stats-strip { display: flex; padding: 10px 18px; gap: 4px; border-bottom: 1px solid var(--obr); flex-shrink: 0; }
+    .ord-stat { flex: 1; text-align: center; padding: 7px 2px; }
+    .ord-stat-val { display: block; font-size: 1.25rem; font-weight: 700; color: var(--ot); line-height: 1; }
+    .ord-stat-lbl { font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--otm); }
+
+    .ord-toolbar { display: flex; gap: 7px; padding: 10px 14px; border-bottom: 1px solid var(--obr); flex-shrink: 0; }
+    .ord-search-box { flex: 1; display: flex; align-items: center; gap: 7px; background: var(--ob); border: 1.5px solid var(--obr); border-radius: 9px; padding: 0 11px; height: 36px; }
+    .ord-search-box:focus-within { border-color: var(--oa); }
+    .ord-search-box i { color: var(--otl); font-size: 0.82rem; }
+    .ord-search-box input { flex: 1; border: none; background: transparent; outline: none; font-size: 0.82rem; font-family: 'DM Sans', sans-serif; color: var(--ot); }
+    .ord-filter-sel { height: 36px; padding: 0 8px; border: 1.5px solid var(--obr); border-radius: 9px; background: var(--ob); color: var(--ot); font-size: 0.8rem; font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer; }
+
+    .ord-cards-list { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .ord-cards-list::-webkit-scrollbar { width: 4px; }
+    .ord-cards-list::-webkit-scrollbar-thumb { background: var(--obr); border-radius: 4px; }
+
+    /* Order card */
+    .ord-card { background: var(--ob); border: 1.5px solid var(--obr); border-radius: 12px; padding: 13px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+    .ord-card:hover { background: #f0f4ff; border-color: #bfdbfe; }
+    .ord-card.selected { background: #eff6ff; border-color: var(--oa); box-shadow: 0 0 0 3px rgba(29,78,216,0.07); }
+    .ord-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+    .ord-card-num { font-size: 0.83rem; font-weight: 700; color: var(--ot); font-family: monospace; }
+    .ord-card-cust { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+    .ord-cust-mini-av { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; font-size: 0.67rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ord-cust-mini-name { font-size: 0.81rem; color: var(--otm); font-weight: 500; }
+    .ord-card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .ord-card-date { font-size: 0.7rem; color: var(--otl); display: flex; align-items: center; gap: 4px; }
+    .ord-card-total { font-size: 0.86rem; font-weight: 700; color: var(--ot); }
+
+    /* Status badges */
+    .ord-status-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; text-transform: capitalize; }
+    .ord-status-badge.pending    { background: var(--oambg); color: var(--oam); border: 1px solid var(--oambr); }
+    .ord-status-badge.processing { background: var(--oblbg); color: var(--obl); border: 1px solid var(--oblbr); }
+    .ord-status-badge.shipped    { background: var(--ovbg);  color: var(--ov);  border: 1px solid var(--ovbr);  }
+    .ord-status-badge.completed  { background: var(--oebg);  color: var(--oe);  border: 1px solid var(--oebr);  }
+    .ord-status-badge.cancelled  { background: var(--orobg); color: var(--oro); border: 1px solid var(--orobr); }
+
+    /* Detail panel */
+    .ord-detail-panel { flex: 1; min-width: 0; background: var(--ob); overflow-y: auto; display: flex; flex-direction: column; }
+    .ord-detail-panel::-webkit-scrollbar { width: 5px; }
+    .ord-detail-panel::-webkit-scrollbar-thumb { background: var(--obr); border-radius: 4px; }
+
+    .ord-detail-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; color: var(--otm); }
+    .ord-empty-icon { width: 70px; height: 70px; border-radius: 20px; background: var(--os); border: 1px solid var(--obr); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--otl); margin: 0 auto 16px; }
+    .ord-detail-empty h3 { font-size: 1rem; font-weight: 600; color: var(--ot); margin: 0 0 6px; }
+    .ord-detail-empty p { font-size: 0.84rem; margin: 0; }
+
+    .ord-detail-body { padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+
+    .ord-detail-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; background: var(--os); border: 1px solid var(--obr); border-radius: 14px; padding: 18px 22px; border-left: 4px solid var(--oa); }
+    .ord-detail-num { font-size: 1.15rem; font-weight: 700; color: var(--ot); font-family: monospace; }
+    .ord-detail-date { font-size: 0.76rem; color: var(--otm); margin-top: 3px; }
+    .ord-detail-header-right { display: flex; align-items: center; gap: 9px; }
+
+    /* Timeline */
+    .ord-timeline { display: flex; align-items: center; background: var(--os); border: 1px solid var(--obr); border-radius: 14px; padding: 16px 18px; }
+    .ord-tl-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 0 0 auto; }
+    .ord-tl-conn { flex: 1; height: 2px; background: var(--obr); margin: 0 6px; margin-bottom: 20px; transition: background 0.3s; }
+    .ord-tl-conn.active { background: var(--oa); }
+    .ord-tl-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--obr); background: var(--ob); color: var(--otl); font-size: 0.82rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s; }
+    .ord-tl-dot.active { background: var(--oa); border-color: var(--oa); color: #fff; box-shadow: 0 0 0 4px rgba(29,78,216,0.1); }
+    .ord-tl-dot.done   { background: var(--oe); border-color: var(--oe); color: #fff; }
+    .ord-tl-label { font-size: 0.62rem; font-weight: 600; text-transform: uppercase; color: var(--otm); white-space: nowrap; }
+    .ord-tl-step.active .ord-tl-label { color: var(--oa); }
+    .ord-tl-step.done   .ord-tl-label { color: var(--oe); }
+
+    /* Sections */
+    .ord-section { background: var(--os); border: 1px solid var(--obr); border-radius: 14px; padding: 16px 18px; }
+    .ord-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--otm); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+    .ord-cust-card { display: flex; align-items: center; gap: 13px; margin-bottom: 11px; }
+    .ord-cust-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ord-cust-name { font-size: 0.9rem; font-weight: 700; color: var(--ot); }
+    .ord-cust-meta { font-size: 0.76rem; color: var(--otm); }
+    .ord-address-box { font-size: 0.81rem; color: var(--otm); padding: 9px 13px; background: var(--ob); border-radius: 8px; border: 1px solid var(--obr); }
+
+    .ord-items-list { display: flex; flex-direction: column; gap: 9px; }
+    .ord-item-row { display: flex; align-items: center; gap: 11px; padding: 9px 11px; background: var(--ob); border-radius: 9px; border: 1px solid var(--obr); }
+    .ord-item-thumb { width: 38px; height: 52px; border-radius: 6px; background: var(--obr); overflow: hidden; flex-shrink: 0; border: 1px solid var(--obr); }
+    .ord-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .ord-item-info { flex: 1; min-width: 0; }
+    .ord-item-title { font-size: 0.83rem; font-weight: 600; color: var(--ot); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ord-item-author { font-size: 0.7rem; color: var(--otm); }
+    .ord-item-meta { text-align: right; flex-shrink: 0; }
+    .ord-item-qty { font-size: 0.7rem; color: var(--otm); }
+    .ord-item-price { font-size: 0.86rem; font-weight: 700; color: var(--ot); }
+
+    .ord-summary { display: flex; flex-direction: column; gap: 9px; }
+    .ord-sum-row { display: flex; justify-content: space-between; font-size: 0.84rem; color: var(--otm); padding: 3px 0; }
+    .ord-sum-row.total { border-top: 1px solid var(--obr); padding-top: 11px; margin-top: 2px; font-size: 0.93rem; font-weight: 700; color: var(--ot); }
+
+    .ord-update-row { display: flex; gap: 8px; }
+    .ord-status-select { flex: 1; height: 40px; padding: 0 12px; border: 1.5px solid var(--obr); border-radius: 9px; background: var(--ob); color: var(--ot); font-size: 0.84rem; font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer; }
+    .ord-status-select:focus { border-color: var(--oa); }
+    .ord-btn-update { display: inline-flex; align-items: center; gap: 6px; padding: 0 18px; height: 40px; background: var(--oa); color: #fff; border: none; border-radius: 9px; font-size: 0.83rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .ord-btn-update:hover { background: #1e40af; }
+
+    @@media (max-width: 900px) {
+        .ord-shell { flex-direction: column; height: auto; }
+        .ord-list-panel { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--obr); max-height: 50vh; }
+        .ord-detail-panel { min-height: 50vh; }
+    }
+    @@media (max-width: 480px) {
+        .ord-detail-body { padding: 12px; }
+        .ord-tl-label { display: none; }
+    }
+</style>
+
+<script>
+    const statusOrder = ["Pending", "Processing", "Shipped", "Completed"];
+
+    // Demo orders data - connected to Profit page totals
+    const demoOrders = [
+        {
+            id: 1, orderNumber: "ORD-2025-001", status: "Completed",
+            customerName: "Maria Santos", customerEmail: "maria.santos@gmail.com",
+            customerPhone: "+63 912 345 6789", address: "123 Rizal St., Cebu City, Cebu 6000",
+            orderDate: "January 5, 2025 · 10:32 AM",
+            subtotal: 1250.00, shipping: 80.00, tax: 165.60, total: 1495.60,
+            items: [
+                { title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", qty: 1, price: 750.00, image: "" },
+                { title: "The Alchemist", author: "Paulo Coelho", qty: 1, price: 500.00, image: "" }
+            ]
+        },
+        {
+            id: 2, orderNumber: "ORD-2025-002", status: "Processing",
+            customerName: "Juan Dela Cruz", customerEmail: "juan.dc@yahoo.com",
+            customerPhone: "+63 918 765 4321", address: "45 Mabini Ave., Mandaue City, Cebu 6014",
+            orderDate: "February 12, 2025 · 2:14 PM",
+            subtotal: 980.00, shipping: 80.00, tax: 129.60, total: 1189.60,
+            items: [
+                { title: "To Kill a Mockingbird", author: "Harper Lee", qty: 1, price: 580.00, image: "" },
+                { title: "1984", author: "George Orwell", qty: 1, price: 400.00, image: "" }
+            ]
+        },
+        {
+            id: 3, orderNumber: "ORD-2025-003", status: "Pending",
+            customerName: "Ana Reyes", customerEmail: "ana.reyes@outlook.com",
+            customerPhone: "+63 905 123 9988", address: "78 Colon St., Cebu City, Cebu 6000",
+            orderDate: "March 3, 2025 · 9:05 AM",
+            subtotal: 1450.00, shipping: 80.00, tax: 195.60, total: 1725.60,
+            items: [
+                { title: "Pride and Prejudice", author: "Jane Austen", qty: 2, price: 425.00, image: "" },
+                { title: "The Great Gatsby", author: "F. Scott Fitzgerald", qty: 1, price: 600.00, image: "" }
+            ]
+        },
+        {
+            id: 4, orderNumber: "ORD-2025-004", status: "Shipped",
+            customerName: "Carlo Mendoza", customerEmail: "carlo.m@gmail.com",
+            customerPhone: "+63 927 456 1234", address: "12 V. Rama St., Cebu City, Cebu 6000",
+            orderDate: "March 10, 2025 · 4:50 PM",
+            subtotal: 2100.00, shipping: 0.00, tax: 252.00, total: 2352.00,
+            items: [
+                { title: "Dune", author: "Frank Herbert", qty: 1, price: 900.00, image: "" },
+                { title: "The Lord of the Rings", author: "J.R.R. Tolkien", qty: 1, price: 1200.00, image: "" }
+            ]
+        },
+        {
+            id: 5, orderNumber: "ORD-2025-005", status: "Completed",
+            customerName: "Liza Fernandez", customerEmail: "liza.f@gmail.com",
+            customerPhone: "+63 932 889 5566", address: "34 M.J. Cuenco Ave., Cebu City, Cebu 6000",
+            orderDate: "March 18, 2025 · 11:22 AM",
+            subtotal: 870.00, shipping: 80.00, tax: 114.00, total: 1064.00,
+            items: [
+                { title: "Atomic Habits", author: "James Clear", qty: 1, price: 550.00, image: "" },
+                { title: "Sapiens", author: "Yuval Noah Harari", qty: 1, price: 320.00, image: "" }
+            ]
+        },
+        {
+            id: 6, orderNumber: "ORD-2025-006", status: "Pending",
+            customerName: "Roberto Villanueva", customerEmail: "rob.v@yahoo.com",
+            customerPhone: "+63 917 654 3210", address: "56 Jakosalem St., Cebu City, Cebu 6000",
+            orderDate: "March 22, 2025 · 3:40 PM",
+            subtotal: 1600.00, shipping: 80.00, tax: 204.00, total: 1884.00,
+            items: [
+                { title: "The Midnight Library", author: "Matt Haig", qty: 1, price: 680.00, image: "" },
+                { title: "Educated", author: "Tara Westover", qty: 1, price: 620.00, image: "" },
+                { title: "The Power of Now", author: "Eckhart Tolle", qty: 1, price: 300.00, image: "" }
+            ]
+        },
+        {
+            id: 7, orderNumber: "ORD-2025-007", status: "Completed",
+            customerName: "Sofia Aquino", customerEmail: "sofia.a@gmail.com",
+            customerPhone: "+63 909 213 4455", address: "23 P. Burgos St., Cebu City, Cebu 6000",
+            orderDate: "March 25, 2025 · 8:10 AM",
+            subtotal: 550.00, shipping: 80.00, tax: 75.60, total: 705.60,
+            items: [
+                { title: "The Little Prince", author: "Antoine de Saint-Exupéry", qty: 1, price: 350.00, image: "" },
+                { title: "Tuesdays with Morrie", author: "Mitch Albom", qty: 1, price: 200.00, image: "" }
+            ]
+        },
+        {
+            id: 8, orderNumber: "ORD-2025-008", status: "Pending",
+            customerName: "Marco Castillo", customerEmail: "marco.c@gmail.com",
+            customerPhone: "+63 921 778 9900", address: "89 Leon Kilat St., Cebu City, Cebu 6000",
+            orderDate: "March 27, 2025 · 1:55 PM",
+            subtotal: 1800.00, shipping: 0.00, tax: 216.00, total: 2016.00,
+            items: [
+                { title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", qty: 2, price: 480.00, image: "" },
+                { title: "Think and Grow Rich", author: "Napoleon Hill", qty: 1, price: 840.00, image: "" }
+            ]
+        }
+    ];
+
+    let currentOrdId = null;
+
+    function renderCards() {
+        const list = document.getElementById('ordCardsList');
+        list.innerHTML = demoOrders.map(o => `
+            <div class="ord-card" data-id="${o.id}" data-status="${o.status}"
+                 data-customer="${o.customerName.toLowerCase()}"
+                 data-ordernum="${o.orderNumber.toLowerCase()}"
+                 onclick="selectOrd(this, ${o.id})">
+                <div class="ord-card-top">
+                    <div class="ord-card-num">#${o.orderNumber}</div>
+                    <span class="ord-status-badge ${o.status.toLowerCase()}">${o.status}</span>
+                </div>
+                <div class="ord-card-cust">
+                    <div class="ord-cust-mini-av">${o.customerName[0].toUpperCase()}</div>
+                    <span class="ord-cust-mini-name">${o.customerName}</span>
+                </div>
+                <div class="ord-card-footer">
+                    <span class="ord-card-date"><i class="bi bi-clock"></i> ${o.orderDate.split('·')[0].trim()}</span>
+                    <span class="ord-card-total">₱ ${o.total.toLocaleString('en-PH', {minimumFractionDigits:2})}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function selectOrd(el, ordId) {
+        document.querySelectorAll('.ord-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        currentOrdId = ordId;
+
+        const o = demoOrders.find(x => x.id === ordId);
+        if (!o) return;
+
+        document.getElementById('ordDetailEmpty').style.display = 'none';
+        document.getElementById('ordDetailBody').style.display = 'flex';
+
+        document.getElementById('dOrderNum').textContent = '#' + o.orderNumber;
+        document.getElementById('dOrderDate').textContent = o.orderDate;
+
+        const badge = document.getElementById('dStatusBadge');
+        badge.textContent = o.status;
+        badge.className = 'ord-status-badge ' + o.status.toLowerCase();
+
+        // Timeline
+        const curIdx = statusOrder.indexOf(o.status);
+        document.querySelectorAll('.ord-tl-step').forEach((step, i) => {
+            const idx = statusOrder.indexOf(step.dataset.step);
+            const dot = step.querySelector('.ord-tl-dot');
+            step.classList.remove('active', 'done');
+            dot.classList.remove('active', 'done');
+            if (idx < curIdx) { step.classList.add('done'); dot.classList.add('done'); }
+            else if (idx === curIdx) { step.classList.add('active'); dot.classList.add('active'); }
+        });
+        document.querySelectorAll('.ord-tl-conn').forEach((c, i) => {
+            c.classList.toggle('active', i < curIdx);
+        });
+
+        // Customer
+        document.getElementById('dCustAvatar').textContent = o.customerName[0].toUpperCase();
+        document.getElementById('dCustName').textContent = o.customerName;
+        document.getElementById('dCustEmail').textContent = o.customerEmail;
+        document.getElementById('dCustPhone').textContent = o.customerPhone;
+        document.getElementById('dAddress').textContent = o.address;
+
+        // Items
+        document.getElementById('dItems').innerHTML = o.items.map(item => `
+            <div class="ord-item-row">
+                <div class="ord-item-thumb">
+                    <img src="https://via.placeholder.com/38x52?text=📖" alt="${item.title}" />
+                </div>
+                <div class="ord-item-info">
+                    <div class="ord-item-title">${item.title}</div>
+                    <div class="ord-item-author">${item.author}</div>
+                </div>
+                <div class="ord-item-meta">
+                    <div class="ord-item-qty">x${item.qty}</div>
+                    <div class="ord-item-price">₱ ${(item.price * item.qty).toFixed(2)}</div>
+                </div>
+            </div>
+        `).join('');
+
+        // Summary
+        document.getElementById('dSummary').innerHTML = `
+            <div class="ord-sum-row"><span>Subtotal</span><span>₱ ${o.subtotal.toFixed(2)}</span></div>
+            <div class="ord-sum-row"><span>Shipping</span><span>${o.shipping === 0 ? 'Free' : '₱ ' + o.shipping.toFixed(2)}</span></div>
+            <div class="ord-sum-row"><span>Tax (12%)</span><span>₱ ${o.tax.toFixed(2)}</span></div>
+            <div class="ord-sum-row total"><span>Total</span><span>₱ ${o.total.toFixed(2)}</span></div>
+        `;
+
+        document.getElementById('ordStatusSelect').value = o.status;
+    }
+
+    function closeOrdDetail() {
+        document.getElementById('ordDetailEmpty').style.display = 'flex';
+        document.getElementById('ordDetailBody').style.display = 'none';
+        document.querySelectorAll('.ord-card').forEach(c => c.classList.remove('selected'));
+        currentOrdId = null;
+    }
+
+    function updateStatus() {
+        if (!currentOrdId) return;
+        const newStatus = document.getElementById('ordStatusSelect').value;
+        const o = demoOrders.find(x => x.id === currentOrdId);
+        if (!o) return;
+        o.status = newStatus;
+
+        // Re-render card
+        const card = document.querySelector(`.ord-card[data-id="${currentOrdId}"]`);
+        if (card) {
+            card.querySelector('.ord-status-badge').textContent = newStatus;
+            card.querySelector('.ord-status-badge').className = 'ord-status-badge ' + newStatus.toLowerCase();
+            card.dataset.status = newStatus;
+        }
+        // Re-render detail
+        selectOrd(document.querySelector(`.ord-card[data-id="${currentOrdId}"]`), currentOrdId);
+    }
+
+    function filterOrders() {
+        const q = document.getElementById('ordSearch').value.toLowerCase();
+        const s = document.getElementById('ordStatusFilter').value.toLowerCase();
+        document.querySelectorAll('.ord-card').forEach(card => {
+            const matchQ = !q || card.dataset.customer.includes(q) || card.dataset.ordernum.includes(q);
+            const matchS = !s || card.dataset.status.toLowerCase() === s;
+            card.style.display = (matchQ && matchS) ? '' : 'none';
+        });
+    }
+
+    // Init
+    renderCards();
+</script>

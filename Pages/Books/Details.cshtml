@@ -1,82 +1,93 @@
 ﻿@page
 @model RazorPageBooks.Pages.Books.DetailsModel
-
 @{
+    Layout = null;
     ViewData["Title"] = "Book Details";
 }
- <link rel="stylesheet" href="~/css/details.css" asp-append-version="true" />
+<link rel="stylesheet" href="/css/details.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<div class="page-wrapper">
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="text-center">
-            <h1 class="page-title">Book Details.</h1>
-            <p class="page-subtitle">Full information for the selected record.</p>
+<div class="dt-page">
+    <div class="dt-header">
+        <div>
+            <div class="dt-eyebrow">System / Inventory</div>
+            <h1 class="dt-title">Book <em>Details</em></h1>
+            <p class="dt-sub">Full information for this record.</p>
         </div>
-        <a asp-page="/Index" class="back-btn">
-            <i class="bi bi-arrow-left"></i> Back to Library
-        </a>
     </div>
 
-    <!-- Card -->
-    <div class="form-card">
-        <div class="card-accent"></div>
-
-        <div class="card-inner">
-
-            <!-- Cover + Title Hero -->
-            <div class="book-hero">
-                <img src="@(string.IsNullOrEmpty(Model.Book.ImageUrl) ? "https://via.placeholder.com/90x130?text=?" : Model.Book.ImageUrl)"
-                     alt="Cover"
-                     class="hero-cover"
-                     onerror="this.src='https://via.placeholder.com/90x130?text=?'" />
-                <div class="hero-meta">
-                    <div class="hero-title">@Model.Book.Title</div>
-                    <div class="hero-author">by @Model.Book.Author</div>
-                    <span class="hero-badge">
-                        <i class="bi bi-calendar3"></i> @Model.Book.YearPublished
-                    </span>
-                </div>
-            </div>
-
-            <!-- Info Grid -->
-            <div class="info-grid">
-                <div class="form-row two-col">
-                    <div class="field-group">
-                        <label class="field-label"><i class="bi bi-book"></i> Book Title</label>
-                        <div class="display-field">@Html.DisplayFor(model => model.Book.Title)</div>
-                    </div>
-                    <div class="field-group">
-                        <label class="field-label"><i class="bi bi-person"></i> Author</label>
-                        <div class="display-field">@Html.DisplayFor(model => model.Book.Author)</div>
-                    </div>
-                </div>
-
-                <div class="form-row two-col">
-                    <div class="field-group">
-                        <label class="field-label"><i class="bi bi-calendar3"></i> Year Published</label>
-                        <div class="display-field">@Html.DisplayFor(model => model.Book.YearPublished)</div>
-                    </div>
-                    <div class="field-group">
-                        <label class="field-label"><i class="bi bi-building"></i> Publisher</label>
-                        <div class="display-field">@Html.DisplayFor(model => model.Book.Publisher)</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            @if (User.Identity.IsAuthenticated && User.Identity.Name == "admin")
+    <div class="dt-grid">
+        <!-- Cover -->
+        <div class="dt-cover-card">
+            @if (!string.IsNullOrEmpty(Model.Book.ImageUrl))
             {
-                <div class="form-actions">
-                    <a asp-page="./Edit" asp-route-id="@Model.Book.Id" class="btn-edit">
-                        <i class="bi bi-pencil"></i> Edit Details
-                    </a>
+                <img src="@Model.Book.ImageUrl" alt="Cover" class="dt-cover-img"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                <div class="dt-cover-ph" style="display:none"><i class="bi bi-book"></i></div>
+            }
+            else
+            {
+                <div class="dt-cover-ph"><i class="bi bi-book"></i></div>
+            }
+            <div class="dt-cover-meta">
+                <div class="meta-price">₱@Model.Book.Price <small>per copy</small></div>
+                @if (!string.IsNullOrEmpty(Model.Book.Category))
+                {
+                    <span class="meta-cat"><i class="bi bi-tag"></i> @Model.Book.Category</span>
+                }
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="dt-info-card">
+            <div class="info-book-title">@Model.Book.Title</div>
+            <div class="info-book-author">by <strong>@Model.Book.Author</strong></div>
+
+            <div class="fields-row">
+                <div>
+                    <div class="field-lbl"><i class="bi bi-calendar3"></i> Year Published</div>
+                    <div class="field-val">@Model.Book.YearPublished</div>
                 </div>
+                <div>
+                    <div class="field-lbl"><i class="bi bi-building"></i> Publisher</div>
+                    <div class="field-val">@(string.IsNullOrEmpty(Model.Book.Publisher) ? "—" : Model.Book.Publisher)</div>
+                </div>
+            </div>
+
+            <div class="field-lbl" style="margin-bottom:8px"><i class="bi bi-card-text"></i> Overview</div>
+            @if (!string.IsNullOrEmpty(Model.Book.Overview))
+            {
+                <div class="overview-val">@Model.Book.Overview</div>
+            }
+            else
+            {
+                <div class="overview-val overview-empty">No overview provided for this entry.</div>
             }
 
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <div class="dt-actions">
+                    <button class="btn-edit"
+                            onclick="(function(){loadContent('/Books/Edit?id=@Model.Book.Id&partial=true');})()">
+                        <i class="bi bi-pencil"></i> Edit Details
+                    </button>
+                    <button class="btn-back"
+                            onclick="(function(){var n=document.querySelector('.nav-item[data-page=products]');if(n)loadTab(n,'products');})()">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="dt-actions">
+                    <button class="btn-back"
+                            onclick="(function(){var n=document.querySelector('.nav-item[data-page=products]');if(n)loadTab(n,'products');})()">
+                        <i class="bi bi-arrow-left"></i> Back to Library
+                    </button>
+                </div>
+            }
         </div>
     </div>
 </div>

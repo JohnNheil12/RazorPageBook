@@ -4,62 +4,39 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RazorPageBooks.Data;
 using RazorPageBooks.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RazorPageBooks.Pages.Books
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
-        private readonly RazorPageBooks.Data.RazorPageBooksContext _context;
-
-        public DeleteModel(RazorPageBooks.Data.RazorPageBooksContext context)
-        {
-            _context = context;
-        }
+        private readonly RazorPageBooksContext _context;
+        public DeleteModel(RazorPageBooksContext context) => _context = context;
 
         [BindProperty]
         public Book Book { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var book = await _context.Book.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Book = book;
-            }
+            if (book == null) return NotFound();
+            Book = book;
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var book = await _context.Book.FindAsync(id);
             if (book != null)
             {
-                Book = book;
-                _context.Book.Remove(Book);
+                _context.Book.Remove(book);
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./Index");
+            // 200 OK tells Dashboard.cshtml fetch handler to reload Products tab
+            return new OkResult();
         }
     }
 }

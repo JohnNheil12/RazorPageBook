@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RazorPageBooks.Data;
 using RazorPageBooks.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +12,9 @@ namespace RazorPageBooks.Pages.Books
     [Authorize]
     public class EditModel : PageModel
     {
-        private readonly RazorPageBooks.Data.RazorPageBooksContext _context;
+        private readonly RazorPageBooksContext _context;
 
-        public EditModel(RazorPageBooks.Data.RazorPageBooksContext context)
+        public EditModel(RazorPageBooksContext context)
         {
             _context = context;
         }
@@ -28,27 +25,20 @@ namespace RazorPageBooks.Pages.Books
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var book =  await _context.Book.FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _context.Book.FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
-            {
                 return NotFound();
-            }
+
             Book = book;
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             _context.Attach(Book).State = EntityState.Modified;
 
@@ -64,11 +54,17 @@ namespace RazorPageBooks.Pages.Books
                 }
                 else
                 {
-                    throw;
+                    // FIX: Instead of re-throwing (which causes a 500 error), add a
+                    // user-friendly validation message and re-display the form.
+                    ModelState.AddModelError(string.Empty,
+                        "This record was modified by another user while you were editing. " +
+                        "Please reload and try again.");
+                    return Page();
                 }
             }
 
-            return RedirectToPage("./Index");
+            // 200 OK tells Dashboard.cshtml fetch handler to reload the Products tab
+            return new OkResult();
         }
 
         private bool BookExists(int id)

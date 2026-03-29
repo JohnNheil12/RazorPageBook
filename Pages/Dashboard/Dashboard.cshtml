@@ -1,166 +1,346 @@
 ﻿@page
 @model DashboardModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 @{
-    Layout = "AdminLayout";
-    ViewData["Title"] = "Admin Dashboard";
+    Layout = null;
+    ViewData["Title"] = "Book Cellar — Admin";
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="shell">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<div class="admin-container">
-
-    <main class="main-content">
-        <div id="dashboardContent">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="bi bi-book-half"></i></div>
+            <div class="brand-text">
+                <span class="brand-name">Book Cellar</span>
+                <span class="brand-tagline">Admin Panel</span>
             </div>
-    </main>
+        </div>
 
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Library</span>
+
+            <a href="#" class="nav-item" data-page="products" onclick="loadTab(this,'products')">
+                <div class="nav-icon-wrap"><i class="bi bi-journals"></i></div>
+                <span class="nav-label">Products</span>
+            </a>
+            <a href="#" class="nav-item" data-page="orders" onclick="loadTab(this,'orders')">
+                <div class="nav-icon-wrap"><i class="bi bi-bag-check"></i></div>
+                <span class="nav-label">Orders</span>
+            </a>
+            <a href="#" class="nav-item" data-page="profit" onclick="loadTab(this,'profit')">
+                <div class="nav-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
+                <span class="nav-label">Profit</span>
+            </a>
+            <a href="#" class="nav-item" data-page="users" onclick="loadTab(this,'users')">
+                <div class="nav-icon-wrap"><i class="bi bi-people"></i></div>
+                <span class="nav-label">Users</span>
+            </a>
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="nav-item">
+                    <div class="nav-icon-wrap"><i class="bi bi-box-arrow-in-right"></i></div>
+                    <span class="nav-label">Login</span>
+                </a>
+            }
+        </nav>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            @* Dynamic Avatar: Uses the first letter of the name *@
+            <div class="user-avatar">
+                @(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "U")
+            </div>
+
+            <div class="user-meta">
+                <span class="user-name">@User.Identity.Name</span>
+                
+                @* Logic to display the correct role label *@
+                <span class="user-role">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @:Administrator
+                    }
+                    else if (User.IsInRole("Staff"))
+                    {
+                        @:Staff
+                    }
+                    else
+                    {
+                        @:User
+                    }
+                </span>
+            </div>
+
+            <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"
+                  style="margin:0;padding:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="user-logout" title="Sign out">
+                    <i class="bi bi-box-arrow-left"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+}
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <div id="pageContent">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <span>Loading...</span>
+            </div>
+        </div>
+    </main>
 </div>
 
 <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; font-family: 'DM Sans', sans-serif; overflow: hidden; }
+
     :root {
-        --sidebar-w: 280px;
-        --lib-dark: #0f141a;
-        --lib-gold: #e2b857;
-        --lib-bg: #f4f6f8;
-        --nav-hover: rgba(255, 255, 255, 0.05);
+        --sidebar-w: 260px;
+        --sidebar-bg: #0b1120;
+        --sidebar-border: rgba(255,255,255,0.06);
+        --sidebar-txt: #6b7fa3;
+        --sidebar-txt-active: #f1f5f9;
+        --sidebar-hover: rgba(255,255,255,0.04);
+        --sidebar-active-bg: rgba(59,130,246,0.12);
+        --sidebar-accent: #3b82f6;
     }
 
-    /* Layout Structure */
-    .admin-container {
-        display: flex; /* Critical for side-by-side */
-        width: 100%;
-        min-height: 100vh;
-        background-color: var(--lib-bg);
-    }
+    .shell { display: flex; height: 100vh; overflow: hidden; }
 
-    /* Sidebar Fix */
+    /* SIDEBAR */
     .sidebar {
-        width: var(--sidebar-w);
-        background-color: var(--lib-dark);
-        color: #fff;
-        position: fixed;
-        height: 100vh;
-        left: 0;
-        top: 0;
-        display: flex;
-        flex-direction: column;
-        padding: 40px 20px;
-        box-sizing: border-box;
-        z-index: 1000;
-        border-right: 1px solid rgba(255,255,255,0.05);
+        width: var(--sidebar-w); min-width: var(--sidebar-w); max-width: var(--sidebar-w);
+        background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);
+        display: flex; flex-direction: column; height: 100vh; z-index: 200;
+        box-shadow: 2px 0 20px rgba(0,0,0,0.25);
     }
+    .sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 24px 20px 22px; border-bottom: 1px solid var(--sidebar-border); }
+    .brand-icon { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #fff; box-shadow: 0 4px 14px rgba(79,70,229,0.45); }
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-name { font-size: 0.9rem; font-weight: 700; color: #f1f5f9; letter-spacing: -0.2px; }
+    .brand-tagline { font-size: 0.6rem; color: var(--sidebar-txt); text-transform: uppercase; letter-spacing: 1.2px; }
 
-    /* Header & Logo */
-    .sidebar-header { text-align: center; margin-bottom: 40px; }
-    .logo-icon { font-size: 2.5rem; color: var(--lib-gold); margin-bottom: 10px; }
-    .logo-text { 
-        font-family: 'Playfair Display', serif; 
-        font-size: 1.25rem; 
-        margin: 0; 
-        letter-spacing: 0.5px;
-    }
-    .admin-status {
-        font-size: 10px;
-        color: var(--lib-gold);
-        letter-spacing: 2px;
-        border: 1px solid var(--lib-gold);
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 4px;
-        margin-top: 10px;
-        opacity: 0.8;
-    }
+    .sidebar-nav { flex: 1; padding: 18px 12px; display: flex; flex-direction: column; gap: 1px; overflow-y: auto; }
+    .nav-section-label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; color: #2d3f5e; padding: 14px 10px 5px; }
+    .nav-divider { height: 1px; background: var(--sidebar-border); margin: 10px 0; }
+    .nav-item { display: flex; align-items: center; gap: 11px; padding: 10px 11px; border-radius: 10px; text-decoration: none; color: var(--sidebar-txt); font-size: 0.84rem; transition: 0.18s; cursor: pointer; border: 1px solid transparent; }
+    .nav-item:hover { background: var(--sidebar-hover); color: #c8d6ef; }
+    .nav-item.active { background: var(--sidebar-active-bg); color: #93c5fd; font-weight: 600; border-color: rgba(59,130,246,0.18); box-shadow: inset 3px 0 0 var(--sidebar-accent); }
+    .nav-icon-wrap { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; background: rgba(255,255,255,0.03); flex-shrink: 0; }
 
-    /* Navigation Menu */
-    .nav-menu { flex-grow: 1; }
-    .menu-category {
-        font-size: 11px;
-        text-transform: uppercase;
-        color: #4b5563;
-        letter-spacing: 1.5px;
-        margin: 25px 0 10px 12px;
-        font-weight: 700;
-    }
-    .nav-menu a {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        color: #94a3b8;
-        text-decoration: none;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-size: 14px;
-        transition: 0.2s ease;
-        margin-bottom: 4px;
-    }
-    .nav-menu a:hover { background: var(--nav-hover); color: #fff; }
-    .nav-menu a.active {
-        background: rgba(226, 184, 87, 0.1);
-        color: var(--lib-gold);
-        border-left: 3px solid var(--lib-gold);
-        border-radius: 0 8px 8px 0;
-        font-weight: 500;
-    }
+    .sidebar-footer { padding: 14px 12px; border-top: 1px solid var(--sidebar-border); }
+    .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 11px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05); }
+    .user-avatar { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .user-meta { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .user-name { font-size: 0.8rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 0.62rem; color: var(--sidebar-txt); }
+    .user-logout { color: #4b5e7a; background: none; border: none; cursor: pointer; padding: 0; width: 28px; height: 28px; border-radius: 7px; transition: 0.18s; display: flex; align-items: center; justify-content: center; }
+    .user-logout:hover { color: #f87171; background: rgba(248,113,113,0.1); }
 
-    /* Footer Exit Link */
-    .sidebar-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-    .exit-btn { 
-        color: #94a3b8; 
-        text-decoration: none; 
-        font-size: 14px; 
-        display: flex; 
-        align-items: center; 
-        gap: 5px; 
-    }
-    .exit-btn:hover { color: #fff; }
+    /* MAIN */
+    .main-content { flex: 1; height: 100vh; overflow-y: auto; background: #f8fafc; }
+    #pageContent { min-height: 100%; }
 
-    /* --- THE CONTENT FIX --- */
-    .main-content {
-        margin-left:150px;
-        flex: 1; 
-        padding: 10px; 
-        min-height: 100vh;
-        background-color: var(--lib-bg);
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-    }
-    .inventory-container, .table-responsive {
-        width: 100% !important;
-    }
+    /* Loading */
+    .loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; gap: 14px; color: #94a3b8; }
+    .spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid #e2e8f0; border-top-color: #3b82f6; animation: spin 0.7s linear infinite; }
+    @@keyframes spin { to { transform: rotate(360deg); } }
 
-    #dashboardContent {
-        width: 100%;
-     max-width: none; 
-        margin: 0; /* Keeps it flush to the left of the main area */
-        animation: fadeIn 0.3s ease;
-    }
+    .page-fade-in { animation: fadeUp 0.25s ease forwards; }
+    @@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    @@keyframes fadeIn {
-        from { opacity: 0; transform: translateY(5px); }
-        to { opacity: 1; transform: translateY(0); }
+    /* Toast notifications */
+    .toast-notify {
+        position: fixed; bottom: 28px; right: 28px;
+        padding: 13px 20px; border-radius: 12px;
+        font-size: 0.84rem; font-weight: 500; color: #fff;
+        display: flex; align-items: center; gap: 9px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+        z-index: 9999;
+        animation: toastIn 0.3s ease;
+        max-width: 320px;
+    }
+    .toast-notify.success { background: #059669; }
+    .toast-notify.error   { background: #dc2626; }
+    @@keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @@keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(12px); } }
+
+    @@media (max-width: 768px) {
+        .shell { flex-direction: column; }
+        .sidebar { width: 100% !important; max-width: none; height: auto; flex-direction: row; }
+        .sidebar-brand { border-bottom: none; border-right: 1px solid var(--sidebar-border); }
+        .sidebar-nav { flex-direction: row; overflow-x: auto; padding: 8px; }
+        .nav-section-label, .sidebar-footer, .nav-divider { display: none; }
+        .nav-item { padding: 8px 10px; }
+        .main-content { height: calc(100vh - 64px); }
     }
 </style>
 
 <script>
-    function loadPage(pageUrl) {
-        fetch(pageUrl)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("dashboardContent").innerHTML = data;
-            });
-    }
-
-    function setActive(el) {
-        document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
-        el.classList.add('active');
-        // Scroll main content to top when switching
-        window.scrollTo(0,0);
-    }
-
-    // Default load: Inventory
-    window.onload = function () {
-        loadPage('/Books/Inventory');
+    /* ── Page URL map ── */
+    const pageUrls = {
+        products: '/Books/Products',
+        orders:   '/Orders/Orders',
+        profit:   '/Profit/Profit',
+        users:    '/Users/Users'
     };
+
+    /* ── Toast helper ── */
+    function showToast(msg, type = 'success') {
+        const t = document.createElement('div');
+        t.className = 'toast-notify ' + type;
+        t.innerHTML = `<i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`;
+        document.body.appendChild(t);
+        setTimeout(() => {
+            t.style.animation = 'toastOut 0.3s ease forwards';
+            setTimeout(() => t.remove(), 300);
+        }, 3000);
+    }
+
+    /* ── Safe HTML injector ── */
+    function injectHTML(container, html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        const scripts = Array.from(tmp.querySelectorAll('script'));
+        scripts.forEach(s => s.remove());
+        container.innerHTML = tmp.innerHTML;
+        container.classList.remove('page-fade-in');
+        void container.offsetWidth;
+        container.classList.add('page-fade-in');
+        scripts.forEach(old => {
+            const code = old.textContent || '';
+            if (/loadTab\s*\(|loadContent\s*\(|DOMContentLoaded|addEventListener/.test(code)) return;
+            try {
+                const s = document.createElement('script');
+                s.textContent = code;
+                document.head.appendChild(s); s.remove();
+            } catch(e) { console.warn('Script init error:', e); }
+        });
+    }
+
+    /* ── Core content loader (GET) ── */
+    async function loadContent(url) {
+        const container = document.getElementById('pageContent');
+        container.innerHTML = `
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <span>Loading...</span>
+            </div>`;
+        try {
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const html = await res.text();
+            if (/<aside|<html/i.test(html)) throw new Error('Full page returned instead of partial');
+            injectHTML(container, html);
+        } catch (err) {
+            console.error('loadContent error:', err);
+            container.innerHTML = `
+                <div class="loading-state" style="color:#ef4444;">
+                    <i class="bi bi-exclamation-octagon" style="font-size:2rem;"></i>
+                    <span>Failed to load content. Please try again.</span>
+                </div>`;
+        }
+    }
+
+    /* ── Tab navigation ── */
+    function loadTab(el, page) {
+        /* prevent default link navigation */
+        if (window.event) window.event.preventDefault();
+
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if (el) el.classList.add('active');
+        document.getElementById('mainContent').scrollTop = 0;
+
+        const base = pageUrls[page];
+        if (!base) return;
+        const url = base + (base.includes('?') ? '&' : '?') + 'partial=true';
+        loadContent(url);
+    }
+
+    /* ── AJAX form submission (handles Create, Edit, Delete, Search) ── */
+    document.addEventListener('submit', async function (e) {
+        const form = e.target;
+
+        /* ── Search form: GET request, reload Products area ── */
+        if (form.classList.contains('search-form')) {
+            e.preventDefault();
+            const params = new URLSearchParams(new FormData(form)).toString();
+            const action = form.getAttribute('action') || '/Books/Products';
+            loadContent(`${action}?${params}`);
+            return;
+        }
+
+        /* ── Book CRUD forms (Create / Edit / Delete): POST via fetch ── */
+        if (form.classList.contains('crud-form')) {
+            e.preventDefault();
+            const action = form.getAttribute('action') || window.location.pathname;
+            const formData = new FormData(form);
+
+            /* Show submitting state on the button */
+            const submitBtn = form.querySelector('[type="submit"]');
+            const origLabel = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving…';
+            }
+
+            try {
+                const res = await fetch(action, { method: 'POST', body: formData });
+                const html = await res.text();
+
+                if (res.ok && html.trim() === '') {
+                    /* Empty body = OkResult() success — reload the active tab */
+                    showToast('Done! Changes saved successfully.', 'success');
+                    // Reload whichever tab is currently active, defaulting to products
+                    const activeNav = document.querySelector('.nav-item.active') ||
+                                      document.querySelector('.nav-item[data-page="products"]');
+                    const activePage = activeNav ? activeNav.dataset.page : 'products';
+                    loadTab(activeNav, activePage);
+                } else if (res.ok && html.includes('crud-form')) {
+                    /* 200 OK but contains a form = validation errors, show in place */
+                    injectHTML(document.getElementById('pageContent'), html);
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origLabel; }
+                } else if (res.ok) {
+                    /* Any other 200 = treat as success */
+                    showToast('Done! Changes saved successfully.', 'success');
+                    const activeNav = document.querySelector('.nav-item.active') ||
+                                      document.querySelector('.nav-item[data-page="products"]');
+                    const activePage = activeNav ? activeNav.dataset.page : 'products';
+                    loadTab(activeNav, activePage);
+                } else {
+                    /* Non-2xx: show error HTML in container */
+                    document.getElementById('pageContent').innerHTML = html;
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origLabel; }
+                }
+            } catch (err) {
+                console.error('Form submit error:', err);
+                showToast('Network error — please try again.', 'error');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origLabel; }
+            }
+        }
+    });
+
+    /* ── Initial page load ── */
+    window.addEventListener('DOMContentLoaded', () => {
+        const first = document.querySelector('.nav-item[data-page="products"]');
+        if (first) loadTab(first, 'products');
+    });
 </script>
+</body>
+</html>

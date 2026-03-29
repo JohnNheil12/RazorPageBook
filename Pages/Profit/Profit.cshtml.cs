@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RazorPageBooks.Pages.Sales
+namespace RazorPageBooks.Pages.Profit
 {
     public class BestSeller
     {

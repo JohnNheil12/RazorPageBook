@@ -12,7 +12,7 @@ namespace RazorPageBooks.Pages.Users
         public string Id { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = "Customer";
+        public string Role { get; set; } = "Staff";
         public DateTime? LastLoginDate { get; set; }
         public DateTime? JoinedDate { get; set; }
     }
@@ -52,7 +52,7 @@ namespace RazorPageBooks.Pages.Users
             foreach (var u in allUsers)
             {
                 var roles = await _userManager.GetRolesAsync(u);
-                var role = roles.Contains("Admin") ? "Admin" : "Customer";
+                var role = roles.Contains("Admin") ? "Admin" : "Staff";
 
                 // Standard IdentityUser has no LastLoginDate / JoinedDate columns.
                 // They will show as null / "Never" in the UI.

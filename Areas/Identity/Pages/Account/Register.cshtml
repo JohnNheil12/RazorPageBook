@@ -2,92 +2,105 @@
 @model RazorPageBooks.Areas.Identity.Pages.Account.RegisterModel
 @{
     ViewData["Title"] = "Register";
+    ViewData["HideNav"] = true;
 }
 
-<div class="register-page-wrapper">
-    <div class="split-container">
-        <div class="brand-side">
-            <div class="brand-content">
-                <div class="brand-badge">
-                    <i class="bi bi-person-plus-fill"></i>
-                </div>
-                <h1 class="brand-title">Join the Cellar</h1>
-                <p class="brand-tagline">Create an account to save your favorite books, write reviews, and join our community of readers.</p>
-                
-                <div class="feature-list mt-4">
-                    <div class="feature-item d-flex align-items-center mb-3">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        <span>Personalized Book Lists</span>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<div class="auth-shell">
+
+    <div class="brand-panel">
+        <div class="brand-inner">
+            <div class="brand-logo">
+                <i class="bi bi-book-half"></i>
+            </div>
+            <h1 class="brand-name">The Book Cellar</h1>
+            <p class="brand-tagline">Secure the vault. Register new staff members with strict access protocols and verified roles.</p>
+
+            <div class="brand-divider"></div>
+
+            <div class="brand-features">
+                <div class="brand-feature">
+                    <div class="feature-icon-wrap"><i class="bi bi-shield-lock"></i></div>
+                    <div>
+                        <div class="feature-title">Advanced Security</div>
+                        <div class="feature-desc">Passwords are hashed with SHA-256 encryption</div>
                     </div>
-                    <div class="feature-item d-flex align-items-center mb-3">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        <span>Exclusive Member Discounts</span>
+                </div>
+                <div class="brand-feature">
+                    <div class="feature-icon-wrap"><i class="bi bi-people"></i></div>
+                    <div>
+                        <div class="feature-title">Team Control</div>
+                        <div class="feature-desc">Easily manage permissions and account roles</div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="form-side">
-            <div class="modern-card">
-                <form method="post">
-                    <div class="form-header">
-                        <h2 class="card-title">Create Account</h2>
-                        <p class="card-subtitle">Enter your details to get started</p>
-                    </div>
+    <div class="form-panel">
+        <div class="form-inner">
+            <div class="auth-card @(ViewData.ModelState.IsValid ? "" : "shake-error")">
+                <div class="auth-card-header">
+                    <h2 class="auth-title">Register</h2>
+                    <p class="auth-sub">Create a new authorized account</p>
+                </div>
 
-                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
-                    {
-                        <div class="alert alert-success">@Model.StatusMessage</div>
-                    }
+                <form id="registerForm" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="err-summary-box" role="alert"></div>
 
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
-
-                    <div class="name-row">
-                        <div class="form-group">
-                            <label asp-for="Input.FirstName" class="custom-label">First Name</label>
-                            <input asp-for="Input.FirstName" class="custom-input" placeholder="e.g. John" required />
-                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    <div class="field-grid">
+                        <div class="field-block">
+                            <label asp-for="Input.FirstName" class="field-label">First Name</label>
+                            <input asp-for="Input.FirstName" class="field-input" placeholder="Juan" />
+                            <span asp-validation-for="Input.FirstName" class="field-err"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Input.LastName" class="custom-label">Last Name</label>
-                            <input asp-for="Input.LastName" class="custom-input" placeholder="e.g. Doe" required />
-                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        <div class="field-block">
+                            <label asp-for="Input.LastName" class="field-label">Last Name</label>
+                            <input asp-for="Input.LastName" class="field-input" placeholder="Dela Cruz" />
+                            <span asp-validation-for="Input.LastName" class="field-err"></span>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Input.Email" class="custom-label">Email Address</label>
-                        <input asp-for="Input.Email" class="custom-input" placeholder="name@example.com" required />
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <div class="field-block">
+                        <label asp-for="Input.Email" class="field-label"><i class="bi bi-envelope"></i> Email</label>
+                        <input asp-for="Input.Email" class="field-input" placeholder="user@bookcellar.com" />
+                        <span asp-validation-for="Input.Email" class="field-err"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Input.Password" class="custom-label">Password</label>
-                        <input asp-for="Input.Password" class="custom-input" type="password" placeholder="Password" required />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Input.ConfirmPassword" class="custom-label">Confirm Password</label>
-                        <input asp-for="Input.ConfirmPassword" class="custom-input" type="password" placeholder="Confirm Password" required />
-                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Input.Role" class="custom-label">Role</label>
-                        <select asp-for="Input.Role" class="custom-input custom-select" required>
-                            <option value="" disabled selected>Select a role...</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Staff">Staff</option>
+                    <div class="field-block">
+                        <label asp-for="Input.Role" class="field-label"><i class="bi bi-person-badge"></i> System Role</label>
+                        <select asp-for="Input.Role" class="field-input select-custom">
+                            <option value="" disabled selected>Choose a role...</option>
+                            <option value="Admin">Administrator</option>
+                            <option value="Staff">Staff Member</option>
                         </select>
-                        <span asp-validation-for="Input.Role" class="text-danger"></span>
+                        <span asp-validation-for="Input.Role" class="field-err"></span>
                     </div>
 
-                    <button type="submit" class="btn-modern-primary mt-2">Create Account</button>
+                    <div class="field-grid">
+                        <div class="field-block">
+                            <label asp-for="Input.Password" class="field-label"><i class="bi bi-lock"></i> Password</label>
+                            <input asp-for="Input.Password" type="password" class="field-input" placeholder="••••••••" />
+                            <span asp-validation-for="Input.Password" class="field-err"></span>
+                        </div>
+                        <div class="field-block">
+                            <label asp-for="Input.ConfirmPassword" class="field-label">Confirm</label>
+                            <input asp-for="Input.ConfirmPassword" type="password" class="field-input" placeholder="••••••••" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="field-err"></span>
+                        </div>
+                    </div>
 
-                    <div class="footer-links">
-                        <p class="small-text">Already a member? <a asp-page="./Login">Log in instead</a></p>
-                        <a asp-page="/Index" class="small-link">Return to Home</a>
+                    <div class="button-group">
+                        <button type="submit" class="btn-submit">
+                            <i class="bi bi-person-plus-fill"></i> Register Account
+                        </button>
+                        <div class="cancel-container">
+                            <a href="/" class="btn-ghost-cancel">
+                                <i class="bi bi-arrow-left"></i> Back to Home
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -101,93 +114,67 @@
 
 <style>
     :root {
-        --brand-dark: #111111;
-        --text-main: #1a1a1a;
-        --text-muted: #718096;
-        --input-bg: #f8fafc;
+        --lib-gold: #b08d57;
+        --lib-charcoal: #1e2124;
+        --lib-paper: #fdfcfb;
+        --lib-border: #e2e8f0;
+        --lib-accent-light: rgba(176, 141, 87, 0.1);
+        --lib-error: #dc2626;
+        --lib-error-bg: #fff5f5;
     }
 
-    /* ✅ FIX: Ensure the register page doesn't hide under the navbar */
-    .register-page-wrapper {
-        margin-top: 0;
-        overflow-x: hidden;
+    body { margin: 0; overflow-x: hidden; background-color: #f8fafc; }
+    .auth-shell { display: flex; min-height: 100vh; font-family: 'DM Sans', sans-serif; }
+
+    /* ── LEFT PANEL ── */
+    .brand-panel {
+        flex: 1.1;
+        /* Updated Image URL to a high-quality library stock photo */
+        background: linear-gradient(135deg, rgba(30, 33, 36, 0.9) 0%, rgba(30, 33, 36, 0.7) 100%), 
+                    url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=2000') center/cover;
+        display: flex; align-items: center; justify-content: center; padding: 60px; color: #ffffff;
     }
+    .brand-inner { max-width: 480px; animation: fadeIn 0.8s ease-out; }
+    .brand-logo { font-size: 2.5rem; color: var(--lib-gold); margin-bottom: 1rem; }
+    .brand-name { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; margin: 0; }
+    .brand-tagline { font-size: 1.1rem; opacity: 0.8; line-height: 1.6; margin-top: 10px; font-weight: 300; }
+    .brand-divider { width: 50px; height: 2px; background: var(--lib-gold); margin: 30px 0; }
+    .brand-feature { display: flex; align-items: center; gap: 18px; margin-bottom: 25px; }
+    .feature-icon-wrap { width: 44px; height: 44px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--lib-gold); }
 
-    .split-container {
-        display: flex;
-        min-height: calc(100vh - 64px); /* Subtract navbar height */
-        width: 100%;
-        background-color: #fff;
-    }
+    /* ── RIGHT PANEL ── */
+    .form-panel { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .form-inner { width: 100%; max-width: 520px; }
+    .auth-card { background: var(--lib-paper); padding: 45px; border-radius: 16px; border: 1px solid var(--lib-border); box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
+    .auth-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--lib-charcoal); margin-bottom: 6px; }
+    .auth-sub { color: #64748b; font-size: 0.95rem; margin-bottom: 30px; }
 
-    .brand-side {
-        flex: 1.2;
-        background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2000&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px;
-        color: white;
-    }
+    /* Inputs */
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field-block { margin-bottom: 20px; }
+    .field-label { font-size: 0.85rem; font-weight: 600; color: var(--lib-charcoal); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .field-input { width: 100%; padding: 13px; border: 1.5px solid var(--lib-border); border-radius: 10px; font-family: inherit; transition: all 0.2s; box-sizing: border-box; background: #fff; }
+    .field-input:focus { outline: none; border-color: var(--lib-gold); box-shadow: 0 0 0 4px var(--lib-accent-light); }
+    .select-custom { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; }
 
-    .brand-side::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 100%);
-        z-index: 1;
-    }
+    /* Validation Errors */
+    .err-summary-box:not(:empty) { background: var(--lib-error-bg); border-left: 4px solid var(--lib-error); padding: 15px; border-radius: 8px; margin-bottom: 25px; }
+    .err-summary-box li { color: #991b1b; font-size: 0.88rem; list-style: none; display: flex; align-items: center; gap: 8px; }
+    .err-summary-box li::before { content: "\F333"; font-family: "bootstrap-icons"; }
+    .field-err { color: var(--lib-error); font-size: 0.78rem; margin-top: 5px; display: block; font-weight: 500; }
 
-    .brand-content { position: relative; z-index: 10; max-width: 440px; }
+    /* Buttons */
+    .button-group { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+    .btn-submit { width: 100%; padding: 16px; background: var(--lib-charcoal); color: #ffffff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; }
+    .btn-submit:hover { background: #33383f; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .cancel-container { text-align: center; }
+    .btn-ghost-cancel { text-decoration: none; color: #94a3b8; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; padding: 5px; }
+    .btn-ghost-cancel:hover { color: var(--lib-gold); transform: translateX(-4px); }
 
-    .brand-badge {
-        width: 64px; height: 64px; background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(12px); border-radius: 18px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 2.2rem; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.2);
-    }
+    /* Animations */
+    @@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-4px); } }
+    .shake-error { animation: shake 0.4s ease-in-out; border-color: #f87171 !important; }
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .brand-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1; }
-
-    .form-side {
-        flex: 1; display: flex; align-items: center; justify-content: center;
-        padding: 40px; background-color: #fff;
-    }
-
-    .modern-card { width: 100%; max-width: 480px; }
-
-    /* Fix for your click issue: ensuring inputs aren't covered */
-    .form-group { margin-bottom: 20px; position: relative; z-index: 5; }
-
-    .name-row { display: flex; gap: 16px; }
-    .name-row .form-group { flex: 1; }
-
-    .custom-label {
-        display: block; font-size: 0.75rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); margin-bottom: 8px;
-    }
-
-    .custom-input {
-        width: 100%; padding: 14px; border: 1.5px solid #edf2f7;
-        background: var(--input-bg); border-radius: 12px; font-size: 0.95rem; transition: all 0.2s;
-    }
-
-    .custom-input:focus { outline: none; background: #fff; border-color: var(--brand-dark); box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
-
-    .btn-modern-primary {
-        width: 100%; padding: 16px; background: var(--brand-dark); color: #fff;
-        border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer;
-    }
-
-    .footer-links { margin-top: 25px; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px; }
-
-    @@media (max-width: 992px) {
-        .brand-side { display: none; }
-        .split-container { min-height: auto; }
-        .form-side { padding: 40px 20px; }
-        .name-row { flex-direction: column; gap: 0; }
-    }
+    @@media (max-width: 992px) { .brand-panel { display: none; } .auth-shell { background: #fff; } }
 </style>
