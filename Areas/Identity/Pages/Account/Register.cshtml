@@ -1,180 +1,637 @@
-﻿@page
-@model RazorPageBooks.Areas.Identity.Pages.Account.RegisterModel
-@{
-    ViewData["Title"] = "Register";
-    ViewData["HideNav"] = true;
-}
+﻿    @page
+    @model RazorPageBooks.Areas.Identity.Pages.Account.RegisterModel
+    @{
+        ViewData["Title"] = "Register";
+        ViewData["HideNav"] = true;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    
 <div class="auth-shell">
 
+    <!-- ── LEFT BRAND PANEL ── -->
     <div class="brand-panel">
-        <div class="brand-inner">
-            <div class="brand-logo">
-                <i class="bi bi-book-half"></i>
-            </div>
-            <h1 class="brand-name">The Book Cellar</h1>
-            <p class="brand-tagline">Secure the vault. Register new staff members with strict access protocols and verified roles.</p>
-
-            <div class="brand-divider"></div>
-
-            <div class="brand-features">
-                <div class="brand-feature">
-                    <div class="feature-icon-wrap"><i class="bi bi-shield-lock"></i></div>
-                    <div>
-                        <div class="feature-title">Advanced Security</div>
-                        <div class="feature-desc">Passwords are hashed with SHA-256 encryption</div>
-                    </div>
-                </div>
-                <div class="brand-feature">
-                    <div class="feature-icon-wrap"><i class="bi bi-people"></i></div>
-                    <div>
-                        <div class="feature-title">Team Control</div>
-                        <div class="feature-desc">Easily manage permissions and account roles</div>
-                    </div>
-                </div>
-            </div>
+        <div class="bloom-bg">
+            <div class="bloom bloom-1"></div>
+            <div class="bloom bloom-2"></div>
+            <div class="bloom bloom-3"></div>
         </div>
-    </div>
 
-    <div class="form-panel">
-        <div class="form-inner">
-            <div class="auth-card @(ViewData.ModelState.IsValid ? "" : "shake-error")">
-                <div class="auth-card-header">
-                    <h2 class="auth-title">Register</h2>
-                    <p class="auth-sub">Create a new authorized account</p>
+        <div class="dust-particles">
+            <span class="dust d1"></span><span class="dust d2"></span><span class="dust d3"></span>
+            <span class="dust d4"></span><span class="dust d5"></span><span class="dust d6"></span>
+            <span class="dust d7"></span><span class="dust d8"></span>
+        </div>
+
+        <div class="shelf-scene">
+            <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" class="shelf-svg" aria-hidden="true">
+                <rect width="480" height="320" fill="none"/>
+                <rect x="10" y="108" width="460" height="10" rx="2" fill="#2a1f0e"/>
+                <rect x="10" y="108" width="460" height="3" rx="1" fill="rgba(201,168,76,0.18)"/>
+                <rect x="10" y="30" width="8" height="80" rx="2" fill="#231a0c"/>
+                <rect x="462" y="30" width="8" height="80" rx="2" fill="#231a0c"/>
+                <rect x="28" y="38" width="22" height="68" rx="2" fill="#1c3a2a"/>
+                <rect x="52" y="52" width="18" height="54" rx="2" fill="#5c1c1c"/>
+                <rect x="72" y="33" width="20" height="73" rx="2" fill="#1a2a4a"/><rect x="76" y="43" width="12" height="1.5" rx="1" fill="rgba(201,168,76,0.6)"/>
+                <rect x="94" y="45" width="16" height="61" rx="2" fill="#4a3b1c"/>
+                <rect x="130" y="42" width="19" height="64" rx="2" fill="#7a1c1c"/>
+                <rect x="154" y="82" width="7" height="22" rx="1" fill="#f5e6c8" opacity="0.9"/><ellipse cx="157.5" cy="78" rx="2.5" ry="4" fill="#f59e0b" opacity="0.9"/><ellipse cx="157.5" cy="77" rx="1.5" ry="2.5" fill="#fcd34d"/>
+                <rect x="165" y="40" width="17" height="66" rx="2" fill="#1a4040"/>
+                <rect x="201" y="35" width="21" height="71" rx="2" fill="#2c3a5c"/><rect x="205" y="45" width="13" height="20" rx="1" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+                <circle cx="250" cy="92" r="12" fill="#1a2a3a" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+                <rect x="265" y="39" width="18" height="67" rx="2" fill="#1f3d1f"/>
+                <rect x="285" y="46" width="14" height="60" rx="2" fill="#c8b89a"/>
+                <rect x="301" y="37" width="20" height="69" rx="2" fill="#3a1a5c"/>
+                <rect x="362" y="36" width="18" height="70" rx="2" fill="#1a2a7a"/>
+                <rect x="398" y="40" width="20" height="66" rx="2" fill="#384050"/>
+                <rect x="10" y="230" width="460" height="10" rx="2" fill="#2a1f0e"/>
+                <rect x="10" y="230" width="460" height="3" rx="1" fill="rgba(201,168,76,0.18)"/>
+                <rect x="10" y="152" width="8" height="80" rx="2" fill="#231a0c"/>
+                <rect x="462" y="152" width="8" height="80" rx="2" fill="#231a0c"/>
+                <rect x="28" y="165" width="26" height="63" rx="2" fill="#3d200a"/>
+                <rect x="75" y="162" width="14" height="66" rx="2" fill="#d4c4a0"/>
+                <g transform="translate(93, 185)"><path d="M2,35 L4,20 L20,20 L22,35 Z" fill="#6b3a1f"/><rect x="1" y="18" width="22" height="4" rx="1" fill="#7a4520"/><path d="M12,20 Q8,10 5,5" stroke="#2d5a20" stroke-width="1.5" fill="none"/><path d="M12,20 Q14,8 18,4" stroke="#2d5a20" stroke-width="1.5" fill="none"/><ellipse cx="12" cy="5" rx="4" ry="6" fill="#448a30"/></g>
+                <rect x="142" y="165" width="24" height="63" rx="2" fill="#6a1010"/>
+                <g transform="translate(170, 195)"><ellipse cx="12" cy="28" rx="10" ry="4" fill="#1a1408"/><path d="M4,28 Q3,15 5,10 Q12,5 19,10 Q21,15 20,28" fill="#1a1408"/><path d="M18,8 Q30,-5 38,-8" stroke="#d4c4a0" stroke-width="1.2" fill="none"/><path d="M38,-8 Q35,-3 28,5 Q22,10 18,8" fill="rgba(220,210,180,0.6)"/></g>
+                <rect x="252" y="158" width="22" height="70" rx="2" fill="#5c3010"/>
+                <g transform="translate(298,172)"><circle cx="16" cy="16" r="15" fill="#1a1408" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/><line x1="16" y1="16" x2="16" y2="7" stroke="rgba(201,168,76,0.7)" stroke-width="1.2" stroke-linecap="round"/><line x1="16" y1="16" x2="22" y2="16" stroke="rgba(201,168,76,0.7)" stroke-width="1" stroke-linecap="round"/></g>
+                <rect x="371" y="165" width="18" height="63" rx="2" fill="#7a4a18"/>
+                <rect x="409" y="160" width="20" height="68" rx="2" fill="#40200c"/>
+                <rect x="431" y="158" width="18" height="70" rx="2" fill="#1c2a6a"/>
+                <g class="float-book fb1"><rect x="370" y="5" width="40" height="28" rx="3" fill="#5c1c1c" transform="rotate(-12, 390, 19)"/></g>
+                <g class="float-book fb2"><path d="M185,8 Q200,4 215,8 L215,22 Q200,18 185,22 Z" fill="#1a2a4a" opacity="0.95"/><path d="M185,8 Q170,4 155,8 L155,22 Q170,18 185,22 Z" fill="#1f3d1f" opacity="0.95"/><line x1="185" y1="7" x2="185" y2="23" stroke="rgba(201,168,76,0.4)" stroke-width="1"/></g>
+                <ellipse cx="240" cy="242" rx="220" ry="6" fill="rgba(0,0,0,0.25)"/>
+            </svg>
+        </div>
+
+       <div class="brand-inner">
+                <div class="brand-logo-wrap">
+                    <i class="bi bi-book-half brand-logo-icon"></i>
                 </div>
-
-                <form id="registerForm" method="post" novalidate>
-                    <div asp-validation-summary="ModelOnly" class="err-summary-box" role="alert"></div>
-
-                    <div class="field-grid">
-                        <div class="field-block">
-                            <label asp-for="Input.FirstName" class="field-label">First Name</label>
-                            <input asp-for="Input.FirstName" class="field-input" placeholder="Juan" />
-                            <span asp-validation-for="Input.FirstName" class="field-err"></span>
-                        </div>
-                        <div class="field-block">
-                            <label asp-for="Input.LastName" class="field-label">Last Name</label>
-                            <input asp-for="Input.LastName" class="field-input" placeholder="Dela Cruz" />
-                            <span asp-validation-for="Input.LastName" class="field-err"></span>
+                <h1 class="brand-name">The Book<br><em>Cellar</em></h1>
+                <p class="brand-tagline">Secure the vault. Register new staff members with strict access protocols and verified roles.</p>
+                <div class="brand-rule"></div>
+                <div class="brand-features">
+                    <div class="brand-feature">
+                        <div class="feat-icon"><i class="bi bi-shield-lock"></i></div>
+                        <div>
+                            <div class="feat-title">Advanced Security</div>
+                            <div class="feat-desc">Passwords are hashed with industry-standard encryption</div>
                         </div>
                     </div>
-
-                    <div class="field-block">
-                        <label asp-for="Input.Email" class="field-label"><i class="bi bi-envelope"></i> Email</label>
-                        <input asp-for="Input.Email" class="field-input" placeholder="user@bookcellar.com" />
-                        <span asp-validation-for="Input.Email" class="field-err"></span>
-                    </div>
-
-                    <div class="field-block">
-                        <label asp-for="Input.Role" class="field-label"><i class="bi bi-person-badge"></i> System Role</label>
-                        <select asp-for="Input.Role" class="field-input select-custom">
-                            <option value="" disabled selected>Choose a role...</option>
-                            <option value="Admin">Administrator</option>
-                            <option value="Staff">Staff Member</option>
-                        </select>
-                        <span asp-validation-for="Input.Role" class="field-err"></span>
-                    </div>
-
-                    <div class="field-grid">
-                        <div class="field-block">
-                            <label asp-for="Input.Password" class="field-label"><i class="bi bi-lock"></i> Password</label>
-                            <input asp-for="Input.Password" type="password" class="field-input" placeholder="••••••••" />
-                            <span asp-validation-for="Input.Password" class="field-err"></span>
-                        </div>
-                        <div class="field-block">
-                            <label asp-for="Input.ConfirmPassword" class="field-label">Confirm</label>
-                            <input asp-for="Input.ConfirmPassword" type="password" class="field-input" placeholder="••••••••" />
-                            <span asp-validation-for="Input.ConfirmPassword" class="field-err"></span>
+                    <div class="brand-feature">
+                        <div class="feat-icon"><i class="bi bi-people"></i></div>
+                        <div>
+                            <div class="feat-title">Team Control</div>
+                            <div class="feat-desc">Easily manage permissions and account roles</div>
                         </div>
                     </div>
+                    <div class="brand-feature">
+                        <div class="feat-icon"><i class="bi bi-key"></i></div>
+                        <div>
+                            <div class="feat-title">Admin Only</div>
+                            <div class="feat-desc">Only administrators can create new accounts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="brand-footer">© 2025 The Book Cellar · All rights reserved</div>
+        </div>
 
-                    <div class="button-group">
-                        <button type="submit" class="btn-submit">
-                            <i class="bi bi-person-plus-fill"></i> Register Account
-                        </button>
-                        <div class="cancel-container">
-                            <a href="/" class="btn-ghost-cancel">
+        <!-- ── RIGHT FORM PANEL ── -->
+        <div class="form-panel">
+            <div class="form-inner">
+                <div class="auth-card @(ViewData.ModelState.IsValid ? "" : "shake-error")">
+
+                    <div class="card-accent-line"></div>
+
+                    <div class="auth-card-header">
+                        <div class="welcome-badge"><i class="bi bi-person-plus"></i> New Account</div>
+                        <h2 class="auth-title">Register a<br>staff member</h2>
+                        <p class="auth-sub">Create a new authorized account for your team</p>
+                    </div>
+
+                    <form id="registerForm" method="post" novalidate>
+
+                        <div asp-validation-summary="ModelOnly" class="err-summary-box" role="alert"></div>
+
+                        <div class="field-grid">
+                            <div class="field-block">
+                                <label asp-for="Input.FirstName" class="field-label">
+                                    <i class="bi bi-person"></i> First Name
+                                </label>
+                                <input asp-for="Input.FirstName" class="field-input" placeholder="Juan" autocomplete="given-name" />
+                                <span asp-validation-for="Input.FirstName" class="field-err"></span>
+                            </div>
+                            <div class="field-block">
+                                <label asp-for="Input.LastName" class="field-label">
+                                    <i class="bi bi-person"></i> Last Name
+                                </label>
+                                <input asp-for="Input.LastName" class="field-input" placeholder="Dela Cruz" autocomplete="family-name" />
+                                <span asp-validation-for="Input.LastName" class="field-err"></span>
+                            </div>
+                        </div>
+
+                        <div class="field-block">
+                            <label asp-for="Input.Email" class="field-label">
+                                <i class="bi bi-envelope"></i> Email Address
+                            </label>
+                            <input asp-for="Input.Email" class="field-input" placeholder="user@bookcellar.com" autocomplete="email" />
+                            <span asp-validation-for="Input.Email" class="field-err"></span>
+                        </div>
+
+                        <div class="field-block">
+                            <label asp-for="Input.Role" class="field-label">
+                                <i class="bi bi-person-badge"></i> System Role
+                            </label>
+                            <div class="select-wrap">
+                                <select asp-for="Input.Role" class="field-input select-input">
+                                    <option value="" disabled selected>Choose a role…</option>
+                                    <option value="Admin">Administrator</option>
+                                    <option value="Staff">Staff Member</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Input.Role" class="field-err"></span>
+                        </div>
+                        <div class="field-grid">
+                            <div class="field-block">
+                                <label asp-for="Input.Password" class="field-label">
+                                    <i class="bi bi-lock"></i> Password
+                                </label>
+                                <div class="input-wrap">
+                                    <input asp-for="Input.Password" type="password" id="reg-pw" class="field-input" placeholder="Password" autocomplete="new-password" />
+                                    <button type="button" class="eye-btn" onclick="togglePw('reg-pw','eye-reg')" aria-label="Toggle password">
+                                        <i class="bi bi-eye" id="eye-reg"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Input.Password" class="field-err"></span>
+                            </div>
+                            <div class="field-block">
+                                <label asp-for="Input.ConfirmPassword" class="field-label">
+                                    <i class="bi bi-lock-fill"></i> Confirm
+                                </label>
+                                <div class="input-wrap">
+                                    <input asp-for="Input.ConfirmPassword" type="password" id="reg-cpw" class="field-input" placeholder="Confirm Password" autocomplete="new-password" />
+                                    <button type="button" class="eye-btn" onclick="togglePw('reg-cpw','eye-cpw')" aria-label="Toggle confirm password">
+                                        <i class="bi bi-eye" id="eye-cpw"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Input.ConfirmPassword" class="field-err"></span>
+                            </div>
+                        </div>
+
+                        <div class="pw-hint">
+                            <i class="bi bi-info-circle"></i>
+                            Min. 8 characters with uppercase, number, and special character.
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn-submit">
+                                <span>Register Account</span>
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                            <a href="/" class="btn-back">
                                 <i class="bi bi-arrow-left"></i> Back to Home
                             </a>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            function togglePw(inputId, iconId) {
+                const inp = document.getElementById(inputId);
+                const icon = document.getElementById(iconId);
+                const show = inp.type === 'password';
+                inp.type = show ? 'text' : 'password';
+                icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+            }
+        </script>
+    }
+
 
 <style>
     :root {
-        --lib-gold: #b08d57;
-        --lib-charcoal: #1e2124;
-        --lib-paper: #fdfcfb;
-        --lib-border: #e2e8f0;
-        --lib-accent-light: rgba(176, 141, 87, 0.1);
-        --lib-error: #dc2626;
-        --lib-error-bg: #fff5f5;
+        --gold:       #c9a84c;
+        --gold-light: #e6c97a;
+        --gold-dim:   rgba(201,168,76,0.12);
+        --charcoal:   #1a1c1e;
+        --charcoal-2: #2a2d31;
+        --paper:      #fefcf8;
+        --text-main:  #1a1c1e;
+        --text-muted: #6b7280;
+        --border:     #e5e0d6;
+        --error:      #c0392b;
+        --error-bg:   #fff5f5;
     }
 
-    body { margin: 0; overflow-x: hidden; background-color: #f8fafc; }
-    .auth-shell { display: flex; min-height: 100vh; font-family: 'DM Sans', sans-serif; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── LEFT PANEL ── */
+    html, body {
+        min-height: 100vh;
+        font-family: 'Jost', sans-serif;
+        background: var(--charcoal);
+        display: flex;
+        align-items: stretch;
+    }
+
+    /* ── SHELL ── */
+    .auth-shell { display: flex; min-height: 100vh; width: 100%; }
+
+    /* ─────────────── LEFT PANEL ─────────────── */
     .brand-panel {
-        flex: 1.1;
-        /* Updated Image URL to a high-quality library stock photo */
-        background: linear-gradient(135deg, rgba(30, 33, 36, 0.9) 0%, rgba(30, 33, 36, 0.7) 100%), 
-                    url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=2000') center/cover;
-        display: flex; align-items: center; justify-content: center; padding: 60px; color: #ffffff;
+     flex: 1 1 50%; /* Grow to equal size, shrink if needed, with a 50% base */
+    position: relative;
+    background: var(--charcoal);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 64px;
+    overflow: hidden;
+    color: #fff;
+    /* --- CRITICAL ADDITIONS --- */
+    min-width: 50vw; /* Hard-force this panel to occupy at least half the viewport width */
+}
+
+    .bloom-bg { position: absolute; inset: 0; pointer-events: none; }
+    .bloom { position: absolute; border-radius: 50%; filter: blur(72px); }
+    .bloom-1 {
+        width: 520px; height: 520px;
+        top: -140px; left: -120px;
+        background: radial-gradient(circle, rgba(201,168,76,0.28) 0%, transparent 70%);
+        animation: bloomPulse 7s ease-in-out infinite alternate;
     }
-    .brand-inner { max-width: 480px; animation: fadeIn 0.8s ease-out; }
-    .brand-logo { font-size: 2.5rem; color: var(--lib-gold); margin-bottom: 1rem; }
-    .brand-name { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; margin: 0; }
-    .brand-tagline { font-size: 1.1rem; opacity: 0.8; line-height: 1.6; margin-top: 10px; font-weight: 300; }
-    .brand-divider { width: 50px; height: 2px; background: var(--lib-gold); margin: 30px 0; }
-    .brand-feature { display: flex; align-items: center; gap: 18px; margin-bottom: 25px; }
-    .feature-icon-wrap { width: 44px; height: 44px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--lib-gold); }
+    .bloom-2 {
+        width: 400px; height: 400px;
+        bottom: -80px; right: -100px;
+        background: radial-gradient(circle, rgba(180,120,40,0.22) 0%, transparent 70%);
+        animation: bloomPulse 9s ease-in-out infinite alternate-reverse;
+    }
+    .bloom-3 {
+        width: 280px; height: 280px;
+        top: 50%; left: 50%;
+        background: radial-gradient(circle, rgba(230,201,122,0.12) 0%, transparent 70%);
+        animation: bloomPulse 6s ease-in-out infinite alternate;
+    }
 
-    /* ── RIGHT PANEL ── */
-    .form-panel { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
-    .form-inner { width: 100%; max-width: 520px; }
-    .auth-card { background: var(--lib-paper); padding: 45px; border-radius: 16px; border: 1px solid var(--lib-border); box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
-    .auth-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--lib-charcoal); margin-bottom: 6px; }
-    .auth-sub { color: #64748b; font-size: 0.95rem; margin-bottom: 30px; }
+    .brand-inner { position: relative; z-index: 3; max-width: 480px; }
 
-    /* Inputs */
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .field-block { margin-bottom: 20px; }
-    .field-label { font-size: 0.85rem; font-weight: 600; color: var(--lib-charcoal); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .field-input { width: 100%; padding: 13px; border: 1.5px solid var(--lib-border); border-radius: 10px; font-family: inherit; transition: all 0.2s; box-sizing: border-box; background: #fff; }
-    .field-input:focus { outline: none; border-color: var(--lib-gold); box-shadow: 0 0 0 4px var(--lib-accent-light); }
-    .select-custom { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; }
+    .shelf-scene { position: absolute; bottom: 0; left: 0; right: 0; height: 55%; z-index: 1; pointer-events: none; opacity: 0.75; }
+    .shelf-svg { width: 100%; height: 100%; }
+    .float-book { animation-iteration-count: infinite; animation-direction: alternate; }
+    .fb1 { animation: floatA 5s ease-in-out infinite alternate; }
+    .fb2 { animation: floatB 6.5s 1s ease-in-out infinite alternate; }
+    .dust-particles { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+    .dust { position: absolute; border-radius: 50%; background: rgba(201,168,76,0.55); animation: dustDrift linear infinite; }
+    .d1 { width: 3px; height: 3px; left: 12%; top: 70%; animation-duration: 14s; }
+    .d2 { width: 2px; height: 2px; left: 28%; top: 55%; animation-duration: 18s; animation-delay: -4s; }
+    .d3 { width: 4px; height: 4px; left: 45%; top: 75%; animation-duration: 12s; animation-delay: -2s; opacity: 0.6; }
+    .d4 { width: 2px; height: 2px; left: 60%; top: 60%; animation-duration: 16s; animation-delay: -7s; }
+    .d5 { width: 3px; height: 3px; left: 75%; top: 65%; animation-duration: 20s; animation-delay: -3s; opacity: 0.5; }
+    .d6 { width: 2px; height: 2px; left: 88%; top: 72%; animation-duration: 15s; animation-delay: -9s; }
+    .d7 { width: 3px; height: 3px; left: 35%; top: 80%; animation-duration: 22s; animation-delay: -5s; opacity: 0.4; }
+    .d8 { width: 2px; height: 2px; left: 55%; top: 50%; animation-duration: 17s; animation-delay: -11s; }
 
-    /* Validation Errors */
-    .err-summary-box:not(:empty) { background: var(--lib-error-bg); border-left: 4px solid var(--lib-error); padding: 15px; border-radius: 8px; margin-bottom: 25px; }
-    .err-summary-box li { color: #991b1b; font-size: 0.88rem; list-style: none; display: flex; align-items: center; gap: 8px; }
+    @@keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes cardReveal {
+        from { opacity: 0; transform: translateY(24px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @@keyframes bloomPulse {
+        from { transform: scale(1); opacity: 0.8; }
+        to   { transform: scale(1.12); opacity: 1; }
+    }
+    @@keyframes floatA { from { transform: translateY(0px); } to { transform: translateY(-12px) rotate(2deg); } }
+    @@keyframes floatB { from { transform: translateY(0px); } to { transform: translateY(-8px) rotate(-3deg); } }
+    @@keyframes dustDrift { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 0.6; } 100% { transform: translateY(-180px); opacity: 0; } }
+
+    .brand-logo-wrap {
+        width: 60px; height: 60px;
+        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+        border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem; color: var(--charcoal);
+        margin-bottom: 32px;
+        box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+        animation: fadeSlideUp 0.7s ease-out both;
+    }
+
+    .brand-name {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 4rem; font-weight: 700;
+        line-height: 1.05; letter-spacing: -1px;
+        color: #f5f0e8;
+        animation: fadeSlideUp 0.7s 0.1s ease-out both;
+    }
+    .brand-name em { font-style: italic; color: var(--gold-light); }
+
+    .brand-tagline {
+        font-size: 1rem;
+        color: rgba(245,240,232,0.65);
+        line-height: 1.7; margin-top: 18px;
+        font-weight: 300; max-width: 360px;
+        animation: fadeSlideUp 0.7s 0.2s ease-out both;
+    }
+
+    .brand-rule {
+        width: 48px; height: 2px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+        margin: 36px 0;
+        animation: fadeSlideUp 0.7s 0.3s ease-out both;
+    }
+
+    .brand-features { animation: fadeSlideUp 0.7s 0.4s ease-out both; }
+    .brand-feature { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 26px; }
+
+    .feat-icon {
+        width: 46px; height: 46px; flex-shrink: 0;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(201,168,76,0.25);
+        border-radius: 13px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.15rem; color: var(--gold-light);
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .brand-feature:hover .feat-icon {
+        background: rgba(201,168,76,0.12);
+        border-color: rgba(201,168,76,0.5);
+    }
+
+    .feat-title { font-size: 0.95rem; font-weight: 600; color: #f0ebe0; margin-bottom: 3px; }
+    .feat-desc  { font-size: 0.82rem; color: rgba(245,240,232,0.5); line-height: 1.5; }
+
+    .brand-footer {
+        position: relative; z-index: 1;
+        font-size: 0.72rem; color: rgba(245,240,232,0.25); letter-spacing: 0.5px;
+    }
+
+    /* ─────────────── RIGHT PANEL ─────────────── */
+    .form-panel {
+        flex: 1;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--paper);
+        padding: 48px 40px;
+    }
+
+    .form-inner { width: 100%; max-width: 460px; }
+
+    .auth-card {
+        background: #ffffff;
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        box-shadow:
+            0 0 0 1px rgba(255,255,255,0.8) inset,
+            0 32px 64px rgba(26,28,30,0.08),
+            0 8px 16px rgba(26,28,30,0.04);
+        overflow: hidden;
+        animation: cardReveal 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .card-accent-line {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, transparent 100%);
+    }
+
+    .auth-card-header { padding: 32px 40px 24px; }
+
+    .welcome-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 0.72rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 1px;
+        padding: 5px 12px; border-radius: 20px;
+        margin-bottom: 14px;
+    }
+    .welcome-badge.forced {
+        background: #fff7ed;
+        border: 1px solid rgba(234,179,8,0.35);
+        color: #92400e;
+    }
+    .welcome-badge.voluntary {
+        background: #f0fdf4;
+        border: 1px solid rgba(34,197,94,0.3);
+        color: #166534;
+    }
+
+    .auth-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.3rem; font-weight: 700;
+        color: var(--text-main);
+        line-height: 1.1; letter-spacing: -0.5px;
+        margin-bottom: 8px;
+    }
+            /* This forces the two items to stay side-by-side */
+        .field-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; /* Space between the two inputs */
+            margin-bottom: 20px;
+        }
+
+        /* Ensure the field blocks don't add extra bottom margin when inside a grid */
+        .field-grid .field-block {
+            margin-bottom: 0; 
+        }
+
+
+
+    .auth-sub { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    form { padding: 0 40px 36px; }
+
+    /* ── FIELDS ── */
+    .field-block { margin-bottom: 6px; }
+
+    .field-label {
+        display: flex; align-items: center; gap: 7px;
+        font-size: 0.78rem; font-weight: 600;
+        color: var(--text-main); margin-bottom: 8px;
+        text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .field-label i { color: var(--gold); }
+
+    .input-wrap { position: relative; }
+    .field-input {
+        width: 100%; padding: 14px 52px 14px 18px;
+        border: 1.5px solid var(--border);
+        background: var(--paper); border-radius: 12px;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.93rem; color: var(--text-main);
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        box-sizing: border-box;
+    }
+    .field-input::placeholder { color: #bdb4a8; }
+    .field-input:focus {
+        outline: none; border-color: var(--gold);
+        background: #fffdf7;
+        box-shadow: 0 0 0 4px var(--gold-dim);
+    }
+
+    .eye-btn {
+        position: absolute; right: 14px; top: 50%;
+        transform: translateY(-50%);
+        background: none; border: none;
+        color: #bdb4a8; cursor: pointer;
+        font-size: 1rem; padding: 4px;
+        transition: color 0.15s;
+    }
+    .eye-btn:hover { color: var(--gold); }
+
+    /* ── STRENGTH METER ── */
+    .strength-wrap { margin-top: 12px; }
+    .strength-track {
+        height: 5px;
+        background: #f0ece6;
+        border-radius: 10px; overflow: hidden;
+    }
+    .strength-fill {
+        height: 100%; width: 0;
+        border-radius: 10px;
+        transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+    }
+    .strength-row {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-top: 6px;
+    }
+    .strength-label { font-size: 0.72rem; color: var(--text-muted); }
+    .strength-status { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); transition: color 0.3s; }
+
+    /* ── REQUIREMENTS ── */
+    .req-list {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 8px; margin-bottom: 4px;
+        background: #faf7f2;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+    }
+    .req-item {
+        display: flex; align-items: center; gap: 7px;
+        font-size: 0.78rem; color: #bdb4a8;
+        transition: color 0.25s;
+    }
+    .req-item i { font-size: 0.72rem; transition: color 0.25s; }
+    .req-item.met { color: #16a34a; }
+    .req-item.met i { color: #22c55e; }
+
+    /* ── MATCH HINT ── */
+    .match-hint {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 0.78rem; margin-top: 8px;
+        opacity: 0; transition: opacity 0.2s;
+    }
+    .match-hint.show { opacity: 1; }
+    .match-hint.ok   { color: #16a34a; }
+    .match-hint.fail { color: var(--error); }
+
+    /* ── ERRORS ── */
+    .err-summary-box {
+        background: var(--error-bg);
+        border: 1px solid rgba(192,57,43,0.2);
+        border-left: 3px solid var(--error);
+        padding: 14px 16px; border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .err-summary-box ul { list-style: none; padding: 0; margin: 0; }
+    .err-summary-box li {
+        color: var(--error); font-size: 0.85rem;
+        display: flex; align-items: center; gap: 8px; padding: 2px 0;
+    }
     .err-summary-box li::before { content: "\F333"; font-family: "bootstrap-icons"; }
-    .field-err { color: var(--lib-error); font-size: 0.78rem; margin-top: 5px; display: block; font-weight: 500; }
+    .field-err { color: var(--error); font-size: 0.78rem; margin-top: 6px; display: block; }
 
-    /* Buttons */
-    .button-group { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
-    .btn-submit { width: 100%; padding: 16px; background: var(--lib-charcoal); color: #ffffff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; }
-    .btn-submit:hover { background: #33383f; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .cancel-container { text-align: center; }
-    .btn-ghost-cancel { text-decoration: none; color: #94a3b8; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; padding: 5px; }
-    .btn-ghost-cancel:hover { color: var(--lib-gold); transform: translateX(-4px); }
+    /* ── BUTTONS ── */
+    .button-group { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
 
-    /* Animations */
-    @@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-4px); } }
-    .shake-error { animation: shake 0.4s ease-in-out; border-color: #f87171 !important; }
-    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .btn-submit {
+        width: 100%; padding: 16px 24px;
+        background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-2) 100%);
+        color: #fff; border: none; border-radius: 12px;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.95rem; font-weight: 600;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        letter-spacing: 0.3px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 16px rgba(26,28,30,0.18);
+        position: relative; overflow: hidden;
+    }
+    .btn-submit::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(201,168,76,0.18) 0%, transparent 60%);
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,28,30,0.22); }
+    .btn-submit:hover::after { opacity: 1; }
+    .btn-submit:active { transform: translateY(0); }
 
-    @@media (max-width: 992px) { .brand-panel { display: none; } .auth-shell { background: #fff; } }
+    .btn-back {
+        text-align: center; text-decoration: none;
+        color: var(--text-muted); font-size: 0.87rem; font-weight: 500;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        transition: color 0.2s; padding: 6px;
+    }
+    .auth-shell {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw; /* Hard-force the shell to span the whole screen width */
+    overflow: hidden; /* Recommended to prevent accidental side-scrolling */
+}
+
+    .btn-back:hover { color: var(--gold); }
+    .form-panel {
+    flex: 1 1 50%; /* Grow to equal size, shrink if needed, with a 50% base */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper); /* The cream color you want to see */
+    padding: 48px 40px;
+    /* --- CRITICAL ADDITIONS --- */
+    min-width: 50vw; /* Hard-force this panel to occupy the other half of the viewport width */
+}
+
+    /* ── ANIMATIONS ── */
+    @@keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes cardReveal {
+        from { opacity: 0; transform: translateY(24px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @@keyframes bloomPulse {
+        from { transform: scale(1); opacity: 0.8; }
+        to   { transform: scale(1.12); opacity: 1; }
+    }
+
+    @@media (max-width: 960px) {
+        .brand-panel { display: none; }
+        .auth-shell { background: var(--paper); }
+        .form-panel { background: var(--paper); }
+    }
+    @@media (max-width: 600px) {
+    .field-grid { 
+        grid-template-columns: 1fr; 
+        gap: 0;
+    }
+    .field-grid .field-block {
+        margin-bottom: 20px;
+    }
+    }
+    @@media (max-width: 480px) {
+        .form-panel { padding: 24px 16px; }
+        .auth-card-header { padding: 24px 20px 18px; }
+        form { padding: 0 20px 24px; }
+        .auth-title { font-size: 2rem; }
+        .req-list { grid-template-columns: 1fr; }
+    }
 </style>
