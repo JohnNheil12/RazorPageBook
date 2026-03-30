@@ -67,7 +67,9 @@
                     </div>
                     <div class="user-meta">
                         <span class="user-name">@User.Identity.Name</span>
-                        <span class="user-role">
+                        <a class="user-role user-role-link"
+                           href="/Identity/Account/ChangePassword"
+                           title="Click to change your password">
                             @if (User.IsInRole("Admin"))
                             {
                                 @:Administrator
@@ -80,7 +82,8 @@
                             {
                                 @:User
                             }
-                        </span>
+                            <i class="bi bi-pencil-square" style="font-size:0.6rem;opacity:0.7;margin-left:3px;"></i>
+                        </a>
                     </div>
                     <form method="post" asp-area="Identity" asp-page="/Account/Logout"
                           asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"
@@ -183,6 +186,18 @@
     .user-meta { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .user-name { font-size: 0.8rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-role { font-size: 0.62rem; color: var(--sidebar-txt); }
+    .user-role-link {
+        font-size: 0.62rem; color: var(--sidebar-txt);
+        text-decoration: none; display: inline-flex; align-items: center; gap: 2px;
+        border-radius: 4px; padding: 1px 4px; margin: -1px -4px;
+        transition: color 0.15s, background 0.15s;
+        cursor: pointer;
+    }
+    .user-role-link:hover {
+        color: #93c5fd;
+        background: rgba(147,197,253,0.1);
+        text-decoration: none;
+    }
     .user-logout { color: #4b5e7a; background: none; border: none; cursor: pointer; padding: 0; width: 28px; height: 28px; border-radius: 7px; transition: 0.18s; display: flex; align-items: center; justify-content: center; }
     .user-logout:hover { color: #f87171; background: rgba(248,113,113,0.1); }
 

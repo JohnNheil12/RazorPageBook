@@ -32,7 +32,7 @@ public static class SeedData
                     Category = "Fiction",
                     YearPublished = 2019,
                     Publisher = "Contemporary Books",
-                    Price = "P576.00",
+                    Price = 576,
                     ImageUrl = "https://marketplace.canva.com/EAFfSnGl7II/2/0/1003w/canva-elegant-dark-woods-fantasy-photo-book-cover-vAt8PH1CmqQ.jpg",
                 },
                 new Book
@@ -42,7 +42,7 @@ public static class SeedData
                     Category = "Fantasy",
                     YearPublished = 2020,
                     Publisher = "Scholastic",
-                    Price = "P685.00",
+                    Price = 685,
                     ImageUrl = "https://static1.srcdn.com/wordpress/wp-content/uploads/2025/03/harry-potter-2.png",
                 },
                 new Book
@@ -52,7 +52,7 @@ public static class SeedData
                     Category = "Drama",
                     YearPublished = 2021,
                     Publisher = "Penguin Random House",
-                    Price = "P450.00",
+                    Price = 450,
                     ImageUrl = "https://i.pinimg.com/564x/f7/c8/12/f7c812c9b0296cd9f119e33a06d9a256.jpg",
                 },
                 new Book
@@ -62,7 +62,7 @@ public static class SeedData
                     Category = "Historical Fiction",
                     YearPublished = 2022,
                     Publisher = "HarperCollins",
-                    Price = "P520.00",
+                    Price = 520,
                     ImageUrl = "https://blog-cdn.reedsy.com/directories/gallery/139/large_6b475cacd2ad05ee513a65b91960173b.jpg",
                 },
                 new Book
@@ -72,7 +72,7 @@ public static class SeedData
                     Category = "Classics",
                     YearPublished = 2004,
                     Publisher = "Sterling",
-                    Price = "P398.00",
+                    Price = 398,
                     ImageUrl = "https://tse2.mm.bing.net/th/id/OIP.EYTQlv3NmnyUdfD_WMFCVQHaMC?rs=1&pid=ImgDetMain&o=7&rm=3",
                 },
                 new Book
@@ -82,7 +82,7 @@ public static class SeedData
                     Category = "Adventure",
                     YearPublished = 1981,
                     Publisher = "Scribner",
-                    Price = "P299.00",
+                    Price = 299,
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMjMwNDQ1NzU3OF5BMl5BanBnXkFtZTcwODY3MDc5Nw@@._V1_FMjpg_UX1000_.jpg",
                 },
                 new Book
@@ -92,7 +92,7 @@ public static class SeedData
                     Category = "Romance",
                     YearPublished = 1995,
                     Publisher = "Penguin Books",
-                    Price = "P745.00",
+                    Price = 745,
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMWM2ZmM1OTQtZjkzOC00YjdkLTllODctMWI1Njc1NDkyMGY2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
                 },
                 new Book
@@ -102,7 +102,7 @@ public static class SeedData
                     Category = "Science Fiction",
                     YearPublished = 1990,
                     Publisher = "Random House",
-                    Price = "P835.00",
+                    Price = 835,
                     ImageUrl = "https://i.pinimg.com/736x/7a/8e/a2/7a8ea2d26cea70b8f7dde560a14a784b.jpg",
                 },
                 new Book
@@ -112,7 +112,7 @@ public static class SeedData
                     Category = "Adventure",
                     YearPublished = 2001,
                     Publisher = "HThe Modern Library",
-                    Price = "P399.00",
+                    Price = 399,
                     ImageUrl = "https://tse2.mm.bing.net/th/id/OIP._RuLbeXpCi3F_-TcgBnJewHaL0?rs=1&pid=ImgDetMain&o=7&rm=3",
                 },
                 new Book
@@ -122,7 +122,7 @@ public static class SeedData
                     Category = "Horror",
                     YearPublished = 2001,
                     Publisher = "Scribner",
-                    Price = "P189.00",
+                    Price = 189,
                     ImageUrl = "https://tse3.mm.bing.net/th/id/OIP.09qfU6wntqgIJPL58Kh9YAHaLg?rs=1&pid=ImgDetMain&o=7&rm=3",
                 },
                 new Book
@@ -132,7 +132,7 @@ public static class SeedData
                     Category = "Contemporary Fiction",
                     YearPublished = 2013,
                     Publisher = "Little, Brown and Company",
-                    Price = "P595.00",
+                    Price = 595,
                     ImageUrl = "https://th.bing.com/th/id/OIP.GBPsJ_fFhvYF8b4IKNtrPAHaLY?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
                 },
                 new Book
@@ -142,7 +142,7 @@ public static class SeedData
                     Category = "Fantasy",
                     YearPublished = 2011,
                     Publisher = "Doubleday",
-                    Price = "P519.00",
+                    Price = 519,
                     ImageUrl = "https://booksofbrilliance.com/wp-content/uploads/2022/06/Screen-Shot-2022-06-09-at-9.01.44-PM.png",
                 }
             );

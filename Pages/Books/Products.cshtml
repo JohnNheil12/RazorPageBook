@@ -1,4 +1,4 @@
-﻿@* Products.cshtml *@
+﻿﻿@* Products.cshtml *@
 @page "/Books/Products"
 @model RazorPageBooks.Pages.Books.IndexModel
 @using Microsoft.AspNetCore.Identity
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    @* --- Toolbar / Search --- *@
+    @* --- Toolbar / Live Search --- *@
     <div class="admin-toolbar">
         <form method="get"
               action="/Books/Products"
@@ -75,25 +75,31 @@
               onsubmit="handleSearch(event, this)">
             <input type="hidden" name="partial" value="true" />
             <div class="search-box">
-                <i class="bi bi-search search-ico"></i>
+                <i class="bi bi-search search-ico" id="searchIco"></i>
                 <input type="text"
+                       id="liveSearchInput"
                        name="SearchString"
                        value="@Model.SearchString"
                        class="search-input"
                        placeholder="Search title, author, year..."
                        autocomplete="off" />
-                <button type="submit" class="search-btn">Search</button>
+                <button type="button" class="search-clear-x" id="searchClearX"
+                        onclick="clearLiveSearch()"
+                        style="display:@(!string.IsNullOrEmpty(Model.SearchString) ? "flex" : "none")">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
         </form>
-        @if (!string.IsNullOrEmpty(Model.SearchString))
-        {
-            <div class="toolbar-meta">
-                <a href="#" onclick="clearSearch(event)" class="clear-search">
-                    <i class="bi bi-x-circle"></i> Clear Results
-                </a>
-            </div>
-        }
+        <div class="toolbar-meta" id="liveSearchMeta" style="display:@(!string.IsNullOrEmpty(Model.SearchString) ? "flex" : "none")">
+            <span id="liveSearchCount" class="search-count-badge">
+                <i class="bi bi-funnel-fill"></i>
+                <span id="liveSearchCountNum">@Model.Book.Count()</span> result@(Model.Book.Count() == 1 ? "" : "s")
+            </span>
+        </div>
     </div>
+
+    @* Live search dropdown *@
+    <div class="live-dropdown" id="liveDropdown"></div>
 
     @* --- Table --- *@
     <div class="admin-table-card">
@@ -237,24 +243,68 @@
     /* Toolbar */
     .admin-toolbar {
         display: flex; align-items: center; justify-content: space-between;
-        gap: 12px; margin-bottom: 16px;
+        gap: 12px; margin-bottom: 16px; position: relative;
     }
-    .search-form { flex: 1; max-width: 420px; }
+    .search-form { flex: 1; max-width: 420px; position: relative; }
     .search-box {
         display: flex; align-items: center; background: white;
-        border: 1px solid var(--border); border-radius: 10px; padding: 4px 6px 4px 14px;
-        gap: 8px;
+        border: 1.5px solid var(--border); border-radius: 10px; padding: 4px 6px 4px 14px;
+        gap: 8px; transition: border-color 0.18s, box-shadow 0.18s;
     }
-    .search-ico { color: #94a3b8; font-size: 0.88rem; }
-    .search-input { flex: 1; border: none; outline: none; font-size: 0.85rem; padding: 8px 4px; font-family: inherit; }
-    .search-btn {
-        background: var(--accent); color: white; border: none;
-        padding: 7px 16px; border-radius: 8px; font-weight: 600;
-        cursor: pointer; font-size: 0.82rem; font-family: inherit; transition: background 0.2s;
+    .search-box:focus-within {
+        border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
-    .search-btn:hover { background: #1d4ed8; }
-    .clear-search { font-size: 0.82rem; color: #e11d48; text-decoration: none; display: flex; align-items: center; gap: 5px; }
-    .clear-search:hover { color: #be123c; }
+    .search-ico { color: #94a3b8; font-size: 0.88rem; flex-shrink: 0; transition: color 0.15s; }
+    .search-box:focus-within .search-ico { color: #2563eb; }
+    .search-input { flex: 1; border: none; outline: none; font-size: 0.85rem; padding: 8px 4px; font-family: inherit; background: transparent; }
+    .search-clear-x {
+        background: none; border: none; cursor: pointer; color: #94a3b8;
+        width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; transition: all 0.15s;
+    }
+    .search-clear-x:hover { background: #f1f5f9; color: #e11d48; }
+    .search-count-badge {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;
+        padding: 4px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 600;
+    }
+
+    /* Live search dropdown */
+    .live-dropdown {
+        position: absolute; left: 28px; right: 28px; top: auto;
+        background: white; border: 1px solid var(--border); border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 999;
+        max-height: 360px; overflow-y: auto; display: none;
+        margin-top: -12px; margin-bottom: 8px;
+    }
+    .live-dropdown.open { display: block; }
+    .live-item {
+        display: flex; align-items: center; gap: 12px;
+        padding: 10px 14px; cursor: pointer; transition: background 0.12s;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .live-item:last-child { border-bottom: none; }
+    .live-item:hover { background: #f8fafc; }
+    .live-item-thumb {
+        width: 32px; height: 44px; border-radius: 4px; overflow: hidden;
+        border: 1px solid #e2e8f0; flex-shrink: 0;
+    }
+    .live-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .live-item-body { flex: 1; min-width: 0; }
+    .live-item-title { font-size: 0.84rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .live-item-meta { font-size: 0.73rem; color: #64748b; margin-top: 2px; }
+    .live-item-year { background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 10px; font-size: 0.71rem; font-weight: 600; flex-shrink: 0; }
+    .live-empty { padding: 20px; text-align: center; color: #94a3b8; font-size: 0.84rem; }
+    .live-footer {
+        padding: 9px 14px; text-align: center; border-top: 1px solid #f1f5f9;
+        font-size: 0.78rem; color: #2563eb; cursor: pointer; font-weight: 600;
+        transition: background 0.12s;
+    }
+    .live-footer:hover { background: #f8fafc; }
+    .live-searching { padding: 16px; text-align: center; color: #94a3b8; font-size: 0.84rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    @@keyframes spin { to { transform: rotate(360deg); } }
+    .spin-icon { display: inline-block; animation: spin 0.7s linear infinite; }
 
     /* Table */
     .admin-table-card { background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
@@ -320,32 +370,170 @@
 </style>
 
 <script>
-    function handleSearch(event, formElement) {
-        event.preventDefault();
-        const searchParams = new URLSearchParams(new FormData(formElement)).toString();
-        const url = `${formElement.action}?${searchParams}`;
-        const container = document.getElementById('pageContent');
-        if (container) {
-            const btn = formElement.querySelector('.search-btn');
-            btn.textContent = '...';
-            btn.disabled = true;
+    /* ── Live Search ── */
+    (function () {
+        const input    = document.getElementById('liveSearchInput');
+        const dropdown = document.getElementById('liveDropdown');
+        const clearX   = document.getElementById('searchClearX');
+        const meta     = document.getElementById('liveSearchMeta');
+        const countNum = document.getElementById('liveSearchCountNum');
+
+        if (!input) return;
+
+        let debounceTimer = null;
+        let currentQuery  = '';
+
+        // Fetch suggestions from the server's OnGetSearchAsync handler
+        async function fetchSuggestions(q) {
+            try {
+                const res  = await fetch(`/Books/Products?handler=Search&searchString=${encodeURIComponent(q)}&partial=true`);
+                const data = await res.json();
+                return data;
+            } catch { return null; }
+        }
+
+        // Highlight matching text
+        function highlight(text, q) {
+            if (!q) return text;
+            const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return text.replace(new RegExp(`(${escaped})`, 'gi'),
+                '<mark style="background:#dbeafe;color:#1d4ed8;border-radius:3px;padding:0 1px">$1</mark>');
+        }
+
+        function showDropdown(results, q) {
+            dropdown.innerHTML = '';
+            if (results === null) {
+                dropdown.innerHTML = `<div class="live-empty"><i class="bi bi-wifi-off"></i> Could not fetch results</div>`;
+            } else if (results.length === 0) {
+                dropdown.innerHTML = `<div class="live-empty"><i class="bi bi-search" style="display:block;font-size:1.5rem;margin-bottom:6px;color:#cbd5e1"></i>No books match "<strong>${q}</strong>"</div>`;
+            } else {
+                results.forEach(b => {
+                    const el = document.createElement('div');
+                    el.className = 'live-item';
+                    el.innerHTML = `
+                        <div class="live-item-thumb">
+                            <img src="https://via.placeholder.com/32x44?text=?" onerror="this.src='https://via.placeholder.com/32x44?text=?'" alt="">
+                        </div>
+                        <div class="live-item-body">
+                            <div class="live-item-title">${highlight(b.title, q)}</div>
+                            <div class="live-item-meta">${highlight(b.author, q)}</div>
+                        </div>
+                        <span class="live-item-year">${b.yearPublished}</span>`;
+                    el.addEventListener('click', () => {
+                        // Navigate to detail view
+                        if (typeof loadContent === 'function') {
+                            loadContent(`/Books/Details?id=${b.id}&partial=true`);
+                        }
+                        closeDropdown();
+                    });
+                    dropdown.appendChild(el);
+                });
+
+                // "Show all results" footer
+                if (results.length >= 10) {
+                    const footer = document.createElement('div');
+                    footer.className = 'live-footer';
+                    footer.innerHTML = `<i class="bi bi-list-ul"></i> Show all results for "<strong>${q}</strong>"`;
+                    footer.addEventListener('click', () => { runFullSearch(q); closeDropdown(); });
+                    dropdown.appendChild(footer);
+                }
+            }
+            dropdown.classList.add('open');
+        }
+
+        function showLoading() {
+            dropdown.innerHTML = `<div class="live-searching"><i class="bi bi-arrow-repeat spin-icon"></i> Searching…</div>`;
+            dropdown.classList.add('open');
+        }
+
+        function closeDropdown() {
+            dropdown.classList.remove('open');
+            dropdown.innerHTML = '';
+        }
+
+        // Full page-content search (replaces the table via injectHTML)
+        function runFullSearch(q) {
+            const container = document.getElementById('pageContent');
+            if (!container) return;
+            const url = `/Books/Products?partial=true&SearchString=${encodeURIComponent(q)}`;
             fetch(url)
                 .then(r => r.text())
                 .then(html => {
-                    container.innerHTML = html;
-                    container.classList.add('page-fade-in');
+                    if (typeof injectHTML === 'function') injectHTML(container, html);
+                    else container.innerHTML = html;
                 })
                 .catch(() => { window.location.href = url; });
         }
-    }
 
-    function clearSearch(event) {
+        input.addEventListener('input', () => {
+            const q = input.value.trim();
+            clearX.style.display = q ? 'flex' : 'none';
+
+            clearTimeout(debounceTimer);
+
+            if (!q) {
+                closeDropdown();
+                meta.style.display = 'none';
+                // Reset table to full list
+                runFullSearch('');
+                return;
+            }
+
+            if (q === currentQuery) return;
+            currentQuery = q;
+            showLoading();
+
+            debounceTimer = setTimeout(async () => {
+                const results = await fetchSuggestions(q);
+                if (input.value.trim() !== q) return; // stale
+                showDropdown(results, q);
+                if (results && results.length > 0) {
+                    meta.style.display = 'flex';
+                    countNum.textContent = results.length;
+                } else {
+                    meta.style.display = 'none';
+                }
+                // Also update the table below with matching rows
+                runFullSearch(q);
+            }, 280);
+        });
+
+        // Close dropdown on Enter key → full search
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const q = input.value.trim();
+                closeDropdown();
+                if (q) runFullSearch(q);
+            }
+            if (e.key === 'Escape') closeDropdown();
+        });
+
+        // Close on outside click
+        document.addEventListener('click', e => {
+            if (!dropdown.contains(e.target) && e.target !== input) closeDropdown();
+        });
+
+        window.clearLiveSearch = function () {
+            input.value    = '';
+            clearX.style.display = 'none';
+            meta.style.display   = 'none';
+            currentQuery = '';
+            closeDropdown();
+            runFullSearch('');
+        };
+    })();
+
+    function handleSearch(event, formElement) {
         event.preventDefault();
+        const q = document.getElementById('liveSearchInput')?.value.trim() || '';
+        const url = `/Books/Products?partial=true&SearchString=${encodeURIComponent(q)}`;
         const container = document.getElementById('pageContent');
-        if (container) {
-            fetch('/Books/Products?partial=true')
-                .then(r => r.text())
-                .then(html => { container.innerHTML = html; });
+        if (container && typeof injectHTML === 'function') {
+            fetch(url).then(r => r.text()).then(html => injectHTML(container, html))
+                      .catch(() => { window.location.href = url; });
+        } else {
+            window.location.href = url;
         }
     }
 </script>
