@@ -1,15 +1,821 @@
 ﻿@page
 @model RazorPageBooks.Pages.AboutModel
 @{
-    ViewData["Title"] = "About";
+    ViewData["Title"] = "About — The Book Cellar";
 }
 
-<div style="max-width: 780px; margin: 60px auto; padding: 0 24px;">
-    <h1 style="font-family:'Playfair Display',serif; font-size:2.4rem; margin-bottom:16px;">
-        About The Book Cellar
-    </h1>
-    <p style="color:#555; font-size:1.05rem; line-height:1.8;">
-        The Book Cellar is a modern bookstore management system built to help staff
-        efficiently track inventory, manage sales, and explore a curated literary collection.
-    </p>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- ═══════════════════════════════════════════════
+     HERO BANNER  (matches Index banner aesthetic)
+════════════════════════════════════════════════════ -->
+<div class="about-hero">
+    <!-- Ambient glow blooms -->
+    <div class="hero-bloom hb1"></div>
+    <div class="hero-bloom hb2"></div>
+
+    <!-- Floating dust -->
+    <div class="dust-particles">
+        <span class="dust d1"></span><span class="dust d2"></span>
+        <span class="dust d3"></span><span class="dust d4"></span>
+        <span class="dust d5"></span><span class="dust d6"></span>
+    </div>
+
+    <!-- Bookshelf SVG (same as Login/ChangePassword brand panel) -->
+    <div class="hero-shelf" aria-hidden="true">
+        <svg viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect x="0" y="140" width="900" height="8" rx="2" fill="#2a1f0e"/>
+            <rect x="0" y="140" width="900" height="3" rx="1" fill="rgba(201,168,76,0.22)"/>
+            <!-- Books row -->
+            <rect x="20"  y="70"  width="28" height="72" rx="2" fill="#1c3a2a"/>
+            <rect x="50"  y="82"  width="22" height="60" rx="2" fill="#5c1c1c"/>
+            <rect x="74"  y="60"  width="26" height="82" rx="2" fill="#1a2a4a"/>
+            <rect x="74"  y="70"  width="16" height="2"  rx="1" fill="rgba(201,168,76,0.6)"/>
+            <rect x="102" y="72"  width="20" height="70" rx="2" fill="#4a3b1c"/>
+            <rect x="128" y="65"  width="24" height="77" rx="2" fill="#7a1c1c"/>
+            <!-- candle -->
+            <rect x="158" y="112" width="8" height="28" rx="1" fill="#f5e6c8" opacity="0.9"/>
+            <ellipse cx="162" cy="109" rx="3" ry="5" fill="#f59e0b" opacity="0.9"/>
+            <ellipse cx="162" cy="108" rx="2" ry="3" fill="#fcd34d"/>
+            <ellipse cx="162" cy="114" rx="10" ry="3" fill="rgba(245,158,11,0.15)"/>
+            <rect x="170" y="62"  width="22" height="80" rx="2" fill="#1a4040"/>
+            <rect x="196" y="75"  width="18" height="67" rx="2" fill="#7a5c10"/>
+            <rect x="218" y="58"  width="26" height="84" rx="2" fill="#2c3a5c"/>
+            <rect x="222" y="70"  width="16" height="24" rx="1" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+            <!-- globe -->
+            <circle cx="262" cy="122" r="14" fill="#1a2a3a" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+            <ellipse cx="262" cy="122" rx="14" ry="5" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+            <rect x="259" y="135" width="7" height="5" rx="1" fill="#2a1f0e"/>
+            <rect x="255" y="139" width="15" height="3" rx="1" fill="#2a1f0e"/>
+            <rect x="280" y="66"  width="22" height="76" rx="2" fill="#1f3d1f"/>
+            <rect x="305" y="78"  width="18" height="64" rx="2" fill="#c8b89a"/>
+            <rect x="326" y="60"  width="24" height="82" rx="2" fill="#3a1a5c"/>
+            <rect x="354" y="68"  width="20" height="74" rx="2" fill="#5c3010"/>
+            <rect x="378" y="74"  width="22" height="68" rx="2" fill="#1a2a7a"/>
+            <rect x="404" y="62"  width="26" height="80" rx="2" fill="#384050"/>
+            <rect x="434" y="70"  width="20" height="72" rx="2" fill="#7a1c1c"/>
+            <rect x="460" y="58"  width="28" height="84" rx="2" fill="#1c3a2a"/>
+            <rect x="464" y="70"  width="18" height="2"  rx="1" fill="rgba(201,168,76,0.5)"/>
+            <rect x="492" y="75"  width="22" height="67" rx="2" fill="#4a3b1c"/>
+            <rect x="518" y="64"  width="24" height="78" rx="2" fill="#1a2a4a"/>
+            <!-- small open book -->
+            <g transform="translate(548,110)">
+                <path d="M0,28 Q15,22 30,28 L30,8 Q15,14 0,8 Z" fill="#e8d5b0" opacity="0.9"/>
+                <line x1="15" y1="8" x2="15" y2="28" stroke="rgba(80,60,30,0.4)" stroke-width="1"/>
+            </g>
+            <rect x="584" y="68"  width="22" height="74" rx="2" fill="#5a3010"/>
+            <rect x="610" y="60"  width="26" height="82" rx="2" fill="#2d1f4a"/>
+            <rect x="640" y="72"  width="20" height="70" rx="2" fill="#1a4040"/>
+            <rect x="664" y="62"  width="24" height="80" rx="2" fill="#7a4a18"/>
+            <rect x="692" y="70"  width="22" height="72" rx="2" fill="#40200c"/>
+            <rect x="718" y="56"  width="26" height="86" rx="2" fill="#1c2a6a"/>
+            <rect x="748" y="68"  width="20" height="74" rx="2" fill="#5c1c1c"/>
+            <rect x="772" y="60"  width="24" height="82" rx="2" fill="#1f3d1f"/>
+            <rect x="800" y="72"  width="22" height="70" rx="2" fill="#3a1a5c"/>
+            <rect x="826" y="62"  width="26" height="80" rx="2" fill="#7a1c1c"/>
+            <rect x="856" y="74"  width="22" height="68" rx="2" fill="#2c3a5c"/>
+            <!-- floor shadow -->
+            <ellipse cx="450" cy="148" rx="430" ry="8" fill="rgba(0,0,0,0.28)"/>
+        </svg>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-logo-wrap">
+            <i class="bi bi-book-half"></i>
+        </div>
+        <h1 class="hero-title">The Book<br><em>Cellar.</em></h1>
+        <p class="hero-sub">Where every spine tells a story worth keeping.</p>
+    </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════ -->
+<div class="about-body">
+
+    <!-- ── OUR STORY ── -->
+    <section class="about-section story-section">
+        <div class="section-inner">
+            <div class="section-label"><span>Our Story</span></div>
+            <h2 class="section-title">A cellar full of worlds,<br><em>waiting to be opened.</em></h2>
+            <div class="story-grid">
+                <div class="story-text">
+                    <p>The Book Cellar was born from a simple belief: that great literature deserves a home as carefully curated as the works themselves. Founded in 2018 in the heart of Cebu City, we set out to build more than a bookstore — we wanted a sanctuary.</p>
+                    <p>From rare first editions to contemporary bestsellers, every title in our collection is chosen with intention. Our team of passionate readers personally reviews and selects each book, ensuring that when you leave our doors, you carry something truly worth your time.</p>
+                    <p>We believe books are not just objects. They are conversations across centuries, bridges between minds, and quiet companions on the longest of days.</p>
+                </div>
+                <div class="story-stats">
+                    <div class="stat-card">
+                        <div class="stat-num">6<span>+</span></div>
+                        <div class="stat-label">Years in Business</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">4<span>k+</span></div>
+                        <div class="stat-label">Titles in Collection</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">12<span>k+</span></div>
+                        <div class="stat-label">Happy Readers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">50<span>+</span></div>
+                        <div class="stat-label">Genre Categories</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── DIVIDER ── -->
+    <div class="gold-rule-wrap"><div class="gold-rule"></div></div>
+
+<!-- ── DEVELOPER INFORMATION ── -->
+<section class="about-section offer-section">
+    <div class="section-inner">
+        <div class="section-label"><span>Developer Information</span></div>
+        <h2 class="section-title">The mind behind<br><em>the cellar.</em></h2>
+
+        <div class="dev-card-pro">
+            <!-- Top row: photo + identity -->
+            <div class="dev-top-row">
+                <div class="dev-avatar-wrap">
+                    <img src="~/images/profile.jpg" alt="John Nheil V. Marturillas" class="dev-avatar-sm" />
+                    <div class="dev-avatar-star">★</div>
+                </div>
+                <div class="dev-identity">
+                    <h3 class="dev-fullname">John Nheil V. Marturillas</h3>
+                    <div class="dev-title-line">
+                        <span class="dev-role-txt">Computer Science Student</span>
+                        <span class="dev-dot-sep"></span>
+                        <span class="dev-school-txt">Asian College of Technology</span>
+                    </div>
+                    <div class="dev-tags-row">
+                        <span class="dev-tag-sm"><i class="bi bi-code-slash"></i> ASP.NET Core</span>
+                        <span class="dev-tag-sm"><i class="bi bi-filetype-cs"></i> C#</span>
+                        <span class="dev-tag-sm"><i class="bi bi-database"></i> SQL Server</span>
+                        <span class="dev-tag-sm"><i class="bi bi-palette"></i> UI / UX Design</span>
+                        <span class="dev-tag-sm"><i class="bi bi-book"></i> Book Enthusiast</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dev-card-divider"></div>
+
+            <!-- Bio -->
+            <div class="dev-bio-pro">
+                <p>Hi, I'm <strong>John Nheil</strong> — a Computer Science student at <strong>Asian College of Technology</strong> and a lifelong reader based in Cebu City, Philippines. The Book Cellar was born from my love of literature and my desire to create something that genuinely serves the reading community.</p>
+                <p>I built this platform using <strong>ASP.NET Core Razor Pages</strong>, with a focus on clean architecture, thoughtful UI design, and a seamless experience for book lovers. Every detail — from the curated typography to the warm color palette — was intentionally crafted to feel like stepping into a real bookstore.</p>
+                <p>When I'm not writing code, you'll find me with a novel in hand, a cup of coffee nearby, and a growing wishlist of books I'll never quite get through.</p>
+            </div>
+
+            <!-- Links -->
+            <div class="dev-links-row">
+                <a href="https://www.facebook.com/johnnheil.marturillas.5" target="_blank" rel="noopener" class="dev-link-btn fb">
+                    <i class="bi bi-facebook"></i> Facebook
+                </a>
+                <a href="https://www.instagram.com/nheil_cutter/" target="_blank" rel="noopener" class="dev-link-btn ig">
+                    <i class="bi bi-instagram"></i> Instagram
+                </a>
+                <a class="dev-link-btn em">
+                    <i class="bi bi-envelope-fill"></i> kershivkarillo&#64;gmail.com
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STYLES
+════════════════════════════════════════════════════ -->
+<style>
+    /* ── DESIGN TOKENS (same as Login) ── */
+    :root {
+        --gold:       #c9a84c;
+        --gold-light: #e6c97a;
+        --gold-dim:   rgba(201,168,76,0.12);
+        --charcoal:   #1a1c1e;
+        --charcoal-2: #2a2d31;
+        --paper:      #fefcf8;
+        --paper-2:    #f9f5ee;
+        --border:     #e5e0d6;
+        --text-main:  #1a1c1e;
+        --text-muted: #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; background: var(--paper); color: var(--text-main); }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .about-hero {
+        position: relative;
+        height: 420px;
+        background: var(--charcoal);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0 0 56px 56px;
+        box-shadow: 0 12px 48px rgba(0,0,0,0.28);
+    }
+
+    /* Bloom glows */
+    .hero-bloom {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .hb1 {
+        width: 520px; height: 520px;
+        top: -160px; left: -100px;
+        background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+        animation: bloomPulse 8s ease-in-out infinite alternate;
+    }
+    .hb2 {
+        width: 380px; height: 380px;
+        bottom: -80px; right: -60px;
+        background: radial-gradient(circle, rgba(180,120,40,0.14) 0%, transparent 70%);
+        animation: bloomPulse 11s ease-in-out infinite alternate-reverse;
+    }
+
+    /* Dust */
+    .dust-particles { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+    .dust { position: absolute; border-radius: 50%; background: rgba(201,168,76,0.55); animation: dustDrift linear infinite; }
+    .d1 { width: 3px; height: 3px; left: 10%; top: 70%; animation-duration: 14s; }
+    .d2 { width: 2px; height: 2px; left: 30%; top: 55%; animation-duration: 18s; animation-delay: -4s; }
+    .d3 { width: 4px; height: 4px; left: 50%; top: 75%; animation-duration: 12s; animation-delay: -2s; opacity: .6; }
+    .d4 { width: 2px; height: 2px; left: 65%; top: 60%; animation-duration: 16s; animation-delay: -7s; }
+    .d5 { width: 3px; height: 3px; left: 80%; top: 65%; animation-duration: 20s; animation-delay: -3s; opacity: .5; }
+    .d6 { width: 2px; height: 2px; left: 92%; top: 72%; animation-duration: 15s; animation-delay: -9s; }
+
+    /* Shelf SVG strip */
+    .hero-shelf {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 56%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.65;
+    }
+    .hero-shelf svg { width: 100%; height: 100%; }
+
+    /* Hero text */
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        animation: fadeSlideUp 0.8s ease-out both;
+    }
+    .hero-logo-wrap {
+        width: 64px; height: 64px;
+        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+        border-radius: 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; color: var(--charcoal);
+        margin: 0 auto 28px;
+        box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+    }
+    .hero-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 4.8rem;
+        font-weight: 700;
+        line-height: 1.0;
+        letter-spacing: -1.5px;
+        color: #f5f0e8;
+    }
+    .hero-title em { font-style: italic; color: var(--gold-light); }
+    .hero-sub {
+        margin-top: 18px;
+        font-size: 1.05rem;
+        font-weight: 300;
+        color: rgba(245,240,232,0.6);
+        letter-spacing: 0.3px;
+    }
+
+    /* ══════════════════════════════════
+       BODY
+    ══════════════════════════════════ */
+    .about-body { background: var(--paper); }
+
+    .about-section { padding: 80px 0; }
+
+    .section-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 40px;
+    }
+
+    /* Label pill */
+    .section-label {
+        margin-bottom: 16px;
+    }
+    .section-label span {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--gold);
+        background: var(--gold-dim);
+        border: 1px solid rgba(201,168,76,0.25);
+        padding: 5px 14px;
+        border-radius: 50px;
+    }
+    .section-label.centered { text-align: center; }
+    .section-label.light span {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(201,168,76,0.35);
+        color: var(--gold-light);
+    }
+
+    .section-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.15;
+        color: var(--charcoal);
+        margin-bottom: 40px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-title.centered { text-align: center; }
+    .section-title.light { color: #f5f0e8; }
+    .section-title.light em { color: var(--gold-light); }
+
+    /* Gold divider */
+    .gold-rule-wrap { display: flex; justify-content: center; padding: 0 40px; }
+    .gold-rule {
+        width: 100%; max-width: 1100px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0.35;
+    }
+
+    /* ── STORY ── */
+    .story-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+    }
+    .story-text p {
+        font-size: 1rem;
+        line-height: 1.85;
+        color: #4a4540;
+        margin-bottom: 18px;
+    }
+    .story-text p:last-child { margin-bottom: 0; }
+
+    .story-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .stat-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 28px 20px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(26,28,30,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(26,28,30,0.1);
+    }
+    .stat-num {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1;
+    }
+    .stat-num span { font-size: 1.6rem; }
+    .stat-label {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-top: 8px;
+        letter-spacing: 0.3px;
+    }
+           /* ── DEVELOPER CARD PRO ── */
+        .dev-card-pro {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px 36px;
+            position: relative;
+            overflow: hidden;
+        }
+        .dev-card-pro::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+        }
+        .dev-top-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .dev-avatar-wrap { position: relative; flex-shrink: 0; }
+        .dev-avatar-sm {
+            width: 90px; height: 90px;
+            border-radius: 16px;
+            object-fit: cover;
+            display: block;
+            border: 2px solid rgba(201,168,76,0.4);
+        }
+        .dev-avatar-star {
+            position: absolute;
+            bottom: -7px; right: -7px;
+            width: 22px; height: 22px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 2px solid #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: #fff;
+        }
+        .dev-identity { flex: 1; padding-top: 4px; }
+        .dev-fullname {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin: 0 0 6px;
+            letter-spacing: -0.3px;
+        }
+        .dev-title-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .dev-role-txt {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        .dev-dot-sep {
+            width: 3px; height: 3px;
+            background: var(--border);
+            border-radius: 50%;
+        }
+        .dev-school-txt {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--gold);
+        }
+        .dev-tags-row { display: flex; flex-wrap: wrap; gap: 6px; }
+        .dev-tag-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--paper-2);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+        .dev-card-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 0 22px;
+        }
+        .dev-bio-pro p {
+            font-size: 0.93rem;
+            line-height: 1.85;
+            color: #4a4540;
+            margin-bottom: 14px;
+        }
+        .dev-bio-pro p:last-child { margin-bottom: 20px; }
+        .dev-bio-pro p strong { font-weight: 600; color: var(--charcoal); }
+        .dev-links-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .dev-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .dev-link-btn:hover { transform: translateY(-2px); }
+        .dev-link-btn.fb { border-color: rgba(24,119,242,0.4); color: #1877f2; background: rgba(24,119,242,0.05); }
+        .dev-link-btn.fb:hover { box-shadow: 0 6px 18px rgba(24,119,242,0.2); }
+        .dev-link-btn.ig { border-color: rgba(225,48,108,0.4); color: #e1306c; background: rgba(225,48,108,0.05); }
+        .dev-link-btn.ig:hover { box-shadow: 0 6px 18px rgba(225,48,108,0.2); }
+        .dev-link-btn.em { border-color: rgba(201,168,76,0.45); color: var(--gold); background: var(--gold-dim); }
+        .dev-link-btn.em:hover { box-shadow: 0 6px 18px rgba(201,168,76,0.25); }
+
+        @@media (max-width: 600px) {
+            .dev-card-pro { padding: 24px 20px; }
+            .dev-top-row { flex-direction: column; align-items: flex-start; }
+        }
+
+    /* ── PILLARS ── */
+    .pillars-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+    .pillar-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 32px 26px;
+        box-shadow: 0 2px 12px rgba(26,28,30,0.04);
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .pillar-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px rgba(26,28,30,0.1);
+        border-color: rgba(201,168,76,0.35);
+    }
+    .pillar-icon {
+        width: 52px; height: 52px;
+        background: var(--gold-dim);
+        border: 1px solid rgba(201,168,76,0.25);
+        border-radius: 15px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem;
+        color: var(--gold);
+        margin-bottom: 20px;
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .pillar-card:hover .pillar-icon {
+        background: rgba(201,168,76,0.2);
+        border-color: rgba(201,168,76,0.5);
+    }
+    .pillar-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--charcoal);
+        margin-bottom: 10px;
+    }
+    .pillar-desc {
+        font-size: 0.88rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+    }
+
+    /* ── VISIT ── */
+    .visit-section { background: var(--charcoal); border-radius: 40px; margin: 0 32px; }
+    .visit-section .section-inner { padding: 72px 60px; }
+
+    .visit-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .visit-detail {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+    .visit-detail:last-child { margin-bottom: 0; }
+    .visit-icon {
+        width: 42px; height: 42px; flex-shrink: 0;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(201,168,76,0.3);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--gold-light);
+        font-size: 1rem;
+    }
+    .visit-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 4px;
+    }
+    .visit-value {
+        font-size: 0.93rem;
+        color: rgba(245,240,232,0.75);
+        line-height: 1.65;
+    }
+
+    /* Map placeholder */
+    .visit-map-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(201,168,76,0.2);
+        border-radius: 24px;
+        overflow: hidden;
+        min-height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .map-placeholder {
+        text-align: center;
+        padding: 40px;
+    }
+    .map-pin-wrap {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    .map-pin {
+        font-size: 3rem;
+        color: var(--gold);
+        position: relative;
+        z-index: 2;
+    }
+    .map-ripple {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 2px solid rgba(201,168,76,0.35);
+        animation: mapRipple 2.4s ease-out infinite;
+    }
+    .r1 { width: 60px;  height: 60px; animation-delay: 0s; }
+    .r2 { width: 100px; height: 100px; animation-delay: 0.6s; }
+    .r3 { width: 140px; height: 140px; animation-delay: 1.2s; }
+
+    .map-label {
+        font-size: 0.9rem;
+        color: rgba(245,240,232,0.6);
+        margin-bottom: 18px;
+    }
+    .map-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+        color: var(--charcoal);
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 11px 22px;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+    }
+    .map-link:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); color: var(--charcoal); }
+
+    /* ── SOCIAL ── */
+    .text-center-section { text-align: left; }
+
+    .social-sub {
+        font-size: 1rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        max-width: 560px;
+        margin: 0 auto 48px;
+        text-align: center;
+    }
+
+    .social-links {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .social-btn {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 22px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        text-decoration: none;
+        color: var(--text-main);
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        box-shadow: 0 2px 10px rgba(26,28,30,0.04);
+    }
+    .social-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 36px rgba(26,28,30,0.1);
+        color: var(--text-main);
+    }
+
+    .social-btn > i {
+        font-size: 1.5rem;
+        width: 44px; height: 44px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .social-platform { display: block; font-size: 0.88rem; font-weight: 600; color: var(--charcoal); }
+    .social-handle   { display: block; font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Per-platform icon colours */
+    .facebook.social-btn:hover  { border-color: #1877f2; }
+    .facebook  > i { background: #1877f2; }
+
+    .instagram.social-btn:hover { border-color: #e1306c; }
+    .instagram > i { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+    .twitter.social-btn:hover   { border-color: #000; }
+    .twitter   > i { background: #000; }
+
+    .tiktok.social-btn:hover    { border-color: #010101; }
+    .tiktok    > i { background: #010101; }
+
+    .youtube.social-btn:hover   { border-color: #ff0000; }
+    .youtube   > i { background: #ff0000; }
+
+    .email.social-btn:hover     { border-color: var(--gold); }
+    .email     > i { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: var(--charcoal); }
+
+    /* ── FOOTER ── */
+    .about-footer {
+        background: var(--charcoal);
+        padding: 32px 40px;
+        margin-top: 0;
+    }
+    .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .footer-brand {
+        display: flex; align-items: center; gap: 10px;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #f5f0e8;
+    }
+    .footer-logo { font-size: 1.4rem; color: var(--gold); }
+    .footer-copy { font-size: 0.75rem; color: rgba(245,240,232,0.3); }
+    .footer-nav { display: flex; gap: 24px; }
+    .footer-nav a {
+        font-size: 0.82rem;
+        color: rgba(245,240,232,0.45);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: var(--gold-light); }
+
+    /* ══════════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════════ */
+    @@keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes bloomPulse {
+        from { transform: scale(1); opacity: 0.8; }
+        to   { transform: scale(1.12); opacity: 1; }
+    }
+    @@keyframes dustDrift {
+        0%   { transform: translateY(0) translateX(0); opacity: 0; }
+        10%  { opacity: 1; }
+        90%  { opacity: 0.6; }
+        100% { transform: translateY(-180px) translateX(20px); opacity: 0; }
+    }
+    @@keyframes mapRipple {
+        0%   { opacity: 0.7; transform: translate(-50%, -50%) scale(0.5); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @@media (max-width: 960px) {
+        .hero-title { font-size: 3.4rem; }
+        .story-grid { grid-template-columns: 1fr; gap: 40px; }
+        .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+        .visit-grid { grid-template-columns: 1fr; gap: 36px; }
+        .visit-section { margin: 0 16px; }
+        .visit-section .section-inner { padding: 48px 32px; }
+        .social-links { grid-template-columns: repeat(2, 1fr); }
+    }
+    @@media (max-width: 600px) {
+        .about-hero { height: 340px; border-radius: 0 0 36px 36px; }
+        .hero-title { font-size: 2.8rem; }
+        .section-inner { padding: 0 20px; }
+        .about-section { padding: 56px 0; }
+        .section-title { font-size: 2.2rem; }
+        .pillars-grid { grid-template-columns: 1fr; }
+        .social-links { grid-template-columns: 1fr; }
+        .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }   
+    }
+</style>

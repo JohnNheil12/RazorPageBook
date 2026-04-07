@@ -59,17 +59,6 @@
             @RenderBody()
         </main>
     </div>
-    @if (ViewData["Title"]?.ToString() != "Admin Dashboard" && (ViewData["HideNav"] == null || !(bool)ViewData["HideNav"]))
-            {
-                <footer class="site-footer">
-                    <div class="footer-inner">
-                        <div class="footer-left">
-                            <span class="footer-brand"><i class="bi bi-book-half"></i> The Book Cellar</span>
-                            <span class="footer-tagline">Curating your literary collection.</span>
-                        </div>
-                    </div>
-                </footer>
-            }
             <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

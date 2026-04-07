@@ -1,85 +1,4 @@
-﻿// ============================================================
-//  ForceChangePassword.cshtml.cs
-//  Location: Areas/Identity/Pages/Account/ForceChangePassword.cshtml.cs
-// ============================================================
-//
-//  WHY THE PREVIOUS VERSION REDIRECTED TO /Index
-//  ─────────────────────────────────────────────
-//  The middleware ran BEFORE the auth cookie was fully read, or
-//  the Index page's [AllowAnonymous] let it bypass the check.
-//  The guaranteed fix is to hook the redirect directly inside
-//  Login.cshtml.cs — right after PasswordSignInAsync succeeds.
-//
-// ============================================================
-//  COMPLETE SETUP — follow ALL four steps
-// ============================================================
-//
-//  ── STEP 1: This file + ForceChangePassword.cshtml ──────────
-//  Place both files at:
-//    Areas/Identity/Pages/Account/ForceChangePassword.cshtml
-//    Areas/Identity/Pages/Account/ForceChangePassword.cshtml.cs
-//
-//  ── STEP 2: Patch Login.cshtml.cs ───────────────────────────
-//  In your Login.cshtml.cs OnPostAsync(), find the block that
-//  handles a successful SignInResult.Succeeded and ADD the
-//  claim check BEFORE the normal returnUrl redirect:
-//
-//    var result = await _signInManager.PasswordSignInAsync(...);
-//    if (result.Succeeded)
-//    {
-//        _logger.LogInformation("User logged in.");
-//
-//        // ★ ADD THIS BLOCK ★
-//        var user = await _userManager.GetUserAsync(User)
-//                   ?? await _userManager.FindByEmailAsync(Input.Email);
-//        if (user != null)
-//        {
-//            var claims = await _userManager.GetClaimsAsync(user);
-//            if (claims.Any(c => c.Type == "MustChangePassword" && c.Value == "true"))
-//                return RedirectToPage("/Account/ForceChangePassword",
-//                                      new { area = "Identity" });
-//        }
-//        // ★ END ADDED BLOCK ★
-//
-//        return LocalRedirect(returnUrl);
-//    }
-//
-//  ── STEP 3: Program.cs middleware (safety net) ──────────────
-//  Add AFTER app.UseAuthentication() AND app.UseAuthorization():
-//
-//    app.Use(async (context, next) =>
-//    {
-//        if (context.User.Identity?.IsAuthenticated == true
-//            && context.User.HasClaim("MustChangePassword", "true"))
-//        {
-//            var path = context.Request.Path.Value ?? "";
-//            bool allowed =
-//                path.StartsWith("/Identity/Account/ForceChangePassword",
-//                                StringComparison.OrdinalIgnoreCase) ||
-//                path.StartsWith("/Identity/Account/Logout",
-//                                StringComparison.OrdinalIgnoreCase) ||
-//                path.StartsWith("/_framework", StringComparison.OrdinalIgnoreCase) ||
-//                path.StartsWith("/css",        StringComparison.OrdinalIgnoreCase) ||
-//                path.StartsWith("/js",         StringComparison.OrdinalIgnoreCase) ||
-//                path.StartsWith("/lib",        StringComparison.OrdinalIgnoreCase);
-//            if (!allowed)
-//            {
-//                context.Response.Redirect("/Identity/Account/ForceChangePassword");
-//                return;
-//            }
-//        }
-//        await next();
-//    });
-//
-//  ── STEP 4: Registration — stamp the claim on new users ─────
-//  After _userManager.CreateAsync(newUser, password) succeeds:
-//
-//    await _userManager.AddClaimAsync(newUser,
-//        new System.Security.Claims.Claim("MustChangePassword", "true"));
-//
-// ============================================================
-
-#nullable disable
+﻿#nullable disable
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -104,6 +23,11 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+        [BindProperty]
+        [Required(ErrorMessage = "Current password is required.")]
+        [DataType(DataType.Password)]
+        public string CurrentPassword { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Password is required")]
@@ -146,9 +70,16 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
             if (user == null)
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
 
-            // Password-reset flow — no current password required
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user, token, NewPassword);
+            // Verify the current password before allowing the change
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, CurrentPassword);
+            if (!passwordCheck)
+            {
+                ModelState.AddModelError(string.Empty, "Current password is incorrect.");
+                return Page();
+            }
+
+            // Change password using the verified current password
+            var result = await _userManager.ChangePasswordAsync(user, CurrentPassword, NewPassword);
 
             if (!result.Succeeded)
             {
