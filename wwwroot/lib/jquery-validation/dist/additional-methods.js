@@ -1499,7 +1499,8 @@ $.validator.addMethod( "vinUS", function( v ) {
 		return true;
 	}
 	return false;
-}, "The specified vehicle identification number (VIN) is invalid." );
+}, "The specified vehicle identification number (VIN) 
+	." );
 
 $.validator.addMethod( "zipcodeUS", function( value, element ) {
 	return this.optional( element ) || /^\d{5}(-\d{4})?$/.test( value );

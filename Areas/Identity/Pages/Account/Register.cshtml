@@ -113,26 +113,9 @@
                         <p class="auth-sub">Create a new authorized account for your team</p>
                     </div>
 
-                    <form id="registerForm" method="post" novalidate>
+                    <form id="registerForm" method="post" novalidate="novalidate">
 
                         <div asp-validation-summary="ModelOnly" class="err-summary-box" role="alert"></div>
-
-                        <div class="field-grid">
-                            <div class="field-block">
-                                <label asp-for="Input.FirstName" class="field-label">
-                                    <i class="bi bi-person"></i> First Name
-                                </label>
-                                <input asp-for="Input.FirstName" class="field-input" placeholder="Juan" autocomplete="given-name" />
-                                <span asp-validation-for="Input.FirstName" class="field-err"></span>
-                            </div>
-                            <div class="field-block">
-                                <label asp-for="Input.LastName" class="field-label">
-                                    <i class="bi bi-person"></i> Last Name
-                                </label>
-                                <input asp-for="Input.LastName" class="field-input" placeholder="Dela Cruz" autocomplete="family-name" />
-                                <span asp-validation-for="Input.LastName" class="field-err"></span>
-                            </div>
-                        </div>
 
                         <div class="field-block">
                             <label asp-for="Input.Email" class="field-label">
@@ -142,51 +125,55 @@
                             <span asp-validation-for="Input.Email" class="field-err"></span>
                         </div>
 
-                        <div class="field-block">
-                            <label asp-for="Input.Role" class="field-label">
-                                <i class="bi bi-person-badge"></i> System Role
+                        <input asp-for="Input.Role" type="hidden" value="Staff" />
+                      <div class="field-block" style="margin-bottom: 20px;">
+                            <label asp-for="Input.Password" class="field-label">
+                                <i class="bi bi-lock"></i> Password
                             </label>
-                            <div class="select-wrap">
-                                <select asp-for="Input.Role" class="field-input select-input">
-                                    <option value="" disabled selected>Choose a role…</option>
-                                    <option value="Admin">Administrator</option>
-                                    <option value="Staff">Staff Member</option>
-                                </select>
+                            <div class="input-wrap">
+                                <input asp-for="Input.Password" type="password" id="reg-pw" class="field-input"
+                                       placeholder="Password" autocomplete="new-password"
+                                       oninput="checkStrength(this.value)" />
+                                <button type="button" class="eye-btn" onclick="togglePw('reg-pw','eye-reg')" aria-label="Toggle password">
+                                    <i class="bi bi-eye" id="eye-reg"></i>
+                                </button>
                             </div>
-                            <span asp-validation-for="Input.Role" class="field-err"></span>
-                        </div>
-                        <div class="field-grid">
-                            <div class="field-block">
-                                <label asp-for="Input.Password" class="field-label">
-                                    <i class="bi bi-lock"></i> Password
-                                </label>
-                                <div class="input-wrap">
-                                    <input asp-for="Input.Password" type="password" id="reg-pw" class="field-input" placeholder="Password" autocomplete="new-password" />
-                                    <button type="button" class="eye-btn" onclick="togglePw('reg-pw','eye-reg')" aria-label="Toggle password">
-                                        <i class="bi bi-eye" id="eye-reg"></i>
-                                    </button>
+                            <span asp-validation-for="Input.Password" class="field-err"></span>
+
+                            <!-- Strength meter -->
+                            <div class="strength-wrap">
+                                <div class="strength-track">
+                                    <div class="strength-fill" id="strengthFill"></div>
                                 </div>
-                                <span asp-validation-for="Input.Password" class="field-err"></span>
-                            </div>
-                            <div class="field-block">
-                                <label asp-for="Input.ConfirmPassword" class="field-label">
-                                    <i class="bi bi-lock-fill"></i> Confirm Password
-                                </label>
-                                <div class="input-wrap">
-                                    <input asp-for="Input.ConfirmPassword" type="password" id="reg-cpw" class="field-input" placeholder="Confirm" autocomplete="new-password" />
-                                    <button type="button" class="eye-btn" onclick="togglePw('reg-cpw','eye-cpw')" aria-label="Toggle confirm password">
-                                        <i class="bi bi-eye" id="eye-cpw"></i>
-                                    </button>
+                                <div class="strength-row">
+                                    <span class="strength-label">Password strength</span>
+                                    <span class="strength-status" id="strengthTxt">Enter a password</span>
                                 </div>
-                                <span asp-validation-for="Input.ConfirmPassword" class="field-err"></span>
                             </div>
                         </div>
 
-                        <div class="pw-hint">
-                            <i class="bi bi-info-circle"></i>
-                            Min. 8 characters with uppercase, number, and special character.
+                        <!-- Requirements checklist -->
+                        <div class="req-list">
+                            <div class="req-item" id="req-len"><i class="bi bi-circle"></i> 8+ characters</div>
+                            <div class="req-item" id="req-upper"><i class="bi bi-circle"></i> Uppercase letter</div>
+                            <div class="req-item" id="req-num"><i class="bi bi-circle"></i> Number</div>
+                            <div class="req-item" id="req-special"><i class="bi bi-circle"></i> Special character</div>
                         </div>
 
+                        <div class="field-block" style="margin-top: 20px; margin-bottom: 6px;">
+                            <label asp-for="Input.ConfirmPassword" class="field-label">
+                                <i class="bi bi-lock-fill"></i> Confirm Password
+                            </label>
+                            <div class="input-wrap">
+                                <input asp-for="Input.ConfirmPassword" type="password" id="reg-cpw" class="field-input"
+                                       placeholder="Confirm password" autocomplete="new-password"
+                                       oninput="checkMatch()" />
+                                <button type="button" class="eye-btn" onclick="togglePw('reg-cpw','eye-cpw')" aria-label="Toggle confirm password">
+                                    <i class="bi bi-eye" id="eye-cpw"></i>
+                                </button>
+                            </div>
+                            <div class="match-hint" id="matchHint"></div>
+                        </div>
                         <div class="button-group">
                             <button type="submit" class="btn-submit">
                                 <span>Register Account</span>
@@ -203,20 +190,68 @@
 
     </div>
 
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-        <script>
-            function togglePw(inputId, iconId) {
-                const inp = document.getElementById(inputId);
-                const icon = document.getElementById(iconId);
-                const show = inp.type === 'password';
-                inp.type = show ? 'text' : 'password';
-                icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
-            }
-        </script>
-    }
+ @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePw(inputId, iconId) {
+            const inp = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            const show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+        }
 
+        function checkStrength(val) {
+            const fill = document.getElementById('strengthFill');
+            const txt  = document.getElementById('strengthTxt');
+            const reqs = {
+                len:     val.length >= 8,
+                upper:   /[A-Z]/.test(val),
+                num:     /[0-9]/.test(val),
+                special: /[^A-Za-z0-9]/.test(val),
+            };
+            setReq('req-len',     reqs.len);
+            setReq('req-upper',   reqs.upper);
+            setReq('req-num',     reqs.num);
+            setReq('req-special', reqs.special);
+            const score = Object.values(reqs).filter(Boolean).length;
+            const map = [
+                { w: '0%',   bg: '#e5e0d6', lbl: 'Enter a password', c: '#9ca3af' },
+                { w: '25%',  bg: '#ef4444', lbl: 'Too weak',          c: '#ef4444' },
+                { w: '50%',  bg: '#f97316', lbl: 'Fair',              c: '#f97316' },
+                { w: '75%',  bg: '#eab308', lbl: 'Good',              c: '#ca8a04' },
+                { w: '100%', bg: '#22c55e', lbl: 'Strong ✓',          c: '#16a34a' },
+            ];
+            const m = map[score];
+            fill.style.width      = m.w;
+            fill.style.background = m.bg;
+            txt.textContent       = m.lbl;
+            txt.style.color       = m.c;
+            checkMatch();
+        }
 
+        function setReq(id, met) {
+            const el = document.getElementById(id);
+            el.className = 'req-item' + (met ? ' met' : '');
+            el.querySelector('i').className = met ? 'bi bi-check-circle-fill' : 'bi bi-circle';
+        }
+
+        function checkMatch() {
+            const pw   = document.getElementById('reg-pw').value;
+            const cpw  = document.getElementById('reg-cpw').value;
+            const hint = document.getElementById('matchHint');
+            if (!cpw) { hint.className = 'match-hint'; return; }
+            const ok = pw === cpw;
+            hint.className = 'match-hint show ' + (ok ? 'ok' : 'fail');
+            hint.innerHTML = ok
+                ? '<i class="bi bi-check-circle-fill"></i> Passwords match'
+                : '<i class="bi bi-x-circle-fill"></i> Passwords do not match';
+        }
+
+        // Run on page load so the hint shows correctly after a failed POST
+        document.addEventListener('DOMContentLoaded', checkMatch);
+    </script>
+}
 <style>
     :root {
         --gold:       #c9a84c;

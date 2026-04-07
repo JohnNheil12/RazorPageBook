@@ -61,15 +61,14 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <div class="sidebar-footer">
-                <div class="sidebar-user">
+                <!-- Entire user container is now a link to Change Password -->
+                <a href="/Identity/Account/ChangePassword" class="sidebar-user" title="Change your password">
                     <div class="user-avatar">
                         @(User.Identity.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "U")
                     </div>
                     <div class="user-meta">
                         <span class="user-name">@User.Identity.Name</span>
-                        <a class="user-role user-role-link"
-                           href="/Identity/Account/ChangePassword"
-                           title="Click to change your password">
+                        <span class="user-role">
                             @if (User.IsInRole("Admin"))
                             {
                                 @:Administrator
@@ -83,17 +82,18 @@
                                 @:User
                             }
                             <i class="bi bi-pencil-square" style="font-size:0.6rem;opacity:0.7;margin-left:3px;"></i>
-                        </a>
+                        </span>
                     </div>
                     <form method="post" asp-area="Identity" asp-page="/Account/Logout"
                           asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"
-                          style="margin:0;padding:0;">
+                          style="margin:0;padding:0;"
+                          onclick="event.stopPropagation()">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="user-logout" title="Sign out">
                             <i class="bi bi-box-arrow-left"></i>
                         </button>
                     </form>
-                </div>
+                </a>
             </div>
         }
     </aside>
@@ -181,23 +181,27 @@
     .nav-icon-wrap { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; background: rgba(255,255,255,0.03); flex-shrink: 0; }
 
     .sidebar-footer { padding: 14px 12px; border-top: 1px solid var(--sidebar-border); }
-    .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 11px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05); }
+
+    /* sidebar-user is now an <a> — reset link styles and keep original look */
+    .sidebar-user {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 11px; border-radius: 10px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.05);
+        text-decoration: none;
+        transition: background 0.18s, border-color 0.18s;
+        cursor: pointer;
+    }
+    .sidebar-user:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(59,130,246,0.25);
+        text-decoration: none;
+    }
+
     .user-avatar { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .user-meta { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .user-name { font-size: 0.8rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-role { font-size: 0.62rem; color: var(--sidebar-txt); }
-    .user-role-link {
-        font-size: 0.62rem; color: var(--sidebar-txt);
-        text-decoration: none; display: inline-flex; align-items: center; gap: 2px;
-        border-radius: 4px; padding: 1px 4px; margin: -1px -4px;
-        transition: color 0.15s, background 0.15s;
-        cursor: pointer;
-    }
-    .user-role-link:hover {
-        color: #93c5fd;
-        background: rgba(147,197,253,0.1);
-        text-decoration: none;
-    }
+    .user-role { font-size: 0.62rem; color: var(--sidebar-txt); display: inline-flex; align-items: center; gap: 2px; }
     .user-logout { color: #4b5e7a; background: none; border: none; cursor: pointer; padding: 0; width: 28px; height: 28px; border-radius: 7px; transition: 0.18s; display: flex; align-items: center; justify-content: center; }
     .user-logout:hover { color: #f87171; background: rgba(248,113,113,0.1); }
 
@@ -248,7 +252,6 @@
     .btn-cancel:hover { background: #f1f5f9; }
     .btn-confirm-delete { padding: 10px 22px; border-radius: 10px; border: none; background: var(--rose); color: #fff; font-size: 0.875rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s, opacity 0.15s; }
     .btn-confirm-delete:hover:not(:disabled) { background: #be123c; }
-    /* ✅ Disabled state for confirm button when target is Admin */
     .btn-confirm-delete:disabled { opacity: 0.4; cursor: not-allowed; }
 
     @@media (max-width: 768px) {
@@ -293,7 +296,6 @@
         const btn     = document.getElementById('btnConfirmDelete');
         const warning = document.getElementById('modalAdminWarning');
 
-        // Always reset button state first
         btn.disabled  = false;
         btn.innerHTML = '<i class="bi bi-trash3"></i> Yes, Delete';
 
@@ -315,7 +317,6 @@
         if (e.target === this) closeDeleteModal();
     });
 
-    /* ── doDeleteUser: called by the confirm button directly (no form involved) ── */
     async function doDeleteUser() {
         if (!_deleteUserId) return;
 
@@ -324,8 +325,6 @@
         btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Deleting…';
 
         try {
-            // Fetch a fresh antiforgery token from the server each time,
-            // so stale tokens never cause a 400 rejection.
             const tokenRes = await fetch('/Users/Users?handler=AntiforgeryToken', {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
@@ -340,7 +339,6 @@
                 body: fd
             });
 
-            // Try to parse as JSON; fall back gracefully if server returns HTML
             let json = { success: false, error: 'Unexpected server response.' };
             const ct = res.headers.get('content-type') || '';
             if (ct.includes('application/json')) {
@@ -369,7 +367,6 @@
         }
     }
 
-    /* ── Users search/filter (must live here — never gets stripped by injectHTML) ── */
     function filterTable() {
         const searchEl = document.getElementById('searchInput');
         const roleEl   = document.getElementById('roleFilter');
@@ -390,9 +387,6 @@
         if (countEl) countEl.textContent = visible + ' user' + (visible !== 1 ? 's' : '');
     }
 
-    /* ── Safe HTML injector ──
-       Scripts run inside new Function() so every tab reload gets a
-       fresh local scope — no global variable collisions on re-click. ── */
     function injectHTML(container, html) {
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
@@ -411,7 +405,6 @@
         });
     }
 
-    /* ── Core content loader (GET) ── */
     async function loadContent(url) {
         const container = document.getElementById('pageContent');
         try {
@@ -429,7 +422,6 @@
         }
     }
 
-    /* ── Tab navigation ── */
     function loadTab(el, page) {
         if (window.event) window.event.preventDefault();
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -441,11 +433,9 @@
         loadContent(url);
     }
 
-    /* ── AJAX form submission (handles Create, Edit, Delete, Search) ── */
     document.addEventListener('submit', async function (e) {
         const form = e.target;
 
-        /* ── Search form: GET request ── */
         if (form.classList.contains('search-form')) {
             e.preventDefault();
             const params = new URLSearchParams(new FormData(form)).toString();
@@ -454,7 +444,6 @@
             return;
         }
 
-        /* ── Book CRUD forms (Create / Edit / Delete): POST via fetch ── */
         if (form.classList.contains('crud-form')) {
             e.preventDefault();
             const action   = form.getAttribute('action') || window.location.pathname;
@@ -486,9 +475,7 @@
         }
     });
 
-    /* ── Initial page load ── */
     window.addEventListener('DOMContentLoaded', () => {
-        // If redirected from Register page with ?tab=users, open Users tab + show toast
         const urlParams = new URLSearchParams(window.location.search);
         const tab = urlParams.get('tab');
         const registered = urlParams.get('registered');

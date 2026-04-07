@@ -34,13 +34,6 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required(ErrorMessage = "First name is required")]
-            [Display(Name = "First Name")]
-            public string FirstName { get; set; }
-
-            [Required(ErrorMessage = "Last name is required")]
-            [Display(Name = "Last Name")]
-            public string LastName { get; set; }
 
             [Required(ErrorMessage = "Email address is required")]
             [EmailAddress(ErrorMessage = "Invalid email address format")]
@@ -58,7 +51,7 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The passwords do not match.")]
+            [Compare("Password")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -69,12 +62,6 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
             if (!ModelState.IsValid)
                 return Page();
 
-            if (Input.Role != "Admin" && Input.Role != "Staff")
-            {
-                ModelState.AddModelError(string.Empty, "Invalid role selected. Choose Admin or Staff.");
-                return Page();
-            }
-
             var existingEmail = await _userManager.FindByEmailAsync(Input.Email);
             if (existingEmail != null)
             {
@@ -82,19 +69,9 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            var username = $"{Input.FirstName.Trim()}.{Input.LastName.Trim()}".ToLower();
-
-            var existingUser = await _userManager.FindByNameAsync(username);
-            if (existingUser != null)
-            {
-                ModelState.AddModelError(string.Empty,
-                    $"A user named '{Input.FirstName} {Input.LastName}' already exists. Try a different name.");
-                return Page();
-            }
-
             var newUser = new IdentityUser
             {
-                UserName = username,
+                UserName = Input.Email,
                 Email = Input.Email,
                 EmailConfirmed = true
             };
@@ -115,7 +92,6 @@ namespace RazorPageBooks.Areas.Identity.Pages.Account
                     DateTime.UtcNow.ToString("o") // ISO 8601 round-trip format
                 ));
 
-                _logger.LogInformation("Admin created new user: {Username} with role {Role}", username, Input.Role);
 
                 // ✅ Redirect to Dashboard with ?tab=users&registered=true
                 // Dashboard's DOMContentLoaded reads these params, opens the Users
