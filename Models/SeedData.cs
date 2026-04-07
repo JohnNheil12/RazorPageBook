@@ -34,7 +34,7 @@ public static class SeedData
                     Publisher = "Contemporary Books",
                     Price = 576,
                     ImageUrl = "https://marketplace.canva.com/EAFfSnGl7II/2/0/1003w/canva-elegant-dark-woods-fantasy-photo-book-cover-vAt8PH1CmqQ.jpg",
-                    Overview = "",
+                    Overview = "A fantasy/paranormal story often involving themes of magic, destiny, and dark secrets hidden within a family or a mysterious town.",
                 },
                 new Book
                 {
@@ -45,7 +45,7 @@ public static class SeedData
                     Publisher = "Scholastic",
                     Price = 685,
                     ImageUrl = "https://static1.srcdn.com/wordpress/wp-content/uploads/2025/03/harry-potter-2.png",
-                    Overview = "",
+                    Overview = "The world-famous series following a young orphan who discovers he is a wizard. He attends Hogwarts School of Witchcraft and Wizardry, where he and his friends battle the dark wizard Lord Voldemort.",
 
                 },
                 new Book
@@ -57,7 +57,7 @@ public static class SeedData
                     Publisher = "Penguin Random House",
                     Price = 450,
                     ImageUrl = "https://i.pinimg.com/564x/f7/c8/12/f7c812c9b0296cd9f119e33a06d9a256.jpg",
-                    Overview = "",
+                    Overview = "A YA fantasy epic centered on a young man named Erik who discovers a dark uprising and must embrace a hidden destiny to save his kingdom from ancient magical forces.",
                 },
                 new Book
                 {
@@ -68,7 +68,7 @@ public static class SeedData
                     Publisher = "HarperCollins",
                     Price = 520,
                     ImageUrl = "https://blog-cdn.reedsy.com/directories/gallery/139/large_6b475cacd2ad05ee513a65b91960173b.jpg",
-                    Overview = "",
+                    Overview = "A time-slip historical novel that connects a soldier in 1916 suffering from \"hysterical blindness\" and a woman in 2017 who finds herself transported back to the same hospital during WWI.",
                 },
                 new Book
                 {
@@ -90,7 +90,7 @@ public static class SeedData
                     Publisher = "Scribner",
                     Price = 299,
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMjMwNDQ1NzU3OF5BMl5BanBnXkFtZTcwODY3MDc5Nw@@._V1_FMjpg_UX1000_.jpg",
-                    Overview = "",
+                    Overview = "The quintessential pirate story. Young Jim Hawkins discovers a treasure map and sets sail on the Hispaniola, only to face a mutiny led by the charismatic but dangerous Long John Silver.",
                 },
                 new Book
                 {
@@ -101,7 +101,7 @@ public static class SeedData
                     Publisher = "Penguin Books",
                     Price = 745,
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMWM2ZmM1OTQtZjkzOC00YjdkLTllODctMWI1Njc1NDkyMGY2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                    Overview = "",
+                    Overview = "A dark, atmospheric novel of intense passion and revenge. It focuses on the turbulent relationship between Catherine Earnshaw and the foundling Heathcliff on the bleak Yorkshire moors.",
                 },
                 new Book
                 {
@@ -112,7 +112,7 @@ public static class SeedData
                     Publisher = "Random House",
                     Price = 835,
                     ImageUrl = "https://i.pinimg.com/736x/7a/8e/a2/7a8ea2d26cea70b8f7dde560a14a784b.jpg",
-                    Overview = "",
+                    Overview = "A cautionary sci-fi thriller about the ethics of genetic engineering. It details the collapse of a theme park where dinosaurs have been brought back to life, leading to a terrifying struggle for survival.",
                 },
                 new Book
                 {
@@ -123,7 +123,7 @@ public static class SeedData
                     Publisher = "HThe Modern Library",
                     Price = 399,
                     ImageUrl = "https://tse2.mm.bing.net/th/id/OIP._RuLbeXpCi3F_-TcgBnJewHaL0?rs=1&pid=ImgDetMain&o=7&rm=3",
-                    Overview = "",
+                    Overview = "A \"sequel\" of sorts to 20,000 Leagues Under the Sea. It follows five American Civil War prisoners who escape in a hot air balloon and crash on an uncharted Pacific island, where they must use science to survive.",
                 },
                 new Book
                 {
@@ -134,7 +134,7 @@ public static class SeedData
                     Publisher = "Scribner",
                     Price = 189,
                     ImageUrl = "https://tse3.mm.bing.net/th/id/OIP.09qfU6wntqgIJPL58Kh9YAHaLg?rs=1&pid=ImgDetMain&o=7&rm=3",
-                    Overview = "",
+                    Overview = "A blend of horror and sci-fi. Four lifelong friends on a hunting trip in Maine encounter a stranded stranger and soon find themselves in the middle of a gruesome alien invasion.",
                 },
                 new Book
                 {
@@ -145,7 +145,7 @@ public static class SeedData
                     Publisher = "Little, Brown and Company",
                     Price = 595,
                     ImageUrl = "https://th.bing.com/th/id/OIP.GBPsJ_fFhvYF8b4IKNtrPAHaLY?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
-                    Overview = "",
+                    Overview = "A Pulitzer Prize-winning novel about Theo Decker, who survives a terrorist attack at an art museum. In the confusion, he steals a small, famous painting, which becomes his secret burden and connection to his lost mother as he grows up.",
                 },
                 new Book
                 {
@@ -156,7 +156,7 @@ public static class SeedData
                     Publisher = "Doubleday",
                     Price = 519,
                     ImageUrl = "https://booksofbrilliance.com/wp-content/uploads/2022/06/Screen-Shot-2022-06-09-at-9.01.44-PM.png",
-                    Overview = "",
+                    Overview = "A magical, atmospheric story about a mysterious traveling circus that only opens at night. At its center is a high-stakes duel between two young magicians, Celia and Marco, who eventually fall in love.",
                 }
             );
             context.SaveChanges();
