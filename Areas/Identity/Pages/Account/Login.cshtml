@@ -803,16 +803,28 @@
     .input-wrap .field-input { padding-right: 52px; }
 
     .eye-btn {
-        position: absolute;
-        right: 14px; top: 50%;
-        transform: translateY(-50%);
-        background: none; border: none;
-        color: #bdb4a8; cursor: pointer;
-        font-size: 1rem; padding: 4px;
-        transition: color 0.15s;
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    color: #bdb4a8 !important;
+    cursor: pointer;
+    font-size: 1rem; padding: 4px;
+    transition: color 0.15s;
     }
-    .eye-btn:hover { color: var(--gold); }
+    .eye-btn i { color: inherit !important; }
+    .eye-btn:hover,
+    .eye-btn:hover i { color: var(--gold) !important; }
 
+    input::-ms-reveal,
+    input::-ms-clear {
+        display: none;
+    }
+
+    input[type="password"]::-webkit-credentials-auto-fill-button,
+    input[type="text"]::-webkit-credentials-auto-fill-button {
+        display: none;
+    }
     /* ── ERRORS ── */
     .err-summary-box:not(:empty) {
         background: var(--error-bg);

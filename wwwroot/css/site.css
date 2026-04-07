@@ -30,3 +30,66 @@ table tbody tr:nth-child(even) {
 table tbody tr:hover {
     background-color: #f0f8ff;
 }
+
+
+/* Container and Font Base */
+.nav-professional {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 0.925rem; /* Slightly smaller is often more professional */
+    letter-spacing: 0.015em;
+}
+
+    /* Links and Buttons Base */
+    .nav-professional .nav-link-item,
+    .nav-professional .btn-auth {
+        text-decoration: none;
+        font-weight: 500;
+        color: #4a5568; /* Soft dark slate */
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border: none;
+        background: transparent;
+    }
+
+    /* The "Action" Button Style (Login/Logout) */
+    .nav-professional .btn-auth {
+        color: #2d3748;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        border-radius: 6px;
+    }
+
+    /* Hover States */
+    .nav-professional .nav-link-item:hover {
+        color: #000;
+    }
+
+    .nav-professional .btn-auth:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: #000;
+    }
+
+    /* Icons */
+    .nav-professional i {
+        margin-right: 6px;
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+
+/* Divider */
+.auth-divider {
+    height: 1.2rem;
+    width: 1px;
+    background-color: #e2e8f0;
+    display: inline-block;
+    margin: 0 0.5rem;
+}
+
+.divider-wrapper {
+    display: flex;
+    align-items: center;
+}

@@ -6,14 +6,21 @@
     var isLoginPage = Context.Request.Path.StartsWithSegments("/Identity/Account/Login");
 }
 
-<ul class="navbar-nav ms-auto d-flex align-items-center flex-row">
+<ul class="navbar-nav ms-auto d-flex align-items-center flex-row nav-professional">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item d-flex align-items-center">
-            <span class="auth-divider mx-2">|</span>
+        <li class="nav-item">
+            <a class="nav-link-item" asp-area="" asp-page="/About/About">
+                <i class="bi bi-info-circle"></i> About
+            </a>
+        </li>
+        <li class="nav-item divider-wrapper">
+            <span class="auth-divider"></span>
+        </li>
+        <li class="nav-item">
             <form id="logoutForm" class="d-inline" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-                <button type="submit" class="nav-link btn-login d-flex align-items-center">
-                    <i class="bi bi-box-arrow-right me-1"></i> Logout
+                <button type="submit" class="nav-link btn-auth">
+                    <i class="bi bi-box-arrow-right"></i> Logout
                 </button>
             </form>
         </li>
@@ -21,16 +28,21 @@
     else if (isLoginPage)
     {
         <li class="nav-item">
-            <a class="nav-link btn-login" asp-area="" asp-page="/Index">
-                <i class="bi bi-arrow-left me-1"></i> Back to Home
+            <a class="nav-link btn-auth" asp-area="" asp-page="/Index">
+                <i class="bi bi-arrow-left"></i> Back to Home
             </a>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link btn-login" asp-area="Identity" asp-page="/Account/Login">
-                <i class="bi bi-door-open me-1"></i> Login
+            <a class="nav-link-item" asp-area="" asp-page="/About/About">
+                <i class="bi bi-info-circle"></i> About
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn-auth" asp-area="Identity" asp-page="/Account/Login">
+                <i class="bi bi-door-open"></i> Login
             </a>
         </li>
     }

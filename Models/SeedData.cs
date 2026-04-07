@@ -34,6 +34,7 @@ public static class SeedData
                     Publisher = "Contemporary Books",
                     Price = 576,
                     ImageUrl = "https://marketplace.canva.com/EAFfSnGl7II/2/0/1003w/canva-elegant-dark-woods-fantasy-photo-book-cover-vAt8PH1CmqQ.jpg",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -44,6 +45,8 @@ public static class SeedData
                     Publisher = "Scholastic",
                     Price = 685,
                     ImageUrl = "https://static1.srcdn.com/wordpress/wp-content/uploads/2025/03/harry-potter-2.png",
+                    Overview = "",
+
                 },
                 new Book
                 {
@@ -54,6 +57,7 @@ public static class SeedData
                     Publisher = "Penguin Random House",
                     Price = 450,
                     ImageUrl = "https://i.pinimg.com/564x/f7/c8/12/f7c812c9b0296cd9f119e33a06d9a256.jpg",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -64,6 +68,7 @@ public static class SeedData
                     Publisher = "HarperCollins",
                     Price = 520,
                     ImageUrl = "https://blog-cdn.reedsy.com/directories/gallery/139/large_6b475cacd2ad05ee513a65b91960173b.jpg",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -74,6 +79,7 @@ public static class SeedData
                     Publisher = "Sterling",
                     Price = 398,
                     ImageUrl = "https://tse2.mm.bing.net/th/id/OIP.EYTQlv3NmnyUdfD_WMFCVQHaMC?rs=1&pid=ImgDetMain&o=7&rm=3",
+                    Overview = "A classic coming-of-age story about a young boy growing up along the Mississippi River. It’s filled with youthful pranks, imaginative play, and a more serious brush with real-world danger.",
                 },
                 new Book
                 {
@@ -84,6 +90,7 @@ public static class SeedData
                     Publisher = "Scribner",
                     Price = 299,
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMjMwNDQ1NzU3OF5BMl5BanBnXkFtZTcwODY3MDc5Nw@@._V1_FMjpg_UX1000_.jpg",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -94,6 +101,7 @@ public static class SeedData
                     Publisher = "Penguin Books",
                     Price = 745,
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMWM2ZmM1OTQtZjkzOC00YjdkLTllODctMWI1Njc1NDkyMGY2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -104,6 +112,7 @@ public static class SeedData
                     Publisher = "Random House",
                     Price = 835,
                     ImageUrl = "https://i.pinimg.com/736x/7a/8e/a2/7a8ea2d26cea70b8f7dde560a14a784b.jpg",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -114,6 +123,7 @@ public static class SeedData
                     Publisher = "HThe Modern Library",
                     Price = 399,
                     ImageUrl = "https://tse2.mm.bing.net/th/id/OIP._RuLbeXpCi3F_-TcgBnJewHaL0?rs=1&pid=ImgDetMain&o=7&rm=3",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -124,6 +134,7 @@ public static class SeedData
                     Publisher = "Scribner",
                     Price = 189,
                     ImageUrl = "https://tse3.mm.bing.net/th/id/OIP.09qfU6wntqgIJPL58Kh9YAHaLg?rs=1&pid=ImgDetMain&o=7&rm=3",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -134,6 +145,7 @@ public static class SeedData
                     Publisher = "Little, Brown and Company",
                     Price = 595,
                     ImageUrl = "https://th.bing.com/th/id/OIP.GBPsJ_fFhvYF8b4IKNtrPAHaLY?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+                    Overview = "",
                 },
                 new Book
                 {
@@ -144,6 +156,7 @@ public static class SeedData
                     Publisher = "Doubleday",
                     Price = 519,
                     ImageUrl = "https://booksofbrilliance.com/wp-content/uploads/2022/06/Screen-Shot-2022-06-09-at-9.01.44-PM.png",
+                    Overview = "",
                 }
             );
             context.SaveChanges();
