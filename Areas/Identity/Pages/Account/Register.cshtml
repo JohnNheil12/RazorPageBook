@@ -66,7 +66,7 @@
             </svg>
         </div>
 
-       <div class="brand-inner">
+    <div class="brand-inner">
                 <div class="brand-logo-wrap">
                     <i class="bi bi-book-half brand-logo-icon"></i>
                 </div>
@@ -100,7 +100,6 @@
             <div class="brand-footer">© 2025 The Book Cellar · All rights reserved</div>
         </div>
 
-        <!-- ── RIGHT FORM PANEL ── -->
         <div class="form-panel">
             <div class="form-inner">
                 <div class="auth-card @(ViewData.ModelState.IsValid ? "" : "shake-error")">
@@ -117,16 +116,22 @@
 
                         <div asp-validation-summary="ModelOnly" class="err-summary-box" role="alert"></div>
 
-                        <div class="field-block">
-                            <label asp-for="Input.Email" class="field-label">
-                                <i class="bi bi-envelope"></i> Email Address
-                            </label>
-                            <input asp-for="Input.Email" class="field-input" placeholder="user@bookcellar.com" autocomplete="email" />
-                            <span asp-validation-for="Input.Email" class="field-err"></span>
-                        </div>
+                            <div class="field-block">
+                                <label asp-for="Input.Email" class="field-label">
+                                    <i class="bi bi-envelope"></i> Email Address
+                                </label>
+                                <input asp-for="Input.Email" class="field-input" placeholder="user@bookcellar.com" autocomplete="email" />
+                                <span asp-validation-for="Input.Email" class="field-err"></span>
+                            </div>
+                            <div class="field-block">
+                                <label class="field-label">
+                                    <i class="bi bi-person-badge"></i> System Role
+                                </label>
+                                <input class="field-input" value="Staff" readonly style="background-color: #f1f1f1; cursor: not-allowed;" />
+                                <input asp-for="Input.Role" type="hidden" value="Staff" />
+                            </div>
 
-                        <input asp-for="Input.Role" type="hidden" value="Staff" />
-                      <div class="field-block" style="margin-bottom: 20px;">
+                        <div class="field-block" style="margin-bottom: 20px;">
                             <label asp-for="Input.Password" class="field-label">
                                 <i class="bi bi-lock"></i> Password
                             </label>
@@ -140,7 +145,6 @@
                             </div>
                             <span asp-validation-for="Input.Password" class="field-err"></span>
 
-                            <!-- Strength meter -->
                             <div class="strength-wrap">
                                 <div class="strength-track">
                                     <div class="strength-fill" id="strengthFill"></div>
@@ -152,7 +156,6 @@
                             </div>
                         </div>
 
-                        <!-- Requirements checklist -->
                         <div class="req-list">
                             <div class="req-item" id="req-len"><i class="bi bi-circle"></i> 8+ characters</div>
                             <div class="req-item" id="req-upper"><i class="bi bi-circle"></i> Uppercase letter</div>
@@ -187,8 +190,9 @@
                 </div>
             </div>
         </div>
-
     </div>
+</div>
+
 
  @section Scripts {
     <partial name="_ValidationScriptsPartial" />

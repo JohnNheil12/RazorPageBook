@@ -51,7 +51,7 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <div class="action-footer">
-                                <a asp-page="/Books/Edit" asp-route-id="@item.Id" class="action-btn edit">
+                                <a asp-page="/Dashboard/Dashboard" asp-route-id="@item.Id" class="action-btn edit">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <a asp-page="/Books/Delete" asp-route-id="@item.Id" class="action-btn delete">
